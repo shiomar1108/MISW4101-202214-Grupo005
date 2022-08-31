@@ -2,7 +2,7 @@ import unittest
 
 from src.logica.Logica_real import Logica_real
 from src.modelo.conn import Session
-from src.modelo.auto import Auto, Combustible
+from src.modelo.auto import Auto
 
 #Clase de ejemplo, debe tener un nombre que termina con el sufijo TestCase, y conservar la herencia
 class ModeloTestCase(unittest.TestCase):
@@ -12,7 +12,7 @@ class ModeloTestCase(unittest.TestCase):
 		self.logica = Logica_real()
 		self.session = Session()
 
-		self.auto1 = Auto(marca = 'volkswagen', modelo = 2016, placa = 'XXX001', color = 'gris', cilindraje = 2.5, combustible=Combustible.GASOLINA)
+		self.auto1 = Auto(marca = 'volkswagen', modelo = 2016, placa = 'XXX001', color = 'gris', cilindraje = 2.5, combustible= 'GASOLINA' )
 
 		self.session.add(self.auto1)
 
@@ -36,9 +36,9 @@ class ModeloTestCase(unittest.TestCase):
 
 
 	def test_crear_auto(self):
-		resultado = self.logica.crear_auto(marca='renault', modelo=1995, placa='XXX003', color='negro', cilindraje=1.6, combustible=Combustible.GASOLINA)
+		resultado = self.logica.crear_auto(marca='renault', modelo=1995, placa='XXX003', color='negro', cilindraje=1.6, combustible= 'GASOL')
 		self.assertTrue(resultado)
 
 	def test_crear_auto_ya_creado(self):
-		resultado = self.logica.crear_auto(marca='volkswagen', modelo=2016, placa='XXX001', color='gris', cilindraje=2.5, combustible=Combustible.GASOLINA)
+		resultado = self.logica.crear_auto(marca='volkswagen', modelo=2016, placa='XXX001', color='gris', cilindraje=2.5, combustible= 'GASOLINA')
 		self.assertFalse(resultado)

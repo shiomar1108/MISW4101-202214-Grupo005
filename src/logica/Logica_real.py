@@ -1,4 +1,4 @@
-from src.modelo.auto import Auto, Combustible
+from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
 
 from src.modelo.conn import engine, Base, session
