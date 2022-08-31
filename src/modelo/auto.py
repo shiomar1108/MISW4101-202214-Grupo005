@@ -19,9 +19,6 @@ class Auto(Base):
     vendido = Column(Boolean)
     valor_venta = Column(Float)
     kilometraje_venta = Column(Float)
-    gasto_total = Column(Float)
-    gasto_anual = Column(Float)
-    gasto_kilometro = Column(Float)
 
 
 # class Auto(Base):
