@@ -1,0 +1,15 @@
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date
+from sqlalchemy.orm import relationship
+
+from .conn import Base
+
+
+class Accion(Base):
+    __tablename__ = 'accion'
+
+    id = Column(Integer, primary_key=True)
+    kilometraje = Column(Float)
+    costo = Column(Float)
+    fecha = Column(Date)
+    mantenimientos = relationship('Mantenimiento')
+    auto = Column(Integer, ForeignKey('auto.id'))

@@ -1,5 +1,6 @@
 from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
+from src.modelo.accion import Accion
 
 from src.modelo.conn import engine, Base, session
 
@@ -17,8 +18,7 @@ class Logica_real():
                 placa=placa, 
                 color=color, 
                 cilindraje=cilindraje, 
-                combustible=combustible, 
-                vendido=False,
+                combustible=combustible,
             )
             session.add(auto)
             session.commit()

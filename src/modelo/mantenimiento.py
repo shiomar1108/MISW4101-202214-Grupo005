@@ -10,3 +10,4 @@ class Mantenimiento(Base):
     id = Column(Integer, primary_key=True)
     nombre = Column(String)
     descripcion = Column(String)
+    accion = Column(Integer, ForeignKey('accion.id'))

@@ -4,6 +4,8 @@ from unittest import result
 from src.logica.Logica_real import Logica_real
 from src.modelo.conn import Session
 from src.modelo.auto import Auto
+from src.modelo.accion import Accion
+
 from src.modelo.mantenimiento import Mantenimiento
 
 #Clase de ejemplo, debe tener un nombre que termina con el sufijo TestCase, y conservar la herencia
@@ -25,7 +27,6 @@ class ModeloTestCase(unittest.TestCase):
 
 
 	def tearDown(self):
-		'''Abre la sesión'''
 		self.session = Session()
 
 		'''Consulta todos los autos'''
