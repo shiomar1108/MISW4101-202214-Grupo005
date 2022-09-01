@@ -12,7 +12,6 @@ class Auto(Base):
     marca = Column(String)
     placa = Column(String)
     modelo = Column(String)
-    kilometraje = Column(Float)
     color = Column(String)
     cilindraje = Column(Float)
     combustible = Column(String)
@@ -22,4 +21,5 @@ class Auto(Base):
     gasto_total = Column(Float)
     gasto_anual = Column(Float)
     gasto_kilometro = Column(Float)
+    vendido = Column(Boolean)
     acciones = relationship('Accion', cascade='all, delete, delete-orphan')
