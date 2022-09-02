@@ -111,10 +111,6 @@ class ModeloTestCase(unittest.TestCase):
 		resultado = self.logica.crear_accion(kilometraje= 15000,costo=9600,fecha='01/09/2022', nombre='Cambio de Filtro')
 		self.assertFalse(resultado)
 
-	def test_crear_accion_ya_creado2(self):
-		resultado = self.logica.crear_accion(kilometraje= 1500,costo=850,fecha='15-08-2022', nombre='Cambio de Filtro')
-		self.assertFalse(resultado)
-
 	def test_vender_auto(self):
 		resultado = self.logica.vender_auto(placa='XXX001', precio_venta=15000000, kilometraje_venta= 352000)
 		self.assertTrue(resultado)
