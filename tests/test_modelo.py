@@ -30,6 +30,21 @@ class ModeloTestCase(unittest.TestCase):
 			gasto_kilometro = 0,
 			vendido = False,
 		)
+		self.auto2 = Auto(
+			marca = 'Nissan',
+		 	modelo = 2016, 
+			placa = 'AAA001', 
+			color = 'Rojo', 
+			cilindraje = 2.5, 
+			combustible= 'DIESEL', 
+			kilometraje_compra = 25000, 
+			precio_venta=0,
+			kilometraje_venta = 0,
+			gasto_total = 0,
+			gasto_anual = 0,
+			gasto_kilometro = 0,
+			vendido = False,
+		)
 		self.manto1 = Mantenimiento(nombre='Cambio de Filtro', descripcion='Pago por nuevo filtro de gasolina')
 		self.accion1 = Accion(
 			kilometraje=15000, 
@@ -39,9 +54,11 @@ class ModeloTestCase(unittest.TestCase):
 		)
 
 		self.session.add(self.auto1)
+		self.session.add(self.auto2)
 		self.session.add(self.manto1)
 		self.session.add(self.accion1)
 		self.session.commit()
+
 
 	def tearDown(self):
 		self.session = Session()
@@ -87,6 +104,46 @@ class ModeloTestCase(unittest.TestCase):
 			resultado = False
 		self.assertTrue(resultado)
 
+	def test_dar_auto_negativo(self):
+		temp = self.logica.dar_auto(placa='XXX002')
+		if(temp == None ):
+			resultado = True
+		else:
+			resultado = False
+		self.assertTrue(resultado)
+
+	def test_dar_autos(self):
+		busqueda = self.logica.dar_autos()
+		if len(busqueda) == 2:
+			resultado = True
+		else:
+			resultado = False
+		self.assertTrue(resultado)
+
+	def test_editar_auto(self):
+		resultado1 = self.logica.editar_auto(placa_og='XXX001', marca_n = 'volkswagen', modelo_n = 2019, placa_n = 'XXX001', color_n = 'Negro', cilindraje_n = 2.5, combustible_n= 'GASOLINA', kilometraje_n = 0,  ) 
+		if(resultado1):
+			temp = self.logica.dar_auto(placa='XXX001')
+			if(temp.modelo == '2019' and temp.color == "Negro"):
+				resultadoT = True
+			else:
+				resultadoT = False
+		else:
+			resultadoT = False
+		self.assertTrue(resultadoT)
+
+	def test_editar_auto_negativo(self):
+		resultado1 = self.logica.editar_auto(placa_og='XXX005', marca_n = 'volkswagen', modelo_n = 2019, placa_n = 'XXX001', color_n = 'Negro', cilindraje_n = 2.5, combustible_n= 'GASOLINA', kilometraje_n = 0,  ) 
+		if(resultado1):
+			temp = self.logica.dar_auto(placa='XXX001')
+			if(temp.modelo == '2019' and temp.color == "Negro"):
+				resultadoT = True
+			else:
+				resultadoT = False
+		else:
+			resultadoT = False
+		self.assertFalse(resultadoT)
+
 	def test_crear_mantenimiento(self):
 		resultado = self.logica.crear_mantenimiento(nombre='Polarizado', descripcion='Pago por colocacion de Polarizado en Ventana')
 		self.assertTrue(resultado)
@@ -103,6 +160,14 @@ class ModeloTestCase(unittest.TestCase):
 			resultado = False
 		self.assertTrue(resultado)
 
+	def test_dar_mantenimiento_negativo(self):
+		temp = self.logica.dar_mantenimiento(nombre= "Rines")
+		if(temp == None):
+			resultado = True
+		else:
+			resultado = False
+		self.assertTrue(resultado)
+
 	def test_crear_accion(self):
 		resultado = self.logica.crear_accion(kilometraje= 1500,costo=850,fecha='15-08-2022', nombre='Cambio de Filtro')
 		self.assertTrue(resultado)
@@ -113,4 +178,13 @@ class ModeloTestCase(unittest.TestCase):
 
 	def test_vender_auto(self):
 		resultado = self.logica.vender_auto(placa='XXX001', precio_venta=15000000, kilometraje_venta= 352000)
+		self.assertTrue(resultado)
+
+	def test_vender_auto_ya_vendido(self):
+		self.logica.vender_auto(placa='XXX001', precio_venta=15000000, kilometraje_venta= 352000)
+		resultado = self.logica.vender_auto(placa='XXX001', precio_venta=15000000, kilometraje_venta= 352000)
+		self.assertFalse(resultado)
+
+	def test_aniadir_accion(self):
+		resultado = self.logica.aniadir_accion(placa= 'XXX001', descripcion='Cambio de Filtro' ,kilometraje= 25000, costo= 5820, fecha= '11-01-2021')
 		self.assertTrue(resultado)

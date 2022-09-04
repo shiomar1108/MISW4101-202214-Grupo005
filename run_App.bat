@@ -29,6 +29,6 @@ echo '  * TEST - CorreR Pruebas de Unitarias                           '
 echo '                                                                 '
 set /p "id=Indique Operacion: "
 
-if %id%==APP (%work_dir%\venv\Scripts\python.exe %work_dir%\__main__.py)
-if %id%==TEST (%work_dir%\venv\Scripts\python.exe -m unittest discover -s tests -v
+if /I %id%==APP (%work_dir%\venv\Scripts\python.exe %work_dir%\__main__.py)
+if /I %id%==TEST (%work_dir%\venv\Scripts\python.exe -m unittest discover -s tests -v
 PAUSE )

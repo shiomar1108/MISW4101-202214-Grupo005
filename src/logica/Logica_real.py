@@ -51,7 +51,6 @@ class Logica_real():
 
     def crear_accion(self, kilometraje, costo,fecha, nombre):
         busqueda = session.query(Accion).filter(Accion.kilometraje == kilometraje, Mantenimiento.nombre == nombre).all()
-        print(len(busqueda))
         if len(busqueda) == 0:
             accion = Accion(
                 kilometraje= kilometraje,
@@ -63,7 +62,7 @@ class Logica_real():
             session.commit()
             return True
         else:
-            print('Accion con Kilometraje ' + str(kilometraje) + ' y mantenimiento llamado ' + nombre +' ya esta registrado')
+            #print('Accion con Kilometraje ' + str(kilometraje) + ' y mantenimiento llamado ' + nombre +' ya esta registrado')
             return False
 
     # Funciones relacionadas a Autos
@@ -73,17 +72,17 @@ class Logica_real():
     def dar_autos(self):
         return session.query(Auto).all()
 
-    def editar_auto(self, auto_id, marca, modelo, placa, color, cilindraje, combustible, kilometraje):
-        busqueda = session.query(Auto).filter(Auto.id == auto_id).all()
+    def editar_auto(self, placa_og, marca_n, modelo_n, placa_n, color_n, cilindraje_n, combustible_n, kilometraje_n):
+        busqueda = session.query(Auto).filter(Auto.placa == placa_og).all()
         if len(busqueda) == 1:
-            temp = session.query(Auto).get(auto_id).__dict__
-            temp.marca = marca
-            temp.modelo=modelo
-            temp.temp.placa=placa
-            temp.color=color
-            temp.cilindraje=cilindraje
-            temp.combustible=combustible
-            temp.kilometraje_compra = kilometraje
+            temp = session.query(Auto).filter(Auto.placa == placa_og).first()
+            temp.marca = marca_n
+            temp.modelo=modelo_n
+            temp.placa=placa_n
+            temp.color=color_n
+            temp.cilindraje=cilindraje_n
+            temp.combustible=combustible_n
+            temp.kilometraje_compra = kilometraje_n
             session.commit()
             return True
         else:
@@ -93,23 +92,24 @@ class Logica_real():
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 1:
             temp = session.query(Auto).filter(Auto.placa == placa).first()
-            temp.vendido = True
-            temp.precio_venta = precio_venta
-            temp.kilometraje_venta = kilometraje_venta
-            session.commit()
-            return True
+            if temp.vendido == False:
+                temp.vendido = True
+                temp.precio_venta = precio_venta
+                temp.kilometraje_venta = kilometraje_venta
+                session.commit()
+                return True
+            else:
+                return False
         else:
             return False
         
-
     # Funciones relacionadas a Mantenimientos
     def dar_mantenimientos(self):
         return session.query(Mantenimiento).all()
-
-    def aniadir_mantenimiento(self, nombre, descripcion):
-        return Logica_real.crear_mantenimiento(self,nombre,descripcion)
 
     def dar_mantenimiento(self, nombre):
         return session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
 
     #Funciones relacionadas a Acciones
+    def aniadir_accion (self, placa, descripcion, kilometraje, costo, fecha):
+        return False
