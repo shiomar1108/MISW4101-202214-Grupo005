@@ -123,17 +123,37 @@ class Logica_mock():
         
 
     def dar_mantenimientos(self):
-        return self.mantenimientos.copy()
+        # return self.mantenimientos.copy()
+        lista = []
+        mantos = session.query(Mantenimiento).all()
+        for manto in mantos:
+            lista.append(manto.__dict__)
+        return lista
 
     def aniadir_mantenimiento(self, nombre, descripcion):
-        self.mantenimientos.append({'Nombre': nombre, 'Descripcion': descripcion})
+        # self.mantenimientos.append({'Nombre': nombre, 'Descripcion': descripcion})
+        busqueda = session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).all()
+        if len(busqueda) == 0:
+            mantenimiento = Mantenimiento(
+                nombre=nombre, 
+                descripcion=descripcion, 
+            )
+            session.add(mantenimiento)
+            session.commit()
+            return True
+        else:
+            return False
     
     def editar_mantenimiento(self, id, nombre, descripcion):
         self.mantenimientos[id]['Nombre'] = nombre
         self.mantenimientos[id]['Descripcion'] = descripcion
     
     def eliminar_mantenimiento(self, id):
-        del self.mantenimientos[id]
+        # del self.mantenimientos[id]
+        mantenimiento = session.query(Mantenimiento).filter(Mantenimiento.id==id).first()
+        session.delete(mantenimiento)
+        session.commit()
+
 
     def validar_crear_editar_mantenimiento(self, nombre, descripcion):
         validacion = False

@@ -68,8 +68,8 @@ class Dialogo_crear_mantenimiento(QDialog):
         #Si el diálogo se va a usar para editar, se pone la información correspondiente en los campos de texto
 
         if (mantenimiento!=None):
-            self.texto_nombre.setText(mantenimiento["Nombre"])
-            self.texto_descripcion.setText(mantenimiento["Descripcion"])
+            self.texto_nombre.setText(mantenimiento["nombre"])
+            self.texto_descripcion.setText(mantenimiento["descripcion"])
 
 
     def guardar(self):

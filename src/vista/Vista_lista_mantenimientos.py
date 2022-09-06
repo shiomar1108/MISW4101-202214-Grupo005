@@ -113,7 +113,7 @@ class Vista_lista_mantenimientos(QWidget):
         numero_fila = 0
         for mantenimiento in self.mantenimientos:
 
-            etiqueta_nombre=QLabel(mantenimiento["Nombre"])          
+            etiqueta_nombre=QLabel(mantenimiento["nombre"])          
             etiqueta_nombre.setWordWrap(True)
             etiqueta_nombre.setFixedSize(90,40)
             self.distribuidor_tabla_mantenimientos.addWidget(etiqueta_nombre, numero_fila+1,0, Qt.AlignTop)
@@ -130,7 +130,7 @@ class Vista_lista_mantenimientos(QWidget):
             etiqueta_eliminar.setToolTip("Borrar")
             etiqueta_eliminar.setFixedSize(30,30)
             etiqueta_eliminar.setIcon(QIcon("src/recursos/005-delete.png"))
-            etiqueta_eliminar.clicked.connect(partial(self.eliminar_mantenimiento, numero_fila) )
+            etiqueta_eliminar.clicked.connect(partial(self.eliminar_mantenimiento, mantenimiento["id"]) )
             self.distribuidor_tabla_mantenimientos.addWidget(etiqueta_eliminar, numero_fila+1,2,Qt.AlignTop)
 
 
