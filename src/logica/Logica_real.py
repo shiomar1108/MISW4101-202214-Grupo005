@@ -55,7 +55,7 @@ class Logica_real():
                 kilometraje= kilometraje,
                 costo = costo,
                 fecha = fecha,
-                mantenimiento = [self.dar_mantenimiento(nombre=nombre)],
+                mantenimiento = [self.agregar_mantenimiento(nombre=nombre)],
             )
             session.add(accion)
             session.commit()
@@ -66,10 +66,18 @@ class Logica_real():
 
     # Funciones relacionadas a Autos
     def dar_auto(self, placa):
-        return session.query(Auto).filter(Auto.placa == placa).first()
+        auto = session.query(Auto).filter(Auto.placa == placa).first()
+        if auto != None:
+            return auto.__dict__
+        else:
+            return None
 
     def dar_autos(self):
-        return session.query(Auto).all()
+        lista = []
+        autos = session.query(Auto).all()
+        for auto in autos:
+            lista.append(auto.__dict__)
+        return lista
 
     def editar_auto(self, placa_og, marca_n, modelo_n, placa_n, color_n, cilindraje_n, combustible_n, kilometraje_n):
         busqueda = session.query(Auto).filter(Auto.placa == placa_og).all()
@@ -103,11 +111,22 @@ class Logica_real():
             return False
         
     # Funciones relacionadas a Mantenimientos
+    def agregar_mantenimiento(self, nombre):
+        return session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
+
     def dar_mantenimientos(self):
-        return session.query(Mantenimiento).all()
+        lista = []
+        mantos = session.query(Mantenimiento).all()
+        for manto in mantos:
+            lista.append(manto.__dict__)
+        return lista
 
     def dar_mantenimiento(self, nombre):
-        return session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
+        manto = session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
+        if manto != None:
+            return manto.__dict__
+        else:
+            return None
 
     #Funciones relacionadas a Acciones
     def aniadir_accion(self, placa, descripcion, kilometraje, costo, fecha):

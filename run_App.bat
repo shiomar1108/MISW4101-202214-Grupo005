@@ -25,7 +25,7 @@ echo '                                                                 '
 echo '               Operaciones Soportadas                            '
 echo '                                                                 '
 echo '  * APP  - Lanzar la Aplicacion Auto-Perfecto                    '
-echo '  * TEST - CorreR Pruebas de Unitarias                           ' 
+echo '  * TEST - Correr Pruebas de Unitarias                           ' 
 echo '                                                                 '
 set /p "id=Indique Operacion: "
 
