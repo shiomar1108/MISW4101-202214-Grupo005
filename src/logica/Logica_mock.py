@@ -31,39 +31,39 @@ class Logica_mock():
                         ('Total',3300000)], 'ValorKilometro': 128},]
 
     def dar_autos(self):
-        # return self.autos.copy()
-        return session.query(Auto).all()
+        return self.autos.copy()
+        # return session.query(Auto).all()
 
     def dar_auto(self, id_auto):
-        # return self.autos[id_auto].copy()
-        return session.query(Auto).filter(Auto.id==id_auto).first()
+        return self.autos[id_auto].copy()
+        # return session.query(Auto).filter(Auto.id==id_auto).first()
     
     def crear_auto(self, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible):
-        # self.autos.append({'Marca':marca, 'Placa':placa, 'Modelo': modelo, 'Kilometraje': float(kilometraje), \
-        #                    'Color':color, 'Cilindraje': cilindraje, 'TipoCombustible':tipo_combustible, 'Vendido': False})
-        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
-        if len(busqueda) > 0:
-            return False
+        self.autos.append({'Marca':marca, 'Placa':placa, 'Modelo': modelo, 'Kilometraje': float(kilometraje), \
+                           'Color':color, 'Cilindraje': cilindraje, 'TipoCombustible':tipo_combustible, 'Vendido': False})
+        # busqueda = session.query(Auto).filter(Auto.placa == placa).all()
+        # if len(busqueda) > 0:
+        #     return False
       
-        auto = Auto(
-            marca=marca, 
-            modelo=modelo, 
-            placa=placa, 
-            color=color, 
-            cilindraje=cilindraje, 
-            combustible=tipo_combustible,
-            kilometraje_compra = kilometraje,
-            precio_venta = 0,
-            kilometraje_venta = 0,
-            gasto_total = 0,
-            gasto_anual = 0,
-            gasto_kilometro = 0,
-            vendido = False,
-        )
-        session.add(auto)
-        session.commit()
+        # auto = Auto(
+        #     marca=marca, 
+        #     modelo=modelo, 
+        #     placa=placa, 
+        #     color=color, 
+        #     cilindraje=cilindraje, 
+        #     combustible=tipo_combustible,
+        #     kilometraje_compra = kilometraje,
+        #     precio_venta = 0,
+        #     kilometraje_venta = 0,
+        #     gasto_total = 0,
+        #     gasto_anual = 0,
+        #     gasto_kilometro = 0,
+        #     vendido = False,
+        # )
+        # session.add(auto)
+        # session.commit()
 
-        return auto
+        # return auto
 
 
 
@@ -83,10 +83,10 @@ class Logica_mock():
         self.autos[id]['Vendido'] = True
 
     def eliminar_auto(self, id):
-        # del self.autos[id]
-        auto = session.query(Auto).filter(Auto.id==id).first()
-        session.delete(auto)
-        session.commit()
+        del self.autos[id]
+        # auto = session.query(Auto).filter(Auto.id==id).first()
+        # session.delete(auto)
+        # session.commit()
 
         
 

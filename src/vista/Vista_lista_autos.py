@@ -128,10 +128,10 @@ class Vista_lista_autos(QWidget):
             self.distribuidor_tabla_autos.addWidget(etiqueta_acciones, 0,1,1,5, Qt.AlignCenter)
        
             for dic_auto in self.autos:
-                dic_auto = dic_auto.__dict__
+                # dic_auto = dic_auto.__dict__
                 numero_fila=numero_fila+1
 
-                etiqueta_nombre=QLabel(dic_auto['placa'])
+                etiqueta_nombre=QLabel(dic_auto['Placa'])
                 etiqueta_nombre.setWordWrap(True)
                 self.distribuidor_tabla_autos.addWidget(etiqueta_nombre,numero_fila,0)
 
@@ -161,10 +161,11 @@ class Vista_lista_autos(QWidget):
                 btn_eliminar.setToolTip("Borrar")
                 btn_eliminar.setFixedSize(40,40)
                 btn_eliminar.setIcon(QIcon("src/recursos/005-delete.png"))
-                btn_eliminar.clicked.connect(partial(self.eliminar_auto,dic_auto['id']) )
+                # btn_eliminar.clicked.connect(partial(self.eliminar_auto,dic_auto['id']) )
+                btn_eliminar.clicked.connect(partial(self.eliminar_auto,numero_fila -1) )
                 self.distribuidor_tabla_autos.addWidget(btn_eliminar,numero_fila,4,Qt.AlignCenter)
 
-                if dic_auto['vendido']:
+                if dic_auto['Vendido']:
                     btn_ver_actividad.setDisabled(True)
                     btn_editar.setDisabled(True)
                     btn_terminar.setDisabled(True)
