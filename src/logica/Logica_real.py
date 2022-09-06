@@ -128,10 +128,9 @@ class Logica_real():
         else:
             return None
 
-    #Funciones relacionadas a Acciones
+    # Funciones relacionadas a Acciones
     def aniadir_accion(self, placa, descripcion, kilometraje, costo, fecha):
-        auto_query = session.query(Auto).filter(Auto.placa == placa)
-        auto = auto_query.one()
+        auto = session.query(Auto).filter(Auto.placa == placa).one()
         if auto is None:
             return False
 
@@ -145,11 +144,11 @@ class Logica_real():
                 costo=costo,
                 fecha=fecha,
                 auto=auto.id
-            )
+        )
         session.add(accion)
         session.commit()
 
-        return accion
+        return True
 
         
 
