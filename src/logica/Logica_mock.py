@@ -1,9 +1,16 @@
-'''
-Esta clase es tan sólo un mock con datos para probar la interfaz
-'''
+from src.modelo.auto import Auto
+from src.modelo.mantenimiento import Mantenimiento
+from src.modelo.accion import Accion
+
+from src.modelo.conn import engine, Base, session
+
+
+
 class Logica_mock():
 
     def __init__(self):
+        Base.metadata.create_all(engine)
+
         #Este constructor contiene los datos falsos para probar la interfaz
         self.autos = [{'Marca':'Volkswagen', 'Placa':'KBL000', 'Modelo': '2010', 'Kilometraje': 150000.0, \
                         'Color':'Rojo', 'Cilindraje': '2000', 'TipoCombustible':'Gasolina', 'Vendido': False, \
@@ -24,14 +31,42 @@ class Logica_mock():
                         ('Total',3300000)], 'ValorKilometro': 128},]
 
     def dar_autos(self):
-        return self.autos.copy()
+        # return self.autos.copy()
+        return session.query(Auto).all()
 
     def dar_auto(self, id_auto):
-        return self.autos[id_auto].copy()
+        # return self.autos[id_auto].copy()
+        return session.query(Auto).filter(Auto.id==id_auto).first()
     
     def crear_auto(self, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible):
-        self.autos.append({'Marca':marca, 'Placa':placa, 'Modelo': modelo, 'Kilometraje': float(kilometraje), \
-                           'Color':color, 'Cilindraje': cilindraje, 'TipoCombustible':tipo_combustible, 'Vendido': False})
+        # self.autos.append({'Marca':marca, 'Placa':placa, 'Modelo': modelo, 'Kilometraje': float(kilometraje), \
+        #                    'Color':color, 'Cilindraje': cilindraje, 'TipoCombustible':tipo_combustible, 'Vendido': False})
+        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
+        if len(busqueda) > 0:
+            return False
+      
+        auto = Auto(
+            marca=marca, 
+            modelo=modelo, 
+            placa=placa, 
+            color=color, 
+            cilindraje=cilindraje, 
+            combustible=tipo_combustible,
+            kilometraje_compra = kilometraje,
+            precio_venta = 0,
+            kilometraje_venta = 0,
+            gasto_total = 0,
+            gasto_anual = 0,
+            gasto_kilometro = 0,
+            vendido = False,
+        )
+        session.add(auto)
+        session.commit()
+
+        return auto
+
+
+
 
     def editar_auto(self, id, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible):
         self.autos[id]['Marca'] = marca
@@ -48,7 +83,14 @@ class Logica_mock():
         self.autos[id]['Vendido'] = True
 
     def eliminar_auto(self, id):
-        del self.autos[id]
+        # del self.autos[id]
+        auto = session.query(Auto).filter(Auto.id==id).first()
+        session.delete(auto)
+        session.commit()
+
+        
+
+
         
     def validar_crear_editar_auto(self, id, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible):
         validacion = False

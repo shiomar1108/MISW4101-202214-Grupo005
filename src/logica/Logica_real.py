@@ -1,4 +1,3 @@
-from pickle import TRUE
 from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
 from src.modelo.accion import Accion
@@ -111,5 +110,27 @@ class Logica_real():
         return session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
 
     #Funciones relacionadas a Acciones
-    def aniadir_accion (self, placa, descripcion, kilometraje, costo, fecha):
-        return False
+    def aniadir_accion(self, placa, descripcion, kilometraje, costo, fecha):
+        auto_query = session.query(Auto).filter(Auto.placa == placa)
+        auto = auto_query.one()
+        if auto is None:
+            return False
+
+        busqueda = session.query(Accion).filter(Accion.auto==auto.id).all()
+        if len(busqueda) > 0:
+            return False
+
+        accion = Accion(
+                kilometraje=kilometraje,
+                descripcion=descripcion,
+                costo=costo,
+                fecha=fecha,
+                auto=auto.id
+            )
+        session.add(accion)
+        session.commit()
+
+        return accion
+
+        
+

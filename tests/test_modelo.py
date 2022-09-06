@@ -186,5 +186,13 @@ class ModeloTestCase(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_aniadir_accion(self):
-		resultado = self.logica.aniadir_accion(placa= 'XXX001', descripcion='Cambio de Filtro' ,kilometraje= 25000, costo= 5820, fecha= '11-01-2021')
-		self.assertTrue(resultado)
+		descripcion = 'se agrego el filtro X de mejor marca' 
+		resultado = self.logica.aniadir_accion(
+			placa= 'XXX001', 
+			descripcion=descripcion,
+			kilometraje= 25000, 
+			costo= 5820, 
+			fecha= '11-01-2021'
+		)
+
+		self.assertEqual(resultado.descripcion, descripcion)
