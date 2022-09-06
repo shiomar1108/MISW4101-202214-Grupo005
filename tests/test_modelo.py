@@ -1,3 +1,4 @@
+from pickle import FALSE
 import unittest
 from unittest import result
 
@@ -46,6 +47,7 @@ class ModeloTestCase(unittest.TestCase):
 			vendido = False,
 		)
 		self.manto1 = Mantenimiento(nombre='Cambio de Filtro', descripcion='Pago por nuevo filtro de gasolina')
+		self.manto2 = Mantenimiento(nombre='Cambio de Llantas', descripcion='Pago por nuevas llantas')
 		self.accion1 = Accion(
 			kilometraje=15000, 
 			costo=9600, 
@@ -56,6 +58,7 @@ class ModeloTestCase(unittest.TestCase):
 		self.session.add(self.auto1)
 		self.session.add(self.auto2)
 		self.session.add(self.manto1)
+		self.session.add(self.manto2)
 		self.session.add(self.accion1)
 		self.session.commit()
 
@@ -98,7 +101,7 @@ class ModeloTestCase(unittest.TestCase):
 
 	def test_dar_auto(self):
 		temp = self.logica.dar_auto(placa='XXX001')
-		if(temp.placa == 'XXX001'):
+		if(temp.get('placa') == 'XXX001'):
 			resultado = True
 		else:
 			resultado = False
@@ -124,7 +127,7 @@ class ModeloTestCase(unittest.TestCase):
 		resultado1 = self.logica.editar_auto(placa_og='XXX001', marca_n = 'volkswagen', modelo_n = 2019, placa_n = 'XXX001', color_n = 'Negro', cilindraje_n = 2.5, combustible_n= 'GASOLINA', kilometraje_n = 0,  ) 
 		if(resultado1):
 			temp = self.logica.dar_auto(placa='XXX001')
-			if(temp.modelo == '2019' and temp.color == "Negro"):
+			if(temp.get('modelo') == '2019' and temp.get('color') == "Negro"):
 				resultadoT = True
 			else:
 				resultadoT = False
@@ -154,7 +157,7 @@ class ModeloTestCase(unittest.TestCase):
 
 	def test_dar_mantenimiento(self):
 		temp = self.logica.dar_mantenimiento(nombre= self.manto1.nombre)
-		if(temp.nombre == self.manto1.nombre and temp.descripcion == self.manto1.descripcion):
+		if(temp.get('nombre') == self.manto1.nombre and temp.get('descripcion') == self.manto1.descripcion):
 			resultado = True
 		else:
 			resultado = False
@@ -163,6 +166,14 @@ class ModeloTestCase(unittest.TestCase):
 	def test_dar_mantenimiento_negativo(self):
 		temp = self.logica.dar_mantenimiento(nombre= "Rines")
 		if(temp == None):
+			resultado = True
+		else:
+			resultado = False
+		self.assertTrue(resultado)
+
+	def test_dar_mantenimentos(self):
+		busqueda = self.logica.dar_mantenimientos()
+		if len(busqueda) == 2:
 			resultado = True
 		else:
 			resultado = False
