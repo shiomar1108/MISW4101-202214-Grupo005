@@ -14,12 +14,12 @@ class ExampleTestCase(unittest.TestCase):
 	def setUp(self):
 		self.logica = Logica_mock()
 
-    	#Prueba para verificar que el caso funciona. El nombre del método usa el prefijo test_
-	def test_nombre_mantenimiento_01(self):
-		mantenimientos = self.logica.dar_mantenimientos()
-		self.assertEqual(mantenimientos[1]['Nombre'], "Impuestos")
+	#Prueba para verificar que el caso funciona. El nombre del método usa el prefijo test_
+	# def test_nombre_mantenimiento_01(self):
+	# 	mantenimientos = self.logica.dar_mantenimientos()
+	# 	self.assertEqual(mantenimientos[1]['Nombre'], "Impuestos")
 		
-    	#Prueba para verificar que el caso funciona. El nombre del método usa el prefijo test_
-	def test_nombre_mantenimiento_02(self):
-		mantenimientos = self.logica.dar_mantenimientos()
-		self.assertEqual(mantenimientos[0]['Nombre'], "Seguros")		
+    # 	#Prueba para verificar que el caso funciona. El nombre del método usa el prefijo test_
+	# def test_nombre_mantenimiento_02(self):
+	# 	mantenimientos = self.logica.dar_mantenimientos()
+	# 	self.assertEqual(mantenimientos[0]['Nombre'], "Seguros")		

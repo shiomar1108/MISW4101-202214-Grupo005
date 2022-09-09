@@ -206,3 +206,21 @@ class ModeloTestCase(unittest.TestCase):
 		)
 
 		self.assertTrue(resultado)
+
+
+
+
+class ModeloTestEmptySetUp(unittest.TestCase):
+	def setUp(self):
+		"""Se ejecuta antes de cada prueba"""
+		self.logica = Logica_real()
+		self.session = Session()
+
+	def test_dar_lista_autos_vacia(self):
+		"""Test que verifica que la lista de autos este vacia"""
+		busqueda = self.logica.dar_autos()
+		if len(busqueda) == 0:
+			resultado = True
+		else:
+			resultado = False
+		self.assertTrue(resultado)
