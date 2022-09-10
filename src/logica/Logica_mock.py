@@ -105,9 +105,6 @@ class Logica_mock():
             print('Auto con Placa ' + placa + ' ya esta registrado')
             return False
 
-
-
-
     def editar_auto(self, id, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible):
         self.autos[id]['Marca'] = marca
         self.autos[id]['Placa'] = placa
@@ -147,7 +144,6 @@ class Logica_mock():
             validacion = False
 
         return validacion
-        
 
     def dar_mantenimientos(self):
         # return self.mantenimientos.copy()
@@ -174,7 +170,7 @@ class Logica_mock():
             session.commit()
             return True
         else:
-            #print('Mantenimiento con Nombre ' + nombre + ' ya esta registrado')
+            print('Mantenimiento con Nombre ' + nombre + ' ya esta registrado')
             return False
 
     def editar_mantenimiento(self, id, nombre, descripcion):

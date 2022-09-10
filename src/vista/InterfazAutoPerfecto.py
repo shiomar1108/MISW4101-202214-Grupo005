@@ -91,7 +91,7 @@ class App_AutoPerfecto(QApplication):
         Esta función muestra las acciones de un auto
         """
         self.auto_actual = id_auto
-        marca_auto = self.logica.dar_auto(id_auto)['Marca']
+        marca_auto = self.logica.dar_auto(id_auto)['marca']
         self.vista_lista_acciones=Vista_lista_acciones(self)
         self.vista_lista_acciones.mostrar_acciones(marca_auto, self.logica.dar_acciones_auto(id_auto))
 

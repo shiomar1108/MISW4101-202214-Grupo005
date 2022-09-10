@@ -147,7 +147,7 @@ class Vista_lista_autos(QWidget):
                 btn_editar.setToolTip("Añadir acciones de mantenimiento")
                 btn_editar.setFixedSize(40,40)
                 btn_editar.setIcon(QIcon("src/recursos/009-money.png"))
-                btn_editar.clicked.connect(partial(self.mostrar_acciones,numero_fila -1 ) )
+                btn_editar.clicked.connect(partial(self.mostrar_acciones,dic_auto['id'] ) )
                 self.distribuidor_tabla_autos.addWidget(btn_editar,numero_fila,2,Qt.AlignCenter)
 
                 btn_terminar=QPushButton("",self)
