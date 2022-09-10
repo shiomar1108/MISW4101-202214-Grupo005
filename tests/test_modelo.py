@@ -287,6 +287,13 @@ class ModeloTestTDD(unittest.TestCase):
 		'''Borra todos los autos'''
 		for auto in busqueda:
 			self.session.delete(auto)
+
+		'''Consulta todos los Mantenimientos'''
+		busqueda = self.session.query(Mantenimiento).all()
+
+		'''Borra todos los Mantenimientos'''
+		for manto in busqueda:
+			self.session.delete(manto)
 			
 		self.session.commit()
 		self.session.close()
