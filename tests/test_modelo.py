@@ -99,7 +99,7 @@ class ModeloTestCase(unittest.TestCase):
 			color='negro', 
 			cilindraje=1.6, 
 			combustible= 'GASOLINA PREMIUM', 
-			kilomentraje= 1000
+			kilometraje= 1000
 		)
 		self.assertTrue(resultado)
 
@@ -310,7 +310,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='negro', 
 			cilindraje=1.6, 
 			combustible= 'GASOLINA PREMIUM', 
-			kilomentraje= 1000 
+			kilometraje= 1000 
 		)
 		self.assertFalse(resultado)
 
@@ -323,7 +323,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='negro', 
 			cilindraje=1.6, 
 			combustible= 'GASOLINA PREMIUM', 
-			kilomentraje= 1000 
+			kilometraje= 1000 
 		)
 		self.assertFalse(resultado)
 
@@ -336,13 +336,13 @@ class ModeloTestTDD(unittest.TestCase):
 			color='negro', 
 			cilindraje=1.6, 
 			combustible= 'GASOLINA PREMIUM', 
-			kilomentraje= 1000 
+			kilometraje= 1000 
 		)
 		self.assertFalse(resultado)
 
 	def test_caso4_crear_auto_ya_creado(self):
 		"""test que verifica que los datos del auto no esten repetidos"""
-		resultado = self.logica.crear_auto(marca='volkswagen', modelo=2016, placa='XXX001', color='gris', cilindraje=2.5, combustible= 'GASOLINA', kilomentraje= 0)
+		resultado = self.logica.crear_auto(marca='volkswagen', modelo=2016, placa='XXX001', color='gris', cilindraje=2.5, combustible= 'GASOLINA', kilometraje= 0)
 		self.assertFalse(resultado)
 
 	def test_caso5_crear_auto_placa_y_marca_duplicados(self):
@@ -354,7 +354,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='azul', 
 			cilindraje=1.4, 
 			combustible= 'HIBRIDO', 
-			kilomentraje= 26000
+			kilometraje= 26000
 		)
 		self.assertFalse(resultado)
 
@@ -367,7 +367,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='', 
 			cilindraje='', 
 			combustible= '', 
-			kilomentraje= ''
+			kilometraje= ''
 		)
 		self.assertFalse(resultado)
 
@@ -380,7 +380,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='', 
 			cilindraje='', 
 			combustible= '', 
-			kilomentraje= ''
+			kilometraje= ''
 		)
 		self.assertFalse(resultado)
 
@@ -393,7 +393,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='azul', 
 			cilindraje='', 
 			combustible= '', 
-			kilomentraje= ''
+			kilometraje= ''
 		)
 		self.assertFalse(resultado)
 
@@ -406,7 +406,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='', 
 			cilindraje='', 
 			combustible= '', 
-			kilomentraje= ''
+			kilometraje= ''
 		)
 		self.assertFalse(resultado)
 
@@ -419,7 +419,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='azul', 
 			cilindraje=2500, 
 			combustible= 'GASOLINA', 
-			kilomentraje= 14000
+			kilometraje= 14000
 		)
 		self.assertFalse(resultado)
 
@@ -432,7 +432,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='azul', 
 			cilindraje=2500, 
 			combustible= 'GASOLINA', 
-			kilomentraje= '14000'
+			kilometraje= '14000'
 		)
 		self.assertFalse(resultado)
 
@@ -445,7 +445,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color=123, 
 			cilindraje=2500,
 			combustible= 'GASOLINA', 
-			kilomentraje= 14000
+			kilometraje= 14000
 		)
 		self.assertFalse(resultado)
 
@@ -458,7 +458,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='azul', 
 			cilindraje="2500",
 			combustible= 'GASOLINA', 
-			kilomentraje= 14000
+			kilometraje= 14000
 		)
 		self.assertFalse(resultado)
 
@@ -471,7 +471,7 @@ class ModeloTestTDD(unittest.TestCase):
 			color='azul', 
 			cilindraje=2500,
 			combustible= 123, 
-			kilomentraje= 14000
+			kilometraje= 14000
 		)
 		self.assertFalse(resultado)
 

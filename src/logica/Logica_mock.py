@@ -47,32 +47,63 @@ class Logica_mock():
         else:
             return None
     
-    def crear_auto(self, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible):
+    def crear_auto(self, marca, placa, modelo, kilometraje, color, cilindraje, combustible):
         # self.autos.append({'Marca':marca, 'Placa':placa, 'Modelo': modelo, 'Kilometraje': float(kilometraje), \
         #                    'Color':color, 'Cilindraje': cilindraje, 'TipoCombustible':tipo_combustible, 'Vendido': False})
-        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
-        if len(busqueda) > 0:
-            return False
-      
-        auto = Auto(
-            marca=marca, 
-            modelo=modelo, 
-            placa=placa, 
-            color=color, 
-            cilindraje=cilindraje, 
-            combustible=tipo_combustible,
-            kilometraje_compra = kilometraje,
-            precio_venta = 0,
-            kilometraje_venta = 0,
-            gasto_total = 0,
-            gasto_anual = 0,
-            gasto_kilometro = 0,
-            vendido = False,
-        )
-        session.add(auto)
-        session.commit()
+        required_fields = ['marca', 'modelo', 'placa', 'color', 'cilindraje', 'combustible', 'kilometraje']
+        for field in required_fields:
+            if field not in locals():
+                print("Error: {} is required".format(field))
+                return False
 
-        return auto
+        int_fields = ['kilometraje', 'modelo']
+        for field in int_fields:
+            if not isinstance(locals()[field], int):
+                print("Error: {} must be an integer".format(field))
+                return False
+
+        str_fields = ['marca', 'placa', 'color', 'combustible']
+        for field in str_fields:
+            if not isinstance(locals()[field], str):
+                print("Error: {} must be a string".format(field))
+                return False
+
+        if not isinstance(cilindraje, (int, float)):
+            print("Error: cilindraje must be a number")
+            return False
+
+        if(len(placa) != 6 or modelo > 9999):
+            print("Error: placa must be 6 characters long and modelo must be 4 digits long")
+            return False
+        else:
+            chunks = [placa[i:i+3] for i in range(0, len(placa), 3)]
+            if(chunks[1].isalpha() or chunks[0].isnumeric() ):
+                print("Error: placa must be in the format AAA000")
+                return False
+
+        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
+        if len(busqueda) == 0:
+            auto = Auto(
+                marca=marca, 
+                modelo=modelo, 
+                placa=placa, 
+                color=color, 
+                cilindraje=cilindraje, 
+                combustible=combustible,
+                kilometraje_compra = kilometraje,
+                precio_venta = 0,
+                kilometraje_venta = 0,
+                gasto_total = 0,
+                gasto_anual = 0,
+                gasto_kilometro = 0,
+                vendido = False,
+            )
+            session.add(auto)
+            session.commit()
+            return True
+        else:
+            print('Auto con Placa ' + placa + ' ya esta registrado')
+            return False
 
 
 
@@ -96,10 +127,6 @@ class Logica_mock():
         auto = session.query(Auto).filter(Auto.id==id).first()
         session.delete(auto)
         session.commit()
-
-        
-
-
         
     def validar_crear_editar_auto(self, id, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible):
         validacion = False
@@ -132,6 +159,11 @@ class Logica_mock():
 
     def aniadir_mantenimiento(self, nombre, descripcion):
         # self.mantenimientos.append({'Nombre': nombre, 'Descripcion': descripcion})
+        required_fields = ['nombre', 'descripcion']
+        for field in required_fields:
+            if len(locals()[field]) == 0:
+                return False
+
         busqueda = session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).all()
         if len(busqueda) == 0:
             mantenimiento = Mantenimiento(
@@ -142,8 +174,9 @@ class Logica_mock():
             session.commit()
             return True
         else:
+            #print('Mantenimiento con Nombre ' + nombre + ' ya esta registrado')
             return False
-    
+
     def editar_mantenimiento(self, id, nombre, descripcion):
         self.mantenimientos[id]['Nombre'] = nombre
         self.mantenimientos[id]['Descripcion'] = descripcion

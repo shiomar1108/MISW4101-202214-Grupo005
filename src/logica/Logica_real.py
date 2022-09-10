@@ -9,13 +9,13 @@ class Logica_real():
     def __init__(self):
         Base.metadata.create_all(engine)
 
-    def crear_auto(self, marca, modelo, placa, color, cilindraje, combustible, kilomentraje):
-        required_fields = ['marca', 'modelo', 'placa', 'color', 'cilindraje', 'combustible', 'kilomentraje']
+    def crear_auto(self, marca, modelo, placa, color, cilindraje, combustible, kilometraje):
+        required_fields = ['marca', 'modelo', 'placa', 'color', 'cilindraje', 'combustible', 'kilometraje']
         for field in required_fields:
             if field not in locals():
                 return False
 
-        int_fields = ['kilomentraje', 'modelo']
+        int_fields = ['kilometraje', 'modelo']
         for field in int_fields:
             if not isinstance(locals()[field], int):
                 return False
@@ -44,7 +44,7 @@ class Logica_real():
                 color=color, 
                 cilindraje=cilindraje, 
                 combustible=combustible,
-                kilometraje_compra = kilomentraje,
+                kilometraje_compra = kilometraje,
                 precio_venta = 0,
                 kilometraje_venta = 0,
                 gasto_total = 0,
