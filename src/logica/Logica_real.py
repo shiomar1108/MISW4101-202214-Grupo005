@@ -11,6 +11,19 @@ class Logica_real():
         Base.metadata.create_all(engine)
 
     def crear_auto(self, marca, modelo, placa, color, cilindraje, combustible, kilomentraje):
+        required_fields = ['marca', 'modelo', 'placa', 'color', 'cilindraje', 'combustible', 'kilomentraje']
+        for field in required_fields:
+            if field not in locals():
+                return False
+
+        int_fields = ['kilomentraje', 'modelo']
+        for field in int_fields:
+            if not isinstance(locals()[field], int):
+                return False
+
+        if cilindraje is str:
+            return False
+
         if(len(placa) != 6):
             return False
         else:

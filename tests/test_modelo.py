@@ -92,7 +92,15 @@ class ModeloTestCase(unittest.TestCase):
 
 
 	def test_crear_auto(self):
-		resultado = self.logica.crear_auto(marca='renault', modelo=1995, placa='XXX003', color='negro', cilindraje=1.6, combustible= 'GASOLINA PREMIUM', kilomentraje= 1000 )
+		resultado = self.logica.crear_auto(
+			marca='renault', 
+			modelo=1995, 
+			placa='XXX003', 
+			color='negro', 
+			cilindraje=1.6, 
+			combustible= 'GASOLINA PREMIUM', 
+			kilomentraje= 1000
+		)
 		self.assertTrue(resultado)
 
 	def test_dar_auto(self):
