@@ -475,11 +475,27 @@ class ModeloTestTDD(unittest.TestCase):
 		)
 		self.assertFalse(resultado)
 
-	def test_caso12_crear_mantenimento_vacio(self):
+	def test_caso12_1_crear_mantenimento_vacio(self):
 		"""test que verifica que los campos al crear un manenimiento no esten vacios"""
 		resultado = self.logica.crear_mantenimiento(
 			nombre='', 
 			descripcion=''
+		)
+		self.assertFalse(resultado)
+
+	def test_caso12_2_crear_mantenimento_vacio(self):
+		"""test que verifica que los campos al crear un manenimiento no esten vacios"""
+		resultado = self.logica.crear_mantenimiento(
+			nombre='Cambio de Llantas', 
+			descripcion=''
+		)
+		self.assertFalse(resultado)
+
+	def test_caso12_3_crear_mantenimento_vacio(self):
+		"""test que verifica que los campos al crear un manenimiento no esten vacios"""
+		resultado = self.logica.crear_mantenimiento(
+			nombre='', 
+			descripcion='Pago por nuevas llantas'
 		)
 		self.assertFalse(resultado)
 
@@ -490,3 +506,17 @@ class ModeloTestTDD(unittest.TestCase):
 			descripcion='Cambio de aceite'
 		)
 		self.assertFalse(resultado)
+
+	def test_caso14_mantenimiento_creado_debe_ser_visible(self):
+		"""test que verifica que despues de creado un mantenimiento se vea en la lista"""
+		self.logica.crear_mantenimiento(
+			nombre='Cambio de Llantas', 
+			descripcion='Pago por nuevas llantas'
+		)
+		lista = self.logica.dar_mantenimientos()
+		if (lista[len(lista)-1].get('nombre') == 'Cambio de Llantas'):
+			resultado = True
+		else:
+			resultado = False
+		self.assertTrue(resultado)	
+		
