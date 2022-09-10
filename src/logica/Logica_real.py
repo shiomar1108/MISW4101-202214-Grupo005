@@ -60,6 +60,11 @@ class Logica_real():
             return False
 
     def crear_mantenimiento(self, nombre, descripcion):
+        required_fields = ['nombre', 'descripcion']
+        for field in required_fields:
+            if len(locals()[field]) == 0:
+                return False
+
         busqueda = session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).all()
         if len(busqueda) == 0:
             mantenimiento = Mantenimiento(
