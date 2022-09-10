@@ -392,3 +392,15 @@ class ModeloTestTDD(unittest.TestCase):
 			kilomentraje= ''
 		)
 		self.assertFalse(resultado)
+
+	def test_caso7_crear_auto_campo_modelo_invalido(self):
+		resultado = self.logica.crear_auto(
+			marca='nissan', 
+			modelo=19995,
+			placa='ABC001', 
+			color='azul', 
+			cilindraje=2500, 
+			combustible= 'GASOLINA', 
+			kilomentraje= 14000
+		)
+		self.assertFalse(resultado)
