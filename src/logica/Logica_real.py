@@ -24,7 +24,7 @@ class Logica_real():
         if cilindraje is str:
             return False
 
-        if(len(placa) != 6):
+        if(len(placa) != 6 or modelo > 9999):
             return False
         else:
             chunks = [placa[i:i+3] for i in range(0, len(placa), 3)]
