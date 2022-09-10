@@ -1,3 +1,4 @@
+from chunk import Chunk
 from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
 from src.modelo.accion import Accion
@@ -10,6 +11,13 @@ class Logica_real():
         Base.metadata.create_all(engine)
 
     def crear_auto(self, marca, modelo, placa, color, cilindraje, combustible, kilomentraje):
+        if(len(placa) != 6):
+            return False
+        else:
+            chunks = [placa[i:i+3] for i in range(0, len(placa), 3)]
+            if(chunks[1].isalpha() or chunks[0].isnumeric() ):
+                return False
+
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 0:
             auto = Auto(

@@ -95,10 +95,6 @@ class ModeloTestCase(unittest.TestCase):
 		resultado = self.logica.crear_auto(marca='renault', modelo=1995, placa='XXX003', color='negro', cilindraje=1.6, combustible= 'GASOLINA PREMIUM', kilomentraje= 1000 )
 		self.assertTrue(resultado)
 
-	def test_crear_auto_ya_creado(self):
-		resultado = self.logica.crear_auto(marca='volkswagen', modelo=2016, placa='XXX001', color='gris', cilindraje=2.5, combustible= 'GASOLINA', kilomentraje= 0)
-		self.assertFalse(resultado)
-
 	def test_dar_auto(self):
 		temp = self.logica.dar_auto(placa='XXX001')
 		if(temp.get('placa') == 'XXX001'):
@@ -286,7 +282,7 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertTrue(resultado)	
 
 
-	def test_caso3_agregar_auto_campo_placa_mas_de_6_caracteres(self):
+	def test_caso3_1_agregar_auto_campo_placa_mas_de_6_caracteres(self):
 		"""test que verifica que el campo placa no tenga mas de 6 caracteres"""
 		resultado = self.logica.crear_auto(
 			marca='renault', 
@@ -297,5 +293,34 @@ class ModeloTestTDD(unittest.TestCase):
 			combustible= 'GASOLINA PREMIUM', 
 			kilomentraje= 1000 
 		)
+		self.assertFalse(resultado)
 
+	def test_caso3_2_agregar_auto_campo_placa_letras(self):
+		"""test que verifica que el campo tenga 3 letras al inicio"""
+		resultado = self.logica.crear_auto(
+			marca='renault', 
+			modelo=1995, 
+			placa='000123', 
+			color='negro', 
+			cilindraje=1.6, 
+			combustible= 'GASOLINA PREMIUM', 
+			kilomentraje= 1000 
+		)
+		self.assertFalse(resultado)
+
+	def test_caso3_3_agregar_auto_campo_placa_numeros(self):
+		"""test que verifica que el campo placa tenga tres numero al final"""
+		resultado = self.logica.crear_auto(
+			marca='renault', 
+			modelo=1995, 
+			placa='XXXYYY', 
+			color='negro', 
+			cilindraje=1.6, 
+			combustible= 'GASOLINA PREMIUM', 
+			kilomentraje= 1000 
+		)
+		self.assertFalse(resultado)
+
+	def test_caso4_crear_auto_ya_creado(self):
+		resultado = self.logica.crear_auto(marca='volkswagen', modelo=2016, placa='XXX001', color='gris', cilindraje=2.5, combustible= 'GASOLINA', kilomentraje= 0)
 		self.assertFalse(resultado)
