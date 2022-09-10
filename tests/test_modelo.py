@@ -451,3 +451,15 @@ class ModeloTestTDD(unittest.TestCase):
 		)
 		self.assertFalse(resultado)
 
+	def test_caso11_crear_auto_campo_combustible_invalido(self):
+		"""test que verifica que el campo combustible del auto sea un texto"""
+		resultado = self.logica.crear_auto(
+			marca='nissan', 
+			modelo=1995,
+			placa='ABC001', 
+			color='azul', 
+			cilindraje=2500,
+			combustible= 123, 
+			kilomentraje= 14000
+		)
+		self.assertFalse(resultado)
