@@ -131,7 +131,7 @@ class ModeloTestCase(unittest.TestCase):
 		resultado1 = self.logica.editar_auto(placa_og='XXX001', marca_n = 'volkswagen', modelo_n = 2019, placa_n = 'XXX001', color_n = 'Negro', cilindraje_n = 2.5, combustible_n= 'GASOLINA', kilometraje_n = 0,  ) 
 		if(resultado1):
 			temp = self.logica.dar_auto(placa='XXX001')
-			if(temp.get('modelo') == '2019' and temp.get('color') == "Negro"):
+			if(temp.get('modelo') == 2019 and temp.get('color') == "Negro"):
 				resultadoT = True
 			else:
 				resultadoT = False
@@ -330,10 +330,12 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso4_crear_auto_ya_creado(self):
+		"""test que verifica que los datos del auto no esten repetidos"""
 		resultado = self.logica.crear_auto(marca='volkswagen', modelo=2016, placa='XXX001', color='gris', cilindraje=2.5, combustible= 'GASOLINA', kilomentraje= 0)
 		self.assertFalse(resultado)
 
 	def test_caso5_crear_auto_placa_y_marca_duplicados(self):
+		"""test que verifica que el campo placa del auto no este duplicado"""
 		resultado = self.logica.crear_auto(
 			marca='volkswagen', 
 			modelo=2019, 
@@ -346,6 +348,7 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso6_1_crear_auto_vacio(self):
+		"""test que verifica que los campos al crear un auto no esten vacios"""
 		resultado = self.logica.crear_auto(
 			marca='', 
 			modelo='', 
@@ -358,6 +361,7 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso6_2_crear_auto_vacio(self):
+		"""test que verifica que los campos al crear un auto no esten vacios"""
 		resultado = self.logica.crear_auto(
 			marca='', 
 			modelo='', 
@@ -370,6 +374,7 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso6_3_crear_auto_vacio(self):
+		"""test que verifica que los campos al crear un auto no esten vacios"""
 		resultado = self.logica.crear_auto(
 			marca='', 
 			modelo='', 
@@ -382,6 +387,7 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso6_4_crear_auto_vacio(self):
+		"""test que verifica que los campos al crear un auto no esten vacios"""
 		resultado = self.logica.crear_auto(
 			marca='volkswagen', 
 			modelo='', 
@@ -394,6 +400,7 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso7_crear_auto_campo_modelo_invalido(self):
+		"""test que verifica que el campo modelo del auto sean 4 digitos"""
 		resultado = self.logica.crear_auto(
 			marca='nissan', 
 			modelo=19995,
@@ -406,6 +413,7 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso8_crear_auto_campo_kilometraje_invalido(self):
+		"""test que verifica que el campo kilometraje del auto sea un numero"""
 		resultado = self.logica.crear_auto(
 			marca='nissan', 
 			modelo=1995,
@@ -418,6 +426,7 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso9_crear_auto_campo_color_invalido(self):
+		"""test que verifica que el campo color del auto sea un texto"""
 		resultado = self.logica.crear_auto(
 			marca='nissan', 
 			modelo=1995,
@@ -429,4 +438,15 @@ class ModeloTestTDD(unittest.TestCase):
 		)
 		self.assertFalse(resultado)
 
-	
+	def test_caso10_crear_auto_campo_clindraje_invalido(self):
+		"""test que verifica que el campo cilindraje del auto sea un numero"""
+		resultado = self.logica.crear_auto(
+			marca='nissan', 
+			modelo=1995,
+			placa='ABC001', 
+			color='azul', 
+			cilindraje="2500",
+			combustible= 'GASOLINA', 
+			kilomentraje= 14000
+		)
+		self.assertFalse(resultado)

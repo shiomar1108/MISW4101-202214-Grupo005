@@ -1,4 +1,3 @@
-from chunk import Chunk
 from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
 from src.modelo.accion import Accion
@@ -19,6 +18,11 @@ class Logica_real():
         int_fields = ['kilomentraje', 'modelo']
         for field in int_fields:
             if not isinstance(locals()[field], int):
+                return False
+
+        str_fields = ['marca', 'placa', 'color', 'combustible']
+        for field in str_fields:
+            if not isinstance(locals()[field], str):
                 return False
 
         if cilindraje is str:

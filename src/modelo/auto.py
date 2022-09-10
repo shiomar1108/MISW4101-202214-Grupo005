@@ -11,7 +11,7 @@ class Auto(Base):
     id = Column(Integer, primary_key=True)
     marca = Column(String)
     placa = Column(String)
-    modelo = Column(String)
+    modelo = Column(Integer)
     color = Column(String)
     cilindraje = Column(Float)
     combustible = Column(String)
