@@ -284,3 +284,8 @@ class ModeloTestTDD(unittest.TestCase):
 		else:
 			resultado = False
 		self.assertTrue(resultado)	
+
+
+	def test_caso3_agregar_auto_campo_placa_mas_de_6_caracteres(self):
+		"""test que verifica que el campo placa no tenga mas de 6 caracteres"""
+		pass
