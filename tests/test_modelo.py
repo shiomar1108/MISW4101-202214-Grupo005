@@ -326,4 +326,13 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso5_crear_auto_placa_y_marca_duplicados(self):
-		pass
+		resultado = self.logica.crear_auto(
+			marca='volkswagen', 
+			modelo=2019, 
+			placa='AAA001', 
+			color='azul', 
+			cilindraje=1.4, 
+			combustible= 'HIBRIDO', 
+			kilomentraje= 26000
+		)
+		self.assertFalse(resultado)
