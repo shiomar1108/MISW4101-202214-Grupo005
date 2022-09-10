@@ -207,16 +207,13 @@ class ModeloTestCase(unittest.TestCase):
 
 		self.assertTrue(resultado)
 
-
-
-
 class ModeloTestEmptySetUp(unittest.TestCase):
 	def setUp(self):
 		"""Se ejecuta antes de cada prueba"""
 		self.logica = Logica_real()
 		self.session = Session()
 
-	def test_dar_lista_autos_vacia(self):
+	def test_caso1_dar_lista_autos_vacia(self):
 		"""Test que verifica que la lista de autos este vacia"""
 		busqueda = self.logica.dar_autos()
 		if len(busqueda) == 0:
@@ -224,3 +221,66 @@ class ModeloTestEmptySetUp(unittest.TestCase):
 		else:
 			resultado = False
 		self.assertTrue(resultado)
+
+class ModeloTestTDD(unittest.TestCase):
+	def setUp(self):
+		self.logica = Logica_real()
+		self.session = Session()
+		
+		self.auto1 = Auto(
+			marca = 'volkswagen',
+		 	modelo = 2016, 
+			placa = 'XXX001', 
+			color = 'gris', 
+			cilindraje = 2.5, 
+			combustible= 'GASOLINA', 
+			kilometraje_compra = 0, 
+			precio_venta=0,
+			kilometraje_venta = 0,
+			gasto_total = 0,
+			gasto_anual = 0,
+			gasto_kilometro = 0,
+			vendido = False,
+		)
+		self.auto2 = Auto(
+			marca = 'Nissan',
+		 	modelo = 2016, 
+			placa = 'AAA001', 
+			color = 'Rojo', 
+			cilindraje = 2.5, 
+			combustible= 'DIESEL', 
+			kilometraje_compra = 25000, 
+			precio_venta=0,
+			kilometraje_venta = 0,
+			gasto_total = 0,
+			gasto_anual = 0,
+			gasto_kilometro = 0,
+			vendido = False,
+		)
+
+		self.session.add(self.auto1)
+		self.session.add(self.auto2)
+		self.session.commit()
+
+
+	def tearDown(self):
+		self.session = Session()
+
+		'''Consulta todos los autos'''
+		busqueda = self.session.query(Auto).all()
+
+		'''Borra todos los autos'''
+		for auto in busqueda:
+			self.session.delete(auto)
+			
+		self.session.commit()
+		self.session.close()
+
+	def test_caso2_dar_autos_ordenados(self):
+		"""Test que verifica que la lista se regrese en orden cronologico"""
+		busqueda = self.logica.dar_autos()
+		if (busqueda[0].get('placa') == self.auto1.placa and busqueda[1].get('placa') == self.auto2.placa):
+			resultado = True
+		else:
+			resultado = False
+		self.assertTrue(resultado)	
