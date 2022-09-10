@@ -416,3 +416,8 @@ class ModeloTestTDD(unittest.TestCase):
 			kilomentraje= '14000'
 		)
 		self.assertFalse(resultado)
+
+	def test_caso9_crear_auto_campo_color_invalido(self):
+		pass
+
+	
