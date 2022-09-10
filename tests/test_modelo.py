@@ -463,3 +463,11 @@ class ModeloTestTDD(unittest.TestCase):
 			kilomentraje= 14000
 		)
 		self.assertFalse(resultado)
+
+	def test_caso12_crear_mantenimento_vacio(self):
+		"""test que verifica que los campos al crear un manenimiento no esten vacios"""
+		resultado = self.logica.crear_mantenimiento(
+			nombre='', 
+			descripcion=''
+		)
+		self.assertFalse(resultado)
