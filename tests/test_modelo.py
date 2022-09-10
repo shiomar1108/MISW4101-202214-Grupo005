@@ -418,6 +418,15 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertFalse(resultado)
 
 	def test_caso9_crear_auto_campo_color_invalido(self):
-		pass
+		resultado = self.logica.crear_auto(
+			marca='nissan', 
+			modelo=1995,
+			placa='ABC001', 
+			color=123, 
+			cilindraje=2500,
+			combustible= 'GASOLINA', 
+			kilomentraje= 14000
+		)
+		self.assertFalse(resultado)
 
 	
