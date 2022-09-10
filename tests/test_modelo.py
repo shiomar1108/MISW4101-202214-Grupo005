@@ -211,7 +211,9 @@ class ModeloTestCase(unittest.TestCase):
 
 		self.assertTrue(resultado)
 
+
 class ModeloTestEmptySetUp(unittest.TestCase):
+	"""clase que contiene los test con el setUp vacio"""
 	def setUp(self):
 		"""Se ejecuta antes de cada prueba"""
 		self.logica = Logica_real()
@@ -226,7 +228,10 @@ class ModeloTestEmptySetUp(unittest.TestCase):
 			resultado = False
 		self.assertTrue(resultado)
 
+
+
 class ModeloTestTDD(unittest.TestCase):
+	"""Clase que contiene los test de la logica"""
 	def setUp(self):
 		self.logica = Logica_real()
 		self.session = Session()
@@ -262,8 +267,14 @@ class ModeloTestTDD(unittest.TestCase):
 			vendido = False,
 		)
 
+		self.manto1 = Mantenimiento(
+			nombre='Cambio de aceite', 
+			descripcion='Cambio de aceite'
+		)
+
 		self.session.add(self.auto1)
 		self.session.add(self.auto2)
+		self.session.add(self.manto1)
 		self.session.commit()
 
 
@@ -469,5 +480,13 @@ class ModeloTestTDD(unittest.TestCase):
 		resultado = self.logica.crear_mantenimiento(
 			nombre='', 
 			descripcion=''
+		)
+		self.assertFalse(resultado)
+
+	def test_caso13_crear_mantenimento_ya_existente(self):
+		"""test que verifica que no se pueda crear un mantenimiento ya existente"""
+		resultado = self.logica.crear_mantenimiento(
+			nombre='Cambio de aceite', 
+			descripcion='Cambio de aceite'
 		)
 		self.assertFalse(resultado)
