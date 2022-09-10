@@ -288,4 +288,14 @@ class ModeloTestTDD(unittest.TestCase):
 
 	def test_caso3_agregar_auto_campo_placa_mas_de_6_caracteres(self):
 		"""test que verifica que el campo placa no tenga mas de 6 caracteres"""
-		pass
+		resultado = self.logica.crear_auto(
+			marca='renault', 
+			modelo=1995, 
+			placa='XXX0011', 
+			color='negro', 
+			cilindraje=1.6, 
+			combustible= 'GASOLINA PREMIUM', 
+			kilomentraje= 1000 
+		)
+
+		self.assertFalse(resultado)
