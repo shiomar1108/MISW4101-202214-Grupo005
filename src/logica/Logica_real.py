@@ -25,7 +25,7 @@ class Logica_real():
             if not isinstance(locals()[field], str):
                 return False
 
-        if cilindraje is str:
+        if not isinstance(cilindraje, (int, float)):
             return False
 
         if(len(placa) != 6 or modelo > 9999):
