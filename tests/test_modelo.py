@@ -336,3 +336,51 @@ class ModeloTestTDD(unittest.TestCase):
 			kilomentraje= 26000
 		)
 		self.assertFalse(resultado)
+
+	def test_caso6_1_crear_auto_vacio(self):
+		resultado = self.logica.crear_auto(
+			marca='', 
+			modelo='', 
+			placa='', 
+			color='', 
+			cilindraje='', 
+			combustible= '', 
+			kilomentraje= ''
+		)
+		self.assertFalse(resultado)
+
+	def test_caso6_2_crear_auto_vacio(self):
+		resultado = self.logica.crear_auto(
+			marca='', 
+			modelo='', 
+			placa='AAA005', 
+			color='', 
+			cilindraje='', 
+			combustible= '', 
+			kilomentraje= ''
+		)
+		self.assertFalse(resultado)
+
+	def test_caso6_3_crear_auto_vacio(self):
+		resultado = self.logica.crear_auto(
+			marca='', 
+			modelo='', 
+			placa='AAA005', 
+			color='azul', 
+			cilindraje='', 
+			combustible= '', 
+			kilomentraje= ''
+		)
+		self.assertFalse(resultado)
+
+	def test_caso6_4_crear_auto_vacio(self):
+		resultado = self.logica.crear_auto(
+			marca='volkswagen', 
+			modelo='', 
+			placa='AAA005', 
+			color='', 
+			cilindraje='', 
+			combustible= '', 
+			kilomentraje= ''
+		)
+		self.assertFalse(resultado)
