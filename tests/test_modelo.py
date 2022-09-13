@@ -1,6 +1,7 @@
 from pickle import FALSE
 import unittest
 from unittest import result
+from faker import Faker
 
 from src.logica.Logica_real import Logica_real
 from src.modelo.conn import Session
@@ -235,7 +236,8 @@ class ModeloTestTDD(unittest.TestCase):
 	def setUp(self):
 		self.logica = Logica_real()
 		self.session = Session()
-		
+		self.data_factory = Faker()
+
 		self.auto1 = Auto(
 			marca = 'volkswagen',
 		 	modelo = 2016, 
@@ -525,5 +527,14 @@ class ModeloTestTDD(unittest.TestCase):
 			resultado = True
 		else:
 			resultado = False
-		self.assertTrue(resultado)	
+		self.assertTrue(resultado)
+
+	def test_HU005_1_vender_automovil(self):
+		"""test que verifica que se pueda vender un automovil"""
+		resultado = self.logica.vender_auto(
+			placa='AAA001',
+			precio_venta=self.data_factory.random_int(1000000, 1000000000),
+			kilometraje_venta=self.data_factory.random_int(0, 300000)
+		)
+		self.assertTrue(resultado)
 		
