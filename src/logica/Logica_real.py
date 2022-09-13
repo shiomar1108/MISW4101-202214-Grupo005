@@ -131,7 +131,7 @@ class Logica_real():
 
         required_numeric_fields = ['precio_venta', 'kilometraje_venta']
         for field in required_numeric_fields:
-            if not isinstance(locals()[field], (int, float)):
+            if not isinstance(locals()[field], (int, float)) or locals()[field] < 0:
                 return False
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
