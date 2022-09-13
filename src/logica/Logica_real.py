@@ -2,6 +2,7 @@ from pickle import NONE
 from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
 from src.modelo.accion import Accion
+from datetime import datetime
 
 from src.modelo.conn import engine, Base, session
 
@@ -180,6 +181,11 @@ class Logica_real():
 
         busqueda = session.query(Auto).filter(Auto.placa==placa).all()
         if len(busqueda) != 1:
+            return False
+
+        try:
+            datetime_object = datetime.strptime(fecha, '%d-%m-%Y')
+        except ValueError as ve:
             return False
 
         auto = session.query(Auto).filter(Auto.placa==placa).first()
