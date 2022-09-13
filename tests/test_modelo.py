@@ -573,3 +573,12 @@ class ModeloTestTDD(unittest.TestCase):
 			kilometraje_venta=self.data_factory.random_int(0, 300000)
 		)
 		self.assertFalse(resultado)
+
+	def test_HU005_6_vender_automovil_kilometraje_venta_negativo(self):
+		"""test que verifica que no se pueda vender un automovil con kilometraje de venta negativo"""
+		resultado = self.logica.vender_auto(
+			placa='AAA001',
+			precio_venta=self.data_factory.random_int(1000000, 1000000000),
+			kilometraje_venta=-1
+		)
+		self.assertTrue(resultado)
