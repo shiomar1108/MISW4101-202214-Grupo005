@@ -538,3 +538,11 @@ class ModeloTestTDD(unittest.TestCase):
 		)
 		self.assertTrue(resultado)
 		
+	def test_HU005_2_vender_automovil_no_existente(self):
+		"""test que verifica que no se pueda vender un automovil que no existe"""
+		resultado = self.logica.vender_auto(
+			placa='AAA002',
+			precio_venta=self.data_factory.random_int(1000000, 1000000000),
+			kilometraje_venta=self.data_factory.random_int(0, 300000)
+		)
+		self.assertFalse(resultado)
