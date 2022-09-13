@@ -200,18 +200,6 @@ class ModeloTestCase(unittest.TestCase):
 		resultado = self.logica.vender_auto(placa='XXX001', precio_venta=15000000, kilometraje_venta= 352000)
 		self.assertFalse(resultado)
 
-	def test_aniadir_accion(self):
-		resultado = self.logica.aniadir_accion(
-			placa= 'XXX001', 
-			descripcion='se agrego el filtro X de mejor marca',
-			kilometraje= 25000, 
-			costo= 5820, 
-			fecha= '11-01-2021'
-		)
-
-		self.assertTrue(resultado)
-
-
 class ModeloTestEmptySetUp(unittest.TestCase):
 	"""clase que contiene los test con el setUp vacio"""
 	def setUp(self):
@@ -525,5 +513,14 @@ class ModeloTestTDD(unittest.TestCase):
 			resultado = True
 		else:
 			resultado = False
-		self.assertTrue(resultado)	
+		self.assertTrue(resultado)
+
+	def test_HU012_1_crear_accion(self):
+		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000,fecha= "15-08-2022", kilometraje=15000)
+		accion = self.logica.dar_accion_auto(placa='AAA001')
+		if (accion.get("costo") == 25000 and accion.get("fecha") == "15-08-2022"):
+			resultado = True
+		else:
+			resultado = False
+		self.assertTrue(resultado)
 		

@@ -9,7 +9,6 @@ class Accion(Base):
     __tablename__ = 'accion'
 
     id = Column(Integer, primary_key=True)
-    descripcion = Column(String)
     kilometraje = Column(Float)
     costo = Column(Float)
     fecha = Column(String)
