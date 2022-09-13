@@ -114,10 +114,32 @@ class Logica_mock():
         self.autos[id]['Cilindraje'] = cilindraje
         self.autos[id]['TipoCombustible'] = tipo_combustible
 
-    def vender_auto(self, id, kilometraje_venta, valor_venta):
-        self.autos[id]['ValorVenta'] = valor_venta
-        self.autos[id]['KilometrajeVenta'] = kilometraje_venta
-        self.autos[id]['Vendido'] = True
+    def vender_auto(self, placa, kilometraje_venta, precio_venta):
+        # self.autos[id]['ValorVenta'] = valor_venta
+        # self.autos[id]['KilometrajeVenta'] = kilometraje_venta
+        # self.autos[id]['Vendido'] = True
+        if placa is None or len(placa) == 0:
+            return False
+
+        required_numeric_fields = ['precio_venta', 'kilometraje_venta']
+        for field in required_numeric_fields:
+            if not isinstance(locals()[field], (int, float)) or locals()[field] < 0:
+                return False
+
+        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
+        if len(busqueda) == 1:
+            temp = session.query(Auto).filter(Auto.placa == placa).first()
+            if temp.vendido == False:
+                temp.vendido = True
+                temp.precio_venta = precio_venta
+                temp.kilometraje_venta = kilometraje_venta
+                session.commit()
+                return True
+            else:
+                return False
+        else:
+            return False
+
 
     def eliminar_auto(self, id):
         # del self.autos[id]
@@ -242,11 +264,16 @@ class Logica_mock():
 
         return validacion
 
-    def dar_reporte_ganancias(self, id_auto):
-        n_auto = self.autos[id_auto]['Marca']
+    def dar_reporte_ganancias(self, placa):
+        # n_auto = self.autos[id_auto]['Marca']
         
-        for gasto in self.gastos:
-            if gasto['Marca'] == n_auto:
-                return gasto['Gastos'], gasto['ValorKilometro']
+        # for gasto in self.gastos:
+        #     if gasto['Marca'] == n_auto:
+        #         return gasto['Gastos'], gasto['ValorKilometro']
 
-        return [('Total',0)], 0
+        # return [('Total',0)], 0
+        auto = session.query(Auto).filter(Auto.placa==placa).first().__dict__
+
+        gastos = [('Total',auto['gasto_anual']), ('Anual',auto['gasto_total'])]
+
+        return gastos, auto['gasto_kilometro']

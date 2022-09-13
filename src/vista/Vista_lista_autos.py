@@ -154,7 +154,7 @@ class Vista_lista_autos(QWidget):
                 btn_terminar.setToolTip("Vender")
                 btn_terminar.setFixedSize(40,40)
                 btn_terminar.setIcon(QIcon("src/recursos/reward.png"))
-                btn_terminar.clicked.connect(partial(self.vender_auto,numero_fila-1) )
+                btn_terminar.clicked.connect(partial(self.vender_auto,dic_auto['placa']) )
                 self.distribuidor_tabla_autos.addWidget(btn_terminar,numero_fila,3,Qt.AlignCenter)
 
                 btn_eliminar=QPushButton("",self)
