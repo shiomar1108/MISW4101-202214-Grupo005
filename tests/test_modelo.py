@@ -515,7 +515,7 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertTrue(resultado)
 
 	def test_HU012_1_crear_accion(self):
-		"""test que verifica que  se puede agregar una accion a un auto"""
+		"""test que verifica que se puede agregar una accion a un auto"""
 		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000,fecha= "15-08-2022", kilometraje=15000)
 		acciones = self.logica.dar_accion_auto(placa='AAA001')
 		for accion in acciones:
@@ -542,4 +542,34 @@ class ModeloTestTDD(unittest.TestCase):
 				else:
 					found += 0
 		self.assertEqual(found,2)
-		
+
+	def test_HU012_3_crear_acciones_vacias_1(self):
+		"""test que verifica que no se puede agregar una accion vacia a un auto"""
+		resultado = self.logica.aniadir_accion(placa='' ,nombre= '', costo= '',fecha= '', kilometraje='')
+		self.assertFalse(resultado)
+
+	def test_HU012_3_crear_acciones_vacias_2(self):
+		"""test que verifica que no se puede agregar una accion vacia a un auto"""
+		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre= '', costo= '',fecha= '', kilometraje='')
+		self.assertFalse(resultado)
+
+	def test_HU012_3_crear_acciones_vacias_3(self):
+		"""test que verifica que no se puede agregar una accion vacia a un auto"""
+		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre= 'Cambio de aceite', costo= '',fecha= '', kilometraje='')
+		self.assertFalse(resultado)
+
+	def test_HU012_3_crear_acciones_vacias_4(self):
+		"""test que verifica que no se puede agregar una accion vacia a un auto"""
+		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre= 'Cambio de aceite', costo= 25000,fecha= '', kilometraje='')
+		self.assertFalse(resultado)
+
+	def test_HU012_3_crear_acciones_vacias_3(self):
+		"""test que verifica que no se puede agregar una accion vacia a un auto"""
+		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre= 'Cambio de aceite', costo=25000 ,fecha= '25-08-2022', kilometraje='')
+		self.assertFalse(resultado)
+
+	def test_HU012_3_crear_acciones_vacias_4(self):
+		"""test que verifica que no se puede agregar una accion vacia a un auto"""
+		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre= 'Cambio de aceite', costo=25000,fecha= '', kilometraje=150000)
+		self.assertFalse(resultado)
+
