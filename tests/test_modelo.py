@@ -581,4 +581,4 @@ class ModeloTestTDD(unittest.TestCase):
 			precio_venta=self.data_factory.random_int(1000000, 1000000000),
 			kilometraje_venta=-1
 		)
-		self.assertTrue(resultado)
+		self.assertFalse(resultado)
