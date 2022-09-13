@@ -161,14 +161,11 @@ class Logica_real():
 
     # Funciones relacionadas a Acciones
     def aniadir_accion(self, placa,  kilometraje, costo, fecha, nombre):
-        auto = session.query(Auto).filter(Auto.placa == placa).one()
-        if auto is None:
+        busqueda = session.query(Auto).filter(Auto.placa==placa).all()
+        if len(busqueda) != 1:
             return False
 
-        busqueda = session.query(Accion).filter(Accion.auto==auto.id).all()
-        if len(busqueda) > 0:
-            return False
-
+        auto = session.query(Auto).filter(Auto.placa==placa).first()
         accion = Accion(
                 kilometraje=kilometraje,
                 costo=costo,
@@ -176,13 +173,20 @@ class Logica_real():
                 auto=auto.id,
                 mantenimiento = [self.agregar_mantenimiento(nombre=nombre)]
         )
-        session.add(accion)
+        auto.acciones.append(accion)
         session.commit()
 
         return True
 
     def dar_accion_auto(self, placa):
-        return NONE
+        lista = []
+        auto = session.query(Auto).filter(Auto.placa == placa).first()
+        if auto is None:
+            return False
+
+        for accion in auto.acciones:
+             lista.append(accion.__dict__)
+        return lista
 
         
 

@@ -255,14 +255,13 @@ class ModeloTestTDD(unittest.TestCase):
 			vendido = False,
 		)
 
-		self.manto1 = Mantenimiento(
-			nombre='Cambio de aceite', 
-			descripcion='Cambio de aceite'
-		)
+		self.manto1 = Mantenimiento(nombre='Cambio de aceite', descripcion='Cambio de aceite' )
+		self.manto2 = Mantenimiento(nombre='Cambio de Llantas', descripcion='Pago por nuevas llantas')
 
 		self.session.add(self.auto1)
 		self.session.add(self.auto2)
 		self.session.add(self.manto1)
+		self.session.add(self.manto2)
 		self.session.commit()
 
 
@@ -516,11 +515,31 @@ class ModeloTestTDD(unittest.TestCase):
 		self.assertTrue(resultado)
 
 	def test_HU012_1_crear_accion(self):
+		"""test que verifica que  se puede agregar una accion a un auto"""
 		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000,fecha= "15-08-2022", kilometraje=15000)
-		accion = self.logica.dar_accion_auto(placa='AAA001')
-		if (accion.get("costo") == 25000 and accion.get("fecha") == "15-08-2022"):
-			resultado = True
-		else:
-			resultado = False
+		acciones = self.logica.dar_accion_auto(placa='AAA001')
+		for accion in acciones:
+			if (accion.get("costo") == 25000 and accion.get("fecha") == "15-08-2022"):
+				resultado = True
+				continue
+			else:
+				resultado = False
 		self.assertTrue(resultado)
+
+	def test_HU012_2_crear_dos_acciones(self):
+		"""test que verifica que se puede agregar varias acciones a un auto"""
+		found = 0
+		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000,fecha= "15-08-2022", kilometraje=15000)
+		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de Llantas", costo= 95000,fecha= "25-08-2022", kilometraje=150000)
+		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de Llantas", costo= 75000,fecha= "25-08-2020", kilometraje=3000)
+		acciones = self.logica.dar_accion_auto(placa='AAA001')
+		if(len(acciones) == 3):
+			for accion in acciones:
+				if (accion.get("costo") == 25000 and accion.get("fecha") == "15-08-2022"):
+					found += 1
+				elif (accion.get("costo") == 95000 and accion.get("fecha") == "25-08-2022"):
+					found += 1
+				else:
+					found += 0
+		self.assertEqual(found,2)
 		
