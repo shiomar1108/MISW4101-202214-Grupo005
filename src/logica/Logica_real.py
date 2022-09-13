@@ -161,6 +161,23 @@ class Logica_real():
 
     # Funciones relacionadas a Acciones
     def aniadir_accion(self, placa,  kilometraje, costo, fecha, nombre):
+
+        required_fields = ['placa', 'kilometraje', 'costo', 'fecha', 'nombre']
+        for field in required_fields:
+            if field not in locals():
+                return False
+
+        str_fields = ['fecha', 'placa', 'nombre']
+        for field in str_fields:
+            if not isinstance(locals()[field], str):
+                return False
+
+        if not isinstance(costo, (float)):
+            return False
+
+        if not isinstance(kilometraje, (int)):
+            return False
+
         busqueda = session.query(Auto).filter(Auto.placa==placa).all()
         if len(busqueda) != 1:
             return False

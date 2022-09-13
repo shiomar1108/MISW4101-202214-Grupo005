@@ -516,7 +516,7 @@ class ModeloTestTDD(unittest.TestCase):
 
 	def test_HU012_1_crear_accion(self):
 		"""test que verifica que se puede agregar una accion a un auto"""
-		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000,fecha= "15-08-2022", kilometraje=15000)
+		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000.0,fecha= "15-08-2022", kilometraje=15000)
 		acciones = self.logica.dar_accion_auto(placa='AAA001')
 		for accion in acciones:
 			if (accion.get("costo") == 25000 and accion.get("fecha") == "15-08-2022"):
@@ -529,9 +529,9 @@ class ModeloTestTDD(unittest.TestCase):
 	def test_HU012_2_crear_dos_acciones(self):
 		"""test que verifica que se puede agregar varias acciones a un auto"""
 		found = 0
-		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000,fecha= "15-08-2022", kilometraje=15000)
-		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de Llantas", costo= 95000,fecha= "25-08-2022", kilometraje=150000)
-		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de Llantas", costo= 75000,fecha= "25-08-2020", kilometraje=3000)
+		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000.0,fecha= "15-08-2022", kilometraje=15000)
+		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de Llantas", costo= 95000.0,fecha= "25-08-2022", kilometraje=150000)
+		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de Llantas", costo= 75000.5,fecha= "25-08-2020", kilometraje=3000)
 		acciones = self.logica.dar_accion_auto(placa='AAA001')
 		if(len(acciones) == 3):
 			for accion in acciones:
