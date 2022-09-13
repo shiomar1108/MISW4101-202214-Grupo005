@@ -126,6 +126,14 @@ class Logica_real():
             return False
 
     def vender_auto(self, placa, precio_venta, kilometraje_venta):
+        if placa is None or len(placa) == 0:
+            return False
+
+        required_numeric_fields = ['precio_venta', 'kilometraje_venta']
+        for field in required_numeric_fields:
+            if not isinstance(locals()[field], (int, float)):
+                return False
+
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 1:
             temp = session.query(Auto).filter(Auto.placa == placa).first()
