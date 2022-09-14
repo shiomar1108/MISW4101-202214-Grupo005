@@ -1,3 +1,4 @@
+from decimal import Decimal
 import unittest
 from unittest import result
 from faker import Faker
@@ -407,8 +408,8 @@ class Test_Modelo_Venta(unittest.TestCase):
     def test_HU005_1_vender_automovil(self):
         """test que verifica que se pueda vender un automovil"""
         resultado = self.logica.vender_auto(
-            placa="AAA001",
-            precio_venta=self.data_factory.random_int(1000000, 1000000000),
+            placa="AAA001",          
+            precio_venta=self.data_factory.random_int(1000000, 10000000000) / 100,            
             kilometraje_venta=self.data_factory.random_int(0, 300000),
         )
         self.assertTrue(resultado)
@@ -417,7 +418,7 @@ class Test_Modelo_Venta(unittest.TestCase):
         """test que verifica que no se pueda vender un automovil que no existe"""
         resultado = self.logica.vender_auto(
             placa="AAA002",
-            precio_venta=self.data_factory.random_int(1000000, 1000000000),
+            precio_venta=self.data_factory.random_int(1000000, 1000000000) / 100,
             kilometraje_venta=self.data_factory.random_int(0, 300000),
         )
         self.assertFalse(resultado)
@@ -435,7 +436,7 @@ class Test_Modelo_Venta(unittest.TestCase):
         """test que verifica que no se pueda vender un automovil sin kilometraje de venta"""
         resultado = self.logica.vender_auto(
             placa="AAA001",
-            precio_venta=self.data_factory.random_int(1000000, 1000000000),
+            precio_venta=self.data_factory.random_int(1000000, 1000000000) / 100,
             kilometraje_venta="abc",
         )
         self.assertFalse(resultado)
@@ -453,7 +454,7 @@ class Test_Modelo_Venta(unittest.TestCase):
         """test que verifica que no se pueda vender un automovil con kilometraje de venta negativo"""
         resultado = self.logica.vender_auto(
             placa="AAA001",
-            precio_venta=self.data_factory.random_int(1000000, 1000000000),
+            precio_venta=self.data_factory.random_int(1000000, 1000000000) / 100,
             kilometraje_venta=-1,
         )
         self.assertFalse(resultado)
