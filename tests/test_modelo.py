@@ -1,5 +1,4 @@
 import unittest
-from unittest import result
 from faker import Faker
 
 from src.logica.Logica_real import Logica_real
@@ -465,6 +464,7 @@ class Test_Modelo_Accion(unittest.TestCase):
     def setUp(self):
         self.logica = Logica_real()
         self.session = Session()
+        self.data_factory = Faker()
 
         self.auto1 = Auto(
             marca="volkswagen",
@@ -537,17 +537,19 @@ class Test_Modelo_Accion(unittest.TestCase):
 
     def test_HU012_1_crear_accion(self):
         """test que verifica que se puede agregar una accion a un auto"""
+        fecha = self.data_factory.date(pattern="%d-%m-%Y")
+        costo = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.0,
-            fecha="15-08-2022",
-            kilometraje=15000,
+            valor=costo,
+            fecha=fecha,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         if resultado == True:
             acciones = self.logica.dar_acciones_auto(id_auto=1)
             for accion in acciones:
-                if accion.get("costo") == 25000 and accion.get("fecha") == "15-08-2022":
+                if accion.get("costo") == costo and accion.get("fecha") == fecha:
                     resultado = True
                     continue
                 else:
@@ -557,35 +559,39 @@ class Test_Modelo_Accion(unittest.TestCase):
     def test_HU012_2_crear_dos_acciones(self):
         """test que verifica que se puede agregar varias acciones a un auto"""
         found = 0
+        fecha1 = self.data_factory.date(pattern="%d-%m-%Y")
+        fecha2 = self.data_factory.date(pattern="%d-%m-%Y")
+        fecha3 = self.data_factory.date(pattern="%d-%m-%Y")
+        costo1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        costo2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        costo3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.0,
-            fecha="15-08-2022",
-            kilometraje=15000,
+            valor=costo1,
+            fecha=fecha1,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de Llantas",
-            valor=95000.0,
-            fecha="25-08-2022",
-            kilometraje=150000,
+            valor=costo2,
+            fecha=fecha2,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de Llantas",
-            valor=75000.5,
-            fecha="25-08-2020",
-            kilometraje=3000,
+            valor=costo3,
+            fecha=fecha3,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         acciones = self.logica.dar_acciones_auto(id_auto=1)
         if len(acciones) == 3:
             for accion in acciones:
-                if accion.get("costo") == 25000 and accion.get("fecha") == "15-08-2022":
+                if accion.get("costo") == costo1 and accion.get("fecha") == fecha1:
                     found += 1
-                elif (
-                    accion.get("costo") == 95000 and accion.get("fecha") == "25-08-2022"
-                ):
+                elif accion.get("costo") == costo2 and accion.get("fecha") == fecha2:
                     found += 1
                 else:
                     found += 0
@@ -621,7 +627,9 @@ class Test_Modelo_Accion(unittest.TestCase):
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.9,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
             fecha="",
             kilometraje="",
         )
@@ -632,8 +640,10 @@ class Test_Modelo_Accion(unittest.TestCase):
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.2,
-            fecha="25-08-2022",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
             kilometraje="",
         )
         self.assertFalse(resultado)
@@ -643,9 +653,11 @@ class Test_Modelo_Accion(unittest.TestCase):
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.9,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
             fecha="",
-            kilometraje=150000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.assertFalse(resultado)
 
@@ -655,8 +667,8 @@ class Test_Modelo_Accion(unittest.TestCase):
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor="25000.3",
-            fecha="25-08-2022",
-            kilometraje=150000,
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.assertFalse(resultado)
 
@@ -665,8 +677,10 @@ class Test_Modelo_Accion(unittest.TestCase):
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.5,
-            fecha="25-08-2022",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
             kilometraje="150000",
         )
         self.assertFalse(resultado)
@@ -676,9 +690,11 @@ class Test_Modelo_Accion(unittest.TestCase):
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.8,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
             fecha=189750369,
-            kilometraje=150000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.assertFalse(resultado)
 
@@ -687,9 +703,11 @@ class Test_Modelo_Accion(unittest.TestCase):
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.7,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
             fecha="25-08",
-            kilometraje=150000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.assertFalse(resultado)
 
@@ -698,45 +716,52 @@ class Test_Modelo_Accion(unittest.TestCase):
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Carga de Gasolina",
-            valor=25000.7,
-            fecha="25-08-2022",
-            kilometraje=150000,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.assertFalse(resultado)
 
     def test_HU012_8_crear_accion_duplicada_1(self):
         """test que verifica que no se puede agregar una accion duplicada"""
+        kilo = self.data_factory.random_int(min=0, max=999999)
+        costo = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        fecha = self.data_factory.date(pattern="%d-%m-%Y")
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.7,
-            fecha="25-08-2022",
-            kilometraje=150000,
+            valor=costo,
+            fecha=fecha,
+            kilometraje=kilo,
         )
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.7,
-            fecha="25-08-2022",
-            kilometraje=150000,
+            valor=costo,
+            fecha=fecha,
+            kilometraje=kilo,
         )
         self.assertFalse(resultado)
 
     def test_HU012_8_crear_accion_duplicada_2(self):
         """test que verifica que no se puede agregar una accion duplicada"""
+        kilo = self.data_factory.random_int(min=0, max=999999)
+        costo = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
-            valor=25000.7,
-            fecha="25-08-2022",
-            kilometraje=150000,
+            valor=costo,
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            kilometraje=kilo,
         )
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de Llantas",
-            valor=25000.7,
-            fecha="25-08-2022",
-            kilometraje=150000,
+            valor=costo,
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            kilometraje=kilo,
         )
         self.assertTrue(resultado)
 
@@ -745,26 +770,36 @@ class Test_Modelo_Accion(unittest.TestCase):
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Carga de Diesel",
-            valor=2500.7,
-            fecha="25-08-2022",
-            kilometraje=150000,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Carga de Diesel",
-            valor=2580.7,
-            fecha="25-08-2020",
-            kilometraje=25000,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de Llantas",
-            valor=25000.7,
-            fecha="25-08-2021",
-            kilometraje=80000,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        lista = self.logica.dar_acciones_auto( id_auto=1)
-        if(lista[0].get("kilometraje") > lista[1].get("kilometraje") > lista[2].get("kilometraje") ):
+        lista = self.logica.dar_acciones_auto(id_auto=1)
+        if (
+            lista[0].get("kilometraje")
+            > lista[1].get("kilometraje")
+            > lista[2].get("kilometraje")
+        ):
             resultado = True
         else:
             resultado = False
@@ -775,20 +810,26 @@ class Test_Modelo_Accion(unittest.TestCase):
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Carga de Diesel",
-            valor=85500.7,
-            fecha="25-08-2022",
-            kilometraje=150000,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
+        kilo = self.data_factory.random_int(min=0, max=999999)
+        fecha = self.data_factory.date(pattern="%d-%m-%Y")
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Carga de Diesel",
-            valor=2580.7,
-            fecha="15-02-2020",
-            kilometraje=25000,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=fecha,
+            kilometraje=kilo,
         )
-        busqueda = self.logica.dar_accion(id_auto=1,id_accion=2)
-        if(busqueda != None):
-            if(busqueda.get("kilometraje") == 25000 and busqueda.get("fecha") == "15-02-2020") :
+        busqueda = self.logica.dar_accion(id_auto=1, id_accion=2)
+        if busqueda != None:
+            if busqueda.get("kilometraje") == kilo and busqueda.get("fecha") == fecha:
                 resultado = True
             else:
                 resultado = False
@@ -799,7 +840,7 @@ class Test_Modelo_Accion(unittest.TestCase):
     def test_HU010_3_ver_accion_invalida(self):
         """test que verifica el error al pedir la lista de acciones de un auto invalido"""
         lista = self.logica.dar_acciones_auto(id_auto=3)
-        if(lista == None):
+        if lista == None:
             resultado = True
         else:
             resultado = False
@@ -810,14 +851,15 @@ class Test_Modelo_Accion(unittest.TestCase):
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Carga de Diesel",
-            valor=85500.7,
-            fecha="25-08-2022",
-            kilometraje=150000,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         lista = self.logica.dar_accion(id_auto=1, id_accion=3)
-        if(lista == None):
+        if lista == None:
             resultado = True
         else:
             resultado = False
         self.assertTrue(resultado)
-
