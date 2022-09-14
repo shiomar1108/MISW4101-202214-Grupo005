@@ -142,19 +142,19 @@ class Logica_real():
             return None
 
     # Funciones relacionadas a Acciones
-    def crear_accion(self, id_auto,  kilometraje, costo, fecha, nombre):
+    def crear_accion(self, id_auto,  kilometraje, valor, fecha, mantenimiento):
 
-        required_fields = ['id_auto', 'kilometraje', 'costo', 'fecha', 'nombre']
+        required_fields = ['id_auto', 'kilometraje', 'valor', 'fecha', 'mantenimiento']
         for field in required_fields:
             if field not in locals():
                 return False
 
-        str_fields = ['fecha', 'nombre']
+        str_fields = ['fecha', 'mantenimiento']
         for field in str_fields:
             if not isinstance(locals()[field], str):
                 return False
 
-        if not isinstance(costo, (float)):
+        if not isinstance(valor, (float)):
             return False
 
         int_fields = ['id_auto', 'kilometraje']
@@ -166,7 +166,7 @@ class Logica_real():
         if len(busqueda) != 1:
             return False
 
-        manto_tempo = self.agregar_mantenimiento(nombre=nombre)
+        manto_tempo = self.agregar_mantenimiento(nombre=mantenimiento)
         if(manto_tempo == None):   
             return False
 
@@ -175,15 +175,15 @@ class Logica_real():
         except ValueError as ve:
             return False
 
-        acciones = self.dar_accion_auto(id_auto)
+        acciones = self.dar_acciones_auto(id_auto)
         for dato in acciones:
-            if(dato.get('costo') == costo and dato.get('kilometraje') == kilometraje and dato.get('fecha') == fecha and dato.get('mantenimiento') == manto_tempo.id):
+            if(dato.get('costo') == valor and dato.get('kilometraje') == kilometraje and dato.get('fecha') == fecha and dato.get('mantenimiento') == manto_tempo.id):
                 return False
         
         auto = session.query(Auto).filter(Auto.id==id_auto).first()
         accion = Accion(
                 kilometraje=kilometraje,
-                costo=costo,
+                costo=valor,
                 fecha=fecha,
                 auto=id_auto,
                 mantenimiento = manto_tempo.id
@@ -193,7 +193,7 @@ class Logica_real():
 
         return True
 
-    def dar_accion_auto(self, id_auto):
+    def dar_acciones_auto(self, id_auto):
         lista = []
         auto = session.query(Auto).filter(Auto.id == id_auto).first()
         if auto is None:
