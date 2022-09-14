@@ -9,9 +9,8 @@ class Accion(Base):
     __tablename__ = 'accion'
 
     id = Column(Integer, primary_key=True)
-    descripcion = Column(String)
-    kilometraje = Column(Float)
+    kilometraje = Column(Integer)
     costo = Column(Float)
     fecha = Column(String)
-    mantenimiento = relationship('Mantenimiento')
+    mantenimiento = Column(Integer, ForeignKey('mantenimiento.id'))
     auto = Column(Integer, ForeignKey('auto.id'))
