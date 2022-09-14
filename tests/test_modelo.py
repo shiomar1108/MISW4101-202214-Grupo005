@@ -593,3 +593,9 @@ class ModeloTestTDD(unittest.TestCase):
 		"""test que verifica que no se puede agregar una accion con una fecha invalida"""
 		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08', kilometraje=150000)
 		self.assertFalse(resultado)
+
+	def test_HU012_7_crear_accion_duplicada(self):
+		"""test que verifica que no se puede agregar una accion duplicada"""
+		self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
+		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
+		self.assertFalse(resultado)
