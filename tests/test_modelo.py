@@ -387,9 +387,9 @@ class Test_Modelo_Accion(unittest.TestCase):
 
 	def test_HU012_1_crear_accion(self):
 		"""test que verifica que se puede agregar una accion a un auto"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000.0,fecha= "15-08-2022", kilometraje=15000)
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre= "Cambio de aceite", costo= 25000.0,fecha= "15-08-2022", kilometraje=15000)
 		if(resultado == True):
-			acciones = self.logica.dar_accion_auto(placa='AAA001')
+			acciones = self.logica.dar_accion_auto(id_auto=1)
 			for accion in acciones:
 				if (accion.get("costo") == 25000 and accion.get("fecha") == "15-08-2022"):
 					resultado = True
@@ -401,10 +401,10 @@ class Test_Modelo_Accion(unittest.TestCase):
 	def test_HU012_2_crear_dos_acciones(self):
 		"""test que verifica que se puede agregar varias acciones a un auto"""
 		found = 0
-		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de aceite", costo= 25000.0,fecha= "15-08-2022", kilometraje=15000)
-		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de Llantas", costo= 95000.0,fecha= "25-08-2022", kilometraje=150000)
-		self.logica.aniadir_accion(placa='AAA001' ,nombre= "Cambio de Llantas", costo= 75000.5,fecha= "25-08-2020", kilometraje=3000)
-		acciones = self.logica.dar_accion_auto(placa='AAA001')
+		self.logica.crear_accion(id_auto=1 ,nombre= "Cambio de aceite", costo= 25000.0,fecha= "15-08-2022", kilometraje=15000)
+		self.logica.crear_accion(id_auto=1 ,nombre= "Cambio de Llantas", costo= 95000.0,fecha= "25-08-2022", kilometraje=150000)
+		self.logica.crear_accion(id_auto=1 ,nombre= "Cambio de Llantas", costo= 75000.5,fecha= "25-08-2020", kilometraje=3000)
+		acciones = self.logica.dar_accion_auto(id_auto=1)
 		if(len(acciones) == 3):
 			for accion in acciones:
 				if (accion.get("costo") == 25000 and accion.get("fecha") == "15-08-2022"):
@@ -417,67 +417,67 @@ class Test_Modelo_Accion(unittest.TestCase):
 
 	def test_HU012_3_crear_acciones_vacias_1(self):
 		"""test que verifica que no se puede agregar una accion vacia a un auto"""
-		resultado = self.logica.aniadir_accion(placa='' ,nombre='', costo= '',fecha= '', kilometraje='')
+		resultado = self.logica.crear_accion(id_auto='' ,nombre='', costo= '',fecha= '', kilometraje='')
 		self.assertFalse(resultado)
 
 	def test_HU012_3_crear_acciones_vacias_2(self):
 		"""test que verifica que no se puede agregar una accion vacia a un auto"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='', costo= '',fecha= '', kilometraje='')
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='', costo= '',fecha= '', kilometraje='')
 		self.assertFalse(resultado)
 
 	def test_HU012_3_crear_acciones_vacias_3(self):
 		"""test que verifica que no se puede agregar una accion vacia a un auto"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo='',fecha='', kilometraje='')
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo='',fecha='', kilometraje='')
 		self.assertFalse(resultado)
 
 	def test_HU012_3_crear_acciones_vacias_4(self):
 		"""test que verifica que no se puede agregar una accion vacia a un auto"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo= 25000.9,fecha='', kilometraje='')
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo= 25000.9,fecha='', kilometraje='')
 		self.assertFalse(resultado)
 
 	def test_HU012_3_crear_acciones_vacias_3(self):
 		"""test que verifica que no se puede agregar una accion vacia a un auto"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.2 ,fecha='25-08-2022', kilometraje='')
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo=25000.2 ,fecha='25-08-2022', kilometraje='')
 		self.assertFalse(resultado)
 
 	def test_HU012_3_crear_acciones_vacias_4(self):
 		"""test que verifica que no se puede agregar una accion vacia a un auto"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.9,fecha='', kilometraje=150000)
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo=25000.9,fecha='', kilometraje=150000)
 		self.assertFalse(resultado)
 
 	def test_HU012_4_crear_accion_costo_invalido(self):
 		"""test que verifica que no se puede agregar una accion con un costo invalido"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo='25000.3',fecha='25-08-2022', kilometraje=150000)
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo='25000.3',fecha='25-08-2022', kilometraje=150000)
 		self.assertFalse(resultado)
 
 	def test_HU012_5_crear_accion_kilometraje_invalido(self):
 		"""test que verifica que no se puede agregar una accion con un kilometraje invalido"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.5,fecha='25-08-2022', kilometraje='150000')
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo=25000.5,fecha='25-08-2022', kilometraje='150000')
 		self.assertFalse(resultado)
 
 	def test_HU012_6_crear_accion_fecha_invalido_1(self):
 		"""test que verifica que no se puede agregar una accion con una fecha invalida"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.8,fecha=189750369, kilometraje=150000)
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo=25000.8,fecha=189750369, kilometraje=150000)
 		self.assertFalse(resultado)
 
 	def test_HU012_6_crear_accion_fecha_invalido_2(self):
 		"""test que verifica que no se puede agregar una accion con una fecha invalida"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08', kilometraje=150000)
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08', kilometraje=150000)
 		self.assertFalse(resultado)
 
 	def test_HU012_7_crear_accion_Mantenimiento_invalido(self):
 		"""test que verifica que no se puede agregar una accion con un mantenimiento invalido"""
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Carga de Gasolina', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Carga de Gasolina', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
 		self.assertFalse(resultado)
 
 	def test_HU012_8_crear_accion_duplicada_1(self):
 		"""test que verifica que no se puede agregar una accion duplicada"""
-		self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
+		self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
 		self.assertFalse(resultado)
 
 	def test_HU012_8_crear_accion_duplicada_2(self):
 		"""test que verifica que no se puede agregar una accion duplicada"""
-		self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
-		resultado = self.logica.aniadir_accion(placa='AAA001' ,nombre='Cambio de Llantas', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
+		self.logica.crear_accion(id_auto=1 ,nombre='Cambio de aceite', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
+		resultado = self.logica.crear_accion(id_auto=1 ,nombre='Cambio de Llantas', costo=25000.7,fecha='25-08-2022', kilometraje=150000)
 		self.assertTrue(resultado)
