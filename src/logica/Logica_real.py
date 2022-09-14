@@ -1,4 +1,3 @@
-from pickle import NONE
 from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
 from src.modelo.accion import Accion
@@ -58,7 +57,6 @@ class Logica_real():
             session.commit()
             return True
         else:
-            #print('Auto con Placa ' + placa + ' ya esta registrado')
             return False
 
     def crear_mantenimiento(self, nombre, descripcion):
@@ -77,23 +75,6 @@ class Logica_real():
             session.commit()
             return True
         else:
-            #print('Mantenimiento con Nombre ' + nombre + ' ya esta registrado')
-            return False
-
-    def crear_accion(self, kilometraje, costo,fecha, nombre):
-        busqueda = session.query(Accion).filter(Accion.kilometraje == kilometraje, Mantenimiento.nombre == nombre).all()
-        if len(busqueda) == 0:
-            accion = Accion(
-                kilometraje= kilometraje,
-                costo = costo,
-                fecha = fecha,
-                mantenimiento = [self.agregar_mantenimiento(nombre=nombre)],
-            )
-            session.add(accion)
-            session.commit()
-            return True
-        else:
-            #print('Accion con Kilometraje ' + str(kilometraje) + ' y mantenimiento llamado ' + nombre +' ya esta registrado')
             return False
 
     # Funciones relacionadas a Autos
@@ -183,18 +164,27 @@ class Logica_real():
         if len(busqueda) != 1:
             return False
 
+        manto_tempo = self.agregar_mantenimiento(nombre=nombre)
+        if(manto_tempo == None):   
+            return False
+
         try:
             datetime_object = datetime.strptime(fecha, '%d-%m-%Y')
         except ValueError as ve:
             return False
 
+        acciones = self.dar_accion_auto(placa)
+        for dato in acciones:
+            if(dato.get('costo') == costo and dato.get('kilometraje') == kilometraje and dato.get('fecha') == fecha and dato.get('mantenimiento') == manto_tempo.id):
+                return False
+        
         auto = session.query(Auto).filter(Auto.placa==placa).first()
         accion = Accion(
                 kilometraje=kilometraje,
                 costo=costo,
                 fecha=fecha,
                 auto=auto.id,
-                mantenimiento = [self.agregar_mantenimiento(nombre=nombre)]
+                mantenimiento = manto_tempo.id
         )
         auto.acciones.append(accion)
         session.commit()
@@ -210,6 +200,5 @@ class Logica_real():
         for accion in auto.acciones:
              lista.append(accion.__dict__)
         return lista
-
         
 
