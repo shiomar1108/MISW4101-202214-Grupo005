@@ -331,6 +331,7 @@ class ModeloTestTDD(unittest.TestCase):
             resultado = False
         self.assertTrue(resultado)
 
+
 class Test_Modelo_Venta(unittest.TestCase):
     """Clase que contiene los test de la logica"""
 
@@ -502,11 +503,15 @@ class Test_Modelo_Accion(unittest.TestCase):
         self.manto2 = Mantenimiento(
             nombre="Cambio de Llantas", descripcion="Pago por nuevas llantas"
         )
+        self.manto3 = Mantenimiento(
+            nombre="Carga de Diesel", descripcion="Pago por cargar combustible"
+        )
 
         self.session.add(self.auto1)
         self.session.add(self.auto2)
         self.session.add(self.manto1)
         self.session.add(self.manto2)
+        self.session.add(self.manto3)
 
         self.session.commit()
 
@@ -734,3 +739,85 @@ class Test_Modelo_Accion(unittest.TestCase):
             kilometraje=150000,
         )
         self.assertTrue(resultado)
+
+    def test_HU010_1_ver_lista_acciones_ordenada(self):
+        """test que verifica que la lista de acciones estan ordenadas en descentente por kilometro"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=2500.7,
+            fecha="25-08-2022",
+            kilometraje=150000,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=2580.7,
+            fecha="25-08-2020",
+            kilometraje=25000,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de Llantas",
+            valor=25000.7,
+            fecha="25-08-2021",
+            kilometraje=80000,
+        )
+        lista = self.logica.dar_acciones_auto( id_auto=1)
+        if(lista[0].get("kilometraje") > lista[1].get("kilometraje") > lista[2].get("kilometraje") ):
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU010_2_ver_accion_especifica(self):
+        """test que verifica que el retornar una accion especifica de un auto"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=85500.7,
+            fecha="25-08-2022",
+            kilometraje=150000,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=2580.7,
+            fecha="15-02-2020",
+            kilometraje=25000,
+        )
+        busqueda = self.logica.dar_accion(id_auto=1,id_accion=2)
+        if(busqueda != None):
+            if(busqueda.get("kilometraje") == 25000 and busqueda.get("fecha") == "15-02-2020") :
+                resultado = True
+            else:
+                resultado = False
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU010_3_ver_accion_invalida(self):
+        """test que verifica el error al pedir la lista de acciones de un auto invalido"""
+        lista = self.logica.dar_acciones_auto(id_auto=3)
+        if(lista == None):
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU010_4_ver_accion_especifica_invalida(self):
+        """test que verifica el error al pedir la una accion invalida de un auto valido"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=85500.7,
+            fecha="25-08-2022",
+            kilometraje=150000,
+        )
+        lista = self.logica.dar_accion(id_auto=1, id_accion=3)
+        if(lista == None):
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+

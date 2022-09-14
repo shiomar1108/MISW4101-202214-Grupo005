@@ -2,6 +2,7 @@ from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
 from src.modelo.accion import Accion
 from datetime import datetime
+import operator
 
 from src.modelo.conn import engine, Base, session
 
@@ -236,8 +237,16 @@ class Logica_real:
         lista = []
         auto = session.query(Auto).filter(Auto.id == id_auto).first()
         if auto is None:
-            return False
+            return None
 
         for accion in auto.acciones:
             lista.append(accion.__dict__)
-        return lista
+        newlist = sorted(lista, key=operator.itemgetter('kilometraje'), reverse=True) 
+        return newlist
+
+    def dar_accion(self, id_auto, id_accion):
+        acciones = self.dar_acciones_auto(id_auto)
+        for accion in acciones:
+            if(accion.get('id') == id_accion):
+                return accion
+        return None
