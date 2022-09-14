@@ -1,9 +1,10 @@
 from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
 from src.modelo.accion import Accion
+from datetime import datetime
 
 from src.modelo.conn import engine, Base, session
-
+import operator
 
 
 class Logica_mock():
@@ -218,14 +219,21 @@ class Logica_mock():
         lista = []
         auto = session.query(Auto).filter(Auto.id == id_auto).first()
         if auto is None:
-            return False
+            return None
 
         for accion in auto.acciones:
-             lista.append(accion.__dict__)
-        return lista
+            lista.append(accion.__dict__)
+        newlist = sorted(lista, key=operator.itemgetter("kilometraje"), reverse=True)
+        return newlist
+
 
     def dar_accion(self, id_auto, id_accion):
-        return self.dar_acciones_auto(id_auto)[id_accion].copy()
+        #return self.dar_acciones_auto(id_auto)[id_accion].copy()
+        acciones = self.dar_acciones_auto(id_auto)
+        for accion in acciones:
+            if accion.get("id") == id_accion:
+                return accion
+        return None
 
     def crear_accion(self, mantenimiento, id_auto, valor, kilometraje, fecha):
         # n_accion = {}
