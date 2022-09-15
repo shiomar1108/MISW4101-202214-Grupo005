@@ -244,9 +244,7 @@ class ModeloTestTDD(unittest.TestCase):
             combustible="GASOLINA PREMIUM",
             kilometraje=self.data_factory.random_int(0, 500000),
         )
-        self.assertEqual(
-            resultado, "Error: placa debe ser un String"
-        )
+        self.assertEqual(resultado, "Error: placa debe ser un String")
 
     def test_caso03_3_agregar_auto_campo_placa_numeros(self):
         """test que verifica que el campo placa tenga tres numero al final"""
@@ -415,33 +413,36 @@ class ModeloTestTDD(unittest.TestCase):
 
     def test_caso12_1_crear_mantenimento_vacio(self):
         """test que verifica que los campos al crear un manenimiento no esten vacios"""
-        resultado = self.logica.crear_mantenimiento(nombre="", descripcion="")
-        self.assertFalse(resultado)
+        resultado = self.logica.aniadir_mantenimiento(nombre="", descripcion="")
+        self.assertEqual(resultado, "Error: nombre es requerido")
 
     def test_caso12_2_crear_mantenimento_vacio(self):
         """test que verifica que los campos al crear un manenimiento no esten vacios"""
-        resultado = self.logica.crear_mantenimiento(
+        resultado = self.logica.aniadir_mantenimiento(
             nombre="Cambio de Llantas", descripcion=""
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: descripcion es requerido")
 
     def test_caso12_3_crear_mantenimento_vacio(self):
         """test que verifica que los campos al crear un manenimiento no esten vacios"""
-        resultado = self.logica.crear_mantenimiento(
+        resultado = self.logica.aniadir_mantenimiento(
             nombre="", descripcion="Pago por nuevas llantas"
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: nombre es requerido")
 
     def test_caso13_crear_mantenimento_ya_existente(self):
         """test que verifica que no se pueda crear un mantenimiento ya existente"""
-        resultado = self.logica.crear_mantenimiento(
+        resultado = self.logica.aniadir_mantenimiento(
             nombre="Cambio de aceite", descripcion="Cambio de aceite"
         )
-        self.assertFalse(resultado)
+        self.assertEqual(
+            resultado,
+            "Error: mantenimiento con Nombre Cambio de aceite ya esta registrado",
+        )
 
     def test_caso14_mantenimiento_creado_debe_ser_visible(self):
         """test que verifica que despues de creado un mantenimiento se vea en la lista"""
-        self.logica.crear_mantenimiento(
+        self.logica.aniadir_mantenimiento(
             nombre="Cambio de Llantas", descripcion="Pago por nuevas llantas"
         )
         lista = self.logica.dar_mantenimientos()

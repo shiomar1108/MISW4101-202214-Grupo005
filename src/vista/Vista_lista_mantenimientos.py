@@ -178,10 +178,10 @@ class Vista_lista_mantenimientos(QWidget):
         self.interfaz.mostrar_vista_lista_autos()
         self.close()
 
-    def error_mantenimiento(self):
+    def error_mantenimiento(self, mensaje):
             mensaje_error=QMessageBox()
             mensaje_error.setIcon(QMessageBox.Question)
-            mensaje_error.setText("Verifique que todos los campos se encuentren diligenciados.")        
+            mensaje_error.setText(mensaje)        
             mensaje_error.setWindowTitle("Error al guardar")
             mensaje_error.setWindowIcon(QIcon("src/recursos/smallLogo.png"))
             mensaje_error.setStandardButtons(QMessageBox.Ok ) 

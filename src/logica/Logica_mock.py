@@ -149,9 +149,9 @@ class Logica_mock:
                 if len(locals()[field]) > 50:
                     return "Error: {} debe tener menos de 50 caracteres".format(field)
                 treeshold = 3
-                if field == 'marca':
+                if field == "marca":
                     treeshold = 2
-                
+
                 if len(locals()[field]) <= treeshold:
                     return f"Error: {field} debe tener más de {treeshold} caracteres"
 
@@ -269,11 +269,16 @@ class Logica_mock:
         return lista
 
     def aniadir_mantenimiento(self, nombre, descripcion):
-        # self.mantenimientos.append({'Nombre': nombre, 'Descripcion': descripcion})
         required_fields = ["nombre", "descripcion"]
         for field in required_fields:
             if len(locals()[field]) == 0:
-                return False
+                return f"Error: {field} es requerido"
+
+            if field == "nombre":
+                if len(locals()[field]) < 3:
+                    return f"Error: {field} debe tener más de 3 caracteres"
+                if len(locals()[field]) > 200:
+                    return f"Error: {field} debe tener menos de 200 caracteres"
 
         busqueda = (
             session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).all()
@@ -287,8 +292,7 @@ class Logica_mock:
             session.commit()
             return True
         else:
-            print("Mantenimiento con Nombre " + nombre + " ya esta registrado")
-            return False
+            return "Error: mantenimiento con Nombre " + nombre + " ya esta registrado"
 
     def editar_mantenimiento(self, id, nombre, descripcion):
         self.mantenimientos[id]["Nombre"] = nombre
