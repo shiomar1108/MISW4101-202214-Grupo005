@@ -527,8 +527,8 @@ class Test_Modelo_Venta(unittest.TestCase):
         """test que verifica que se pueda vender un automovil"""
         resultado = self.logica.vender_auto(
             placa="AAA001",
-            precio_venta=self.data_factory.random_int(1000000, 10000000000) / 100,
-            kilometraje_venta=self.data_factory.random_int(0, 300000),
+            valor=self.data_factory.random_int(1000000, 10000000000) / 100,
+            kilometraje=self.data_factory.random_int(0, 300000),
         )
         self.assertTrue(resultado)
 
@@ -536,8 +536,8 @@ class Test_Modelo_Venta(unittest.TestCase):
         """test que verifica que no se pueda vender un automovil que no existe"""
         resultado = self.logica.vender_auto(
             placa="AAA002",
-            precio_venta=self.data_factory.random_int(1000000, 1000000000) / 100,
-            kilometraje_venta=self.data_factory.random_int(0, 300000),
+            valor=self.data_factory.random_int(1000000, 1000000000) / 100,
+            kilometraje=self.data_factory.random_int(0, 300000),
         )
         self.assertEqual(resultado, "Error: auto con Placa AAA002 no existe")
 
@@ -545,40 +545,40 @@ class Test_Modelo_Venta(unittest.TestCase):
         """test que verifica que no se pueda vender un automovil sin precio de venta"""
         resultado = self.logica.vender_auto(
             placa="AAA001",
-            precio_venta="abc",
-            kilometraje_venta=self.data_factory.random_int(0, 300000),
+            valor="abc",
+            kilometraje=self.data_factory.random_int(0, 300000),
         )
-        self.assertEqual(resultado, "Error: precio_venta debe ser un numero mayor a 0")
+        self.assertEqual(resultado, "Error: valor debe ser un decimal")
 
     def test_HU005_4_vender_automovil_kilometraje_venta_string(self):
         """test que verifica que no se pueda vender un automovil sin kilometraje de venta"""
         resultado = self.logica.vender_auto(
             placa="AAA001",
-            precio_venta=self.data_factory.random_int(1000000, 1000000000) / 100,
-            kilometraje_venta="abc",
+            valor=self.data_factory.random_int(1000000, 1000000000) / 100,
+            kilometraje="abc",
         )
         self.assertEqual(
-            resultado, "Error: kilometraje_venta debe ser un numero mayor a 0"
+            resultado, "Error: kilometraje debe ser un número"
         )
 
     def test_HU005_5_vender_automovil_precio_venta_negativo(self):
         """test que verifica que no se pueda vender un automovil con precio de venta negativo"""
         resultado = self.logica.vender_auto(
             placa="AAA001",
-            precio_venta=-1,
-            kilometraje_venta=self.data_factory.random_int(0, 300000),
+            valor=-1,
+            kilometraje=self.data_factory.random_int(0, 300000),
         )
-        self.assertEqual(resultado, "Error: precio_venta debe ser un numero mayor a 0")
+        self.assertEqual(resultado, "Error: valor debe ser un numero mayor a 0")
 
     def test_HU005_6_vender_automovil_kilometraje_venta_negativo(self):
         """test que verifica que no se pueda vender un automovil con kilometraje de venta negativo"""
         resultado = self.logica.vender_auto(
             placa="AAA001",
-            precio_venta=self.data_factory.random_int(1000000, 1000000000) / 100,
-            kilometraje_venta=-1,
+            valor=self.data_factory.random_int(1000000, 1000000000) / 100,
+            kilometraje=-1,
         )
         self.assertEqual(
-            resultado, "Error: kilometraje_venta debe ser un numero mayor a 0"
+            resultado, "Error: kilometraje debe ser un numero mayor a 0"
         )
 
 

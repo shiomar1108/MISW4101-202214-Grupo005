@@ -207,16 +207,26 @@ class Logica_mock:
         self.autos[id]["Cilindraje"] = cilindraje
         self.autos[id]["TipoCombustible"] = tipo_combustible
 
-    def vender_auto(self, placa, kilometraje_venta, precio_venta):
+    def vender_auto(self, placa, valor, kilometraje):
         if placa is None or len(placa) == 0:
             return "Error: placa es requerida"
 
-        required_numeric_fields = ["precio_venta", "kilometraje_venta"]
+        try:
+            kilometraje = int(kilometraje)
+        except:
+            return "Error: kilometraje debe ser un número"
+
+        try:
+            valor = float(valor)
+        except:
+            return "Error: valor debe ser un decimal"
+
+        required_numeric_fields = ["valor", "kilometraje"]
         for field in required_numeric_fields:
             if field not in locals() or locals()[field] == "":
                 return "Error: {} es requerido".format(field)
 
-            if not isinstance(locals()[field], (int, float)) or locals()[field] < 0:
+            if locals()[field] < 0:
                 return "Error: {} debe ser un numero mayor a 0".format(field)
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
@@ -224,8 +234,8 @@ class Logica_mock:
             temp = session.query(Auto).filter(Auto.placa == placa).first()
             if temp.vendido == False:
                 temp.vendido = True
-                temp.precio_venta = precio_venta
-                temp.kilometraje_venta = kilometraje_venta
+                temp.precio_venta = valor
+                temp.kilometraje_venta = kilometraje
                 session.commit()
                 return True
             else:
