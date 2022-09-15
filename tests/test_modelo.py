@@ -1,11 +1,6 @@
 import unittest
 import random
-<<<<<<< HEAD
-=======
-import string
-from pprint import pprint
-from unittest import result
->>>>>>> refactor_interfaz_mensajes
+
 from faker import Faker
 from faker.providers import BaseProvider
 from datetime import date
@@ -396,13 +391,8 @@ class ModeloTestTDD(unittest.TestCase):
             marca="nissan",
             modelo=self.data_factory.random_int(min=1900, max=2025),
             placa="ABC001",
-<<<<<<< HEAD
             color=self.data_factory.color_name(),
-            cilindraje="2500",
-=======
-            color="azul",
             cilindraje="asd",
->>>>>>> refactor_interfaz_mensajes
             combustible="GASOLINA",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
