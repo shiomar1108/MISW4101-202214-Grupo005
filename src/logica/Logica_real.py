@@ -241,12 +241,12 @@ class Logica_real:
 
         for accion in auto.acciones:
             lista.append(accion.__dict__)
-        newlist = sorted(lista, key=operator.itemgetter('kilometraje'), reverse=True) 
+        newlist = sorted(lista, key=operator.itemgetter("kilometraje"), reverse=True)
         return newlist
 
     def dar_accion(self, id_auto, id_accion):
         acciones = self.dar_acciones_auto(id_auto)
         for accion in acciones:
-            if(accion.get('id') == id_accion):
+            if accion.get("id") == id_accion:
                 return accion
         return None
