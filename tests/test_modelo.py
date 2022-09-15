@@ -1,5 +1,11 @@
 import unittest
 import random
+<<<<<<< HEAD
+=======
+import string
+from pprint import pprint
+from unittest import result
+>>>>>>> refactor_interfaz_mensajes
 from faker import Faker
 from faker.providers import BaseProvider
 from datetime import date
@@ -54,25 +60,58 @@ class ProveedorAuto(BaseProvider):
 
         return random.choice(marcas)
 
-"""se comento esta linea por que borra la base de datos,
-    no se usa el test por que si el usuario tiene un carro creado
-    no hay manera de devolver la lista vacia"""
-# class ModeloTestEmptySetUp(unittest.TestCase):
-#     """clase que contiene los test con el setUp vacio"""
 
-#     def setUp(self):
-#         """Se ejecuta antes de cada prueba"""
-#         self.logica = Logica_real()
-#         self.session = Session()
+class ModeloTestEmptySetUp(unittest.TestCase):
+    """clase que contiene los test con el setUp vacio"""
 
-#     def test_caso01_dar_lista_autos_vacia(self):
-#         """Test que verifica que la lista de autos este vacia"""
-#         busqueda = self.logica.dar_autos()
-#         if len(busqueda) == 0:
-#             resultado = True
-#         else:
-#             resultado = False
-#         self.assertTrue(resultado)
+    def setUp(self):
+        """Se ejecuta antes de cada prueba"""
+        self.logica = Logica_real()
+        self.session = Session()
+
+        busqueda = self.session.query(Auto).all()
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        self.session.commit()
+
+    def tearDown(self):
+        self.session = Session()
+
+        """Consulta todos los autos"""
+        busqueda = self.session.query(Auto).all()
+
+        """Borra todos los autos"""
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        self.session.commit()
+        self.session.close()
+
+    def test_caso01_dar_lista_autos_vacia(self):
+        """Test que verifica que la lista de autos este vacia"""
+        busqueda = self.logica.dar_autos()
+        if len(busqueda) == 0:
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_caso02_dar_2_autos_ordenados(self):
+        """Test que verifica que la lista de autos este ordenada por placa"""
+        self.logica.crear_auto(
+            "Toyota", "Corolla", "ABC123", "Rojo", 1500, "Gasolina", 0
+        )
+        self.logica.crear_auto(
+            "Toyota", "Corolla", "XYZ789", "Rojo", 1500, "Gasolina", 0
+        )
+        busqueda = self.logica.dar_autos()
+        resultado = True
+        for i in range(len(busqueda) - 1):
+            if busqueda[i]["placa"] > busqueda[i + 1]["placa"]:
+                resultado = False
+                break
+        self.assertTrue(resultado)
 
 
 class ModeloTestTDD(unittest.TestCase):
@@ -150,15 +189,35 @@ class ModeloTestTDD(unittest.TestCase):
 
     def test_caso02_dar_autos_ordenados(self):
         """Test que verifica que la lista se regrese en orden cronologico"""
+        auto1 = {
+            "marca": self.data_factory.marca_auto(),
+            "modelo": self.data_factory.random_int(1900, date.today().year),
+            "placa": "ABB123",
+            "color": self.data_factory.color(),
+            "cilindraje": self.data_factory.random_int(10, 50) / 10,
+            "combustible": self.data_factory.text(8),
+            "kilometraje": self.data_factory.random_int(0, 500000),
+        }
+
+        auto2 = {
+            "marca": self.data_factory.marca_auto(),
+            "modelo": self.data_factory.random_int(1900, date.today().year),
+            "placa": "AAA123",
+            "color": self.data_factory.color(),
+            "cilindraje": self.data_factory.random_int(10, 50) / 10,
+            "combustible": self.data_factory.text(8),
+            "kilometraje": self.data_factory.random_int(0, 500000),
+        }
+
+        self.logica.crear_auto(**auto1)
+        self.logica.crear_auto(**auto2)
+
         busqueda = self.logica.dar_autos()
-        if (
-            busqueda[0].get("placa") == self.auto1.placa
-            and busqueda[1].get("placa") == self.auto2.placa
-        ):
-            resultado = True
-        else:
-            resultado = False
-        self.assertTrue(resultado)
+        placas = []
+        for auto in busqueda:
+            placas.append(auto["placa"])
+
+        self.assertEqual(placas, sorted(placas))
 
     def test_caso03_1_agregar_auto_campo_placa_mas_de_6_caracteres(self):
         """test que verifica que el campo placa no tenga mas de 6 caracteres"""
@@ -172,7 +231,10 @@ class ModeloTestTDD(unittest.TestCase):
             combustible="GASOLINA PREMIUM",
             kilometraje=self.data_factory.random_int(0, 500000),
         )
-        self.assertEqual(resultado, "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999")
+        self.assertEqual(
+            resultado,
+            "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999",
+        )
 
     def test_caso03_2_agregar_auto_campo_placa_letras(self):
         """test que verifica que el campo tenga 3 letras al inicio"""
@@ -185,7 +247,9 @@ class ModeloTestTDD(unittest.TestCase):
             combustible="GASOLINA PREMIUM",
             kilometraje=self.data_factory.random_int(0, 500000),
         )
-        self.assertEqual(resultado, "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)")
+        self.assertEqual(
+            resultado, "Error: placa debe ser un String"
+        )
 
     def test_caso03_3_agregar_auto_campo_placa_numeros(self):
         """test que verifica que el campo placa tenga tres numero al final"""
@@ -198,7 +262,9 @@ class ModeloTestTDD(unittest.TestCase):
             combustible="GASOLINA PREMIUM",
             kilometraje=self.data_factory.random_int(0, 500000),
         )
-        self.assertEqual(resultado, "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)")
+        self.assertEqual(
+            resultado, "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
+        )
 
     def test_caso04_crear_auto_ya_creado(self):
         """test que verifica que los datos del auto no esten repetidos"""
@@ -293,7 +359,10 @@ class ModeloTestTDD(unittest.TestCase):
             combustible="GASOLINA",
             kilometraje=self.data_factory.random_int(0, 500000),
         )
-        self.assertEqual(resultado, "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999")
+        self.assertEqual(
+            resultado,
+            "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999",
+        )
 
     def test_caso08_crear_auto_campo_kilometraje_invalido(self):
         """test que verifica que el campo kilometraje del auto sea un numero"""
@@ -304,7 +373,7 @@ class ModeloTestTDD(unittest.TestCase):
             color=self.data_factory.color_name(),
             cilindraje=self.data_factory.pyint(),
             combustible="GASOLINA",
-            kilometraje="14000",
+            kilometraje="asd",
         )
         self.assertEqual(resultado, "Error: kilometraje debe ser un numero")
 
@@ -327,8 +396,13 @@ class ModeloTestTDD(unittest.TestCase):
             marca="nissan",
             modelo=self.data_factory.random_int(min=1900, max=2025),
             placa="ABC001",
+<<<<<<< HEAD
             color=self.data_factory.color_name(),
             cilindraje="2500",
+=======
+            color="azul",
+            cilindraje="asd",
+>>>>>>> refactor_interfaz_mensajes
             combustible="GASOLINA",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
@@ -492,7 +566,9 @@ class Test_Modelo_Venta(unittest.TestCase):
             precio_venta=self.data_factory.random_int(1000000, 1000000000) / 100,
             kilometraje_venta="abc",
         )
-        self.assertEqual(resultado, "Error: kilometraje_venta debe ser un numero mayor a 0")
+        self.assertEqual(
+            resultado, "Error: kilometraje_venta debe ser un numero mayor a 0"
+        )
 
     def test_HU005_5_vender_automovil_precio_venta_negativo(self):
         """test que verifica que no se pueda vender un automovil con precio de venta negativo"""
@@ -510,7 +586,9 @@ class Test_Modelo_Venta(unittest.TestCase):
             precio_venta=self.data_factory.random_int(1000000, 1000000000) / 100,
             kilometraje_venta=-1,
         )
-        self.assertEqual(resultado, "Error: kilometraje_venta debe ser un numero mayor a 0")
+        self.assertEqual(
+            resultado, "Error: kilometraje_venta debe ser un numero mayor a 0"
+        )
 
 
 class Test_Modelo_Accion(unittest.TestCase):

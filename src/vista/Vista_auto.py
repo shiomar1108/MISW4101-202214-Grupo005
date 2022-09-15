@@ -131,27 +131,8 @@ class Vista_auto(QWidget):
         """
         Esta función guarda los cambios al auto (editando o guardando los nuevos autos)
         """    
-        kilometraje = ""
-        modelo = ""
-        cilindraje = ""
-
-        if self.texto_kilometraje.text() != "":
-            kilometraje = int(self.texto_kilometraje.text())
-
-        if self.texto_modelo.text() != "":
-            modelo = int(self.texto_modelo.text())
-        
-
-        if self.texto_cilindraje.text() != "":
-            cilindraje = self.texto_cilindraje.text()
-            if "." in cilindraje:
-                cilindraje = float(cilindraje)
-            else:
-                cilindraje = int(cilindraje)
-        
-
-        response = self.interfaz.guardar_auto(self.texto_marca.text(), self.texto_placa.text(), modelo, kilometraje, \
-        self.texto_color.text(), cilindraje, self.texto_tipo_combustible.text())
+        response = self.interfaz.guardar_auto(self.texto_marca.text(), self.texto_placa.text(), self.texto_modelo.text(), self.texto_kilometraje.text(), \
+        self.texto_color.text(), self.texto_cilindraje.text(), self.texto_tipo_combustible.text())
 
 
         if response == True:

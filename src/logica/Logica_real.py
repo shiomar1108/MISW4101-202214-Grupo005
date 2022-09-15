@@ -14,53 +14,84 @@ class Logica_real:
     def crear_auto(
         self, marca, modelo, placa, color, cilindraje, combustible, kilometraje
     ):
-        required_fields = ['marca', 'modelo', 'placa', 'color', 'cilindraje', 'combustible', 'kilometraje']
+        required_fields = [
+            "marca",
+            "modelo",
+            "placa",
+            "color",
+            "cilindraje",
+            "combustible",
+            "kilometraje",
+        ]
         for field in required_fields:
-            if field not in locals() or locals()[field] == '':
+            if field not in locals() or locals()[field] == "":
                 return "Error: {} es requerido".format(field)
 
-        int_fields = ['kilometraje', 'modelo']
-        for field in int_fields:
-            if not isinstance(locals()[field], int):
-                return "Error: {} debe ser un numero".format(field)
+        try:
+            modelo = int(modelo)
+        except:
+            return "Error: modelo debe ser un numero"
 
-        str_fields = ['marca', 'placa', 'color', 'combustible']
+        try:
+            kilometraje = int(kilometraje)
+        except:
+            return "Error: kilometraje debe ser un numero"
+
+        str_fields = ["marca", "placa", "color", "combustible"]
         for field in str_fields:
-            if not isinstance(locals()[field], str):
+            try:
+                int(locals()[field])
                 return "Error: {} debe ser un String".format(field)
+            except:
+                if len(locals()[field]) > 50:
+                    return "Error: {} debe tener menos de 50 caracteres".format(field)
+                treeshold = 3
+                if field == 'marca':
+                    treeshold = 2
+                
+                if len(locals()[field]) <= treeshold:
+                    return "Error: {} debe tener más de 3 caracteres".format(field)
 
-        if not isinstance(cilindraje, (int, float)):
-            return "Error: cilindraje debe ser un numero o un decimal"
+        try:
+            cilindraje = int(cilindraje)
+        except:
+            mensaje = "Error: cilindraje debe ser un numero o un decimal"
+            try:
+                cilindraje = float(cilindraje)
+            except:
+                return mensaje
 
-        if(len(placa) != 6 or modelo > 9999):
-            return "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999"
+        if len(placa) != 6 or modelo > 9999:
+            return (
+                "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999"
+            )
         else:
-            chunks = [placa[i:i+3] for i in range(0, len(placa), 3)]
-            if(chunks[1].isalpha() or chunks[0].isnumeric() ):
+            chunks = [placa[i : i + 3] for i in range(0, len(placa), 3)]
+            if chunks[1].isalpha() or chunks[0].isnumeric():
                 return "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 0:
             auto = Auto(
-                marca=marca, 
-                modelo=modelo, 
-                placa=placa, 
-                color=color, 
-                cilindraje=cilindraje, 
+                marca=marca,
+                modelo=modelo,
+                placa=placa,
+                color=color,
+                cilindraje=cilindraje,
                 combustible=combustible,
-                kilometraje_compra = kilometraje,
-                precio_venta = 0,
-                kilometraje_venta = 0,
-                gasto_total = 0,
-                gasto_anual = 0,
-                gasto_kilometro = 0,
-                vendido = False,
+                kilometraje_compra=kilometraje,
+                precio_venta=0,
+                kilometraje_venta=0,
+                gasto_total=0,
+                gasto_anual=0,
+                gasto_kilometro=0,
+                vendido=False,
             )
             session.add(auto)
             session.commit()
             return True
         else:
-            return 'Error: auto con Placa ' + placa + ' ya esta registrado'
+            return "Error: auto con Placa " + placa + " ya esta registrado"
 
     def crear_mantenimiento(self, nombre, descripcion):
         required_fields = ["nombre", "descripcion"]
@@ -92,7 +123,7 @@ class Logica_real:
 
     def dar_autos(self):
         lista = []
-        autos = session.query(Auto).all()
+        autos = session.query(Auto).order_by(Auto.placa).all()
         for auto in autos:
             lista.append(auto.__dict__)
         return lista
