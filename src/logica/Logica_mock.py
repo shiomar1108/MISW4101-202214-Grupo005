@@ -49,38 +49,30 @@ class Logica_mock():
             return None
     
     def crear_auto(self, marca, placa, modelo, kilometraje, color, cilindraje, combustible):
-        # self.autos.append({'Marca':marca, 'Placa':placa, 'Modelo': modelo, 'Kilometraje': float(kilometraje), \
-        #                    'Color':color, 'Cilindraje': cilindraje, 'TipoCombustible':tipo_combustible, 'Vendido': False})
         required_fields = ['marca', 'modelo', 'placa', 'color', 'cilindraje', 'combustible', 'kilometraje']
         for field in required_fields:
-            if field not in locals():
-                print("Error: {} is required".format(field))
-                return False
+            if field not in locals() or locals()[field] == '':
+                return "Error: {} es requerido".format(field)
 
         int_fields = ['kilometraje', 'modelo']
         for field in int_fields:
             if not isinstance(locals()[field], int):
-                print("Error: {} must be an integer".format(field))
-                return False
+                return "Error: {} debe ser un numero".format(field)
 
         str_fields = ['marca', 'placa', 'color', 'combustible']
         for field in str_fields:
             if not isinstance(locals()[field], str):
-                print("Error: {} must be a string".format(field))
-                return False
+                return "Error: debe ser un String".format(field)
 
         if not isinstance(cilindraje, (int, float)):
-            print("Error: cilindraje must be a number")
-            return False
+            return "Error: cilindraje debe ser un numero o un decimal"
 
         if(len(placa) != 6 or modelo > 9999):
-            print("Error: placa must be 6 characters long and modelo must be 4 digits long")
-            return False
+            return "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999"
         else:
             chunks = [placa[i:i+3] for i in range(0, len(placa), 3)]
             if(chunks[1].isalpha() or chunks[0].isnumeric() ):
-                print("Error: placa must be in the format AAA000")
-                return False
+                return "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 0:
@@ -103,8 +95,7 @@ class Logica_mock():
             session.commit()
             return True
         else:
-            print('Auto con Placa ' + placa + ' ya esta registrado')
-            return False
+            return 'Error: auto con Placa ' + placa + ' ya esta registrado'
 
     def editar_auto(self, id, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible):
         self.autos[id]['Marca'] = marca
@@ -116,16 +107,16 @@ class Logica_mock():
         self.autos[id]['TipoCombustible'] = tipo_combustible
 
     def vender_auto(self, placa, kilometraje_venta, precio_venta):
-        # self.autos[id]['ValorVenta'] = valor_venta
-        # self.autos[id]['KilometrajeVenta'] = kilometraje_venta
-        # self.autos[id]['Vendido'] = True
         if placa is None or len(placa) == 0:
-            return False
+            return "Error: placa es requerida"
 
         required_numeric_fields = ['precio_venta', 'kilometraje_venta']
         for field in required_numeric_fields:
+            if field not in locals() or locals()[field] == '':
+                return "Error: {} es requerido".format(field)
+
             if not isinstance(locals()[field], (int, float)) or locals()[field] < 0:
-                return False
+                return "Error: {} debe ser un numero mayor a 0".format(field)
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 1:
@@ -137,9 +128,9 @@ class Logica_mock():
                 session.commit()
                 return True
             else:
-                return False
+                return "Error: auto con placa " + placa + " ya fue vendido"
         else:
-            return False
+            return "Error: auto con Placa " + placa + " no existe"
 
 
     def eliminar_auto(self, id):
@@ -154,8 +145,7 @@ class Logica_mock():
             float(kilometraje)
             validacion = True
         except ValueError:
-            return False
-        return validacion
+                return False
         
     def validar_vender_auto(self, id, kilometraje_venta, valor_venta):
         validacion = False

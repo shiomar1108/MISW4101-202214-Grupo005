@@ -233,10 +233,10 @@ class Vista_lista_autos(QWidget):
         if respuesta == QMessageBox.Yes:
              self.interfaz.eliminar_auto(indice_auto)
     
-    def error_vender_auto(self):
+    def error_vender_auto(self, mensaje):
             mensaje_error=QMessageBox()
             mensaje_error.setIcon(QMessageBox.Question)
-            mensaje_error.setText("Verifique que todos los campos se encuentren diligenciados y que sean valores numéricos.")        
+            mensaje_error.setText(mensaje)        
             mensaje_error.setWindowTitle("Error al guardar")
             mensaje_error.setWindowIcon(QIcon("src/recursos/smallLogo.png"))
             mensaje_error.setStandardButtons(QMessageBox.Ok ) 
