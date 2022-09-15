@@ -81,11 +81,19 @@ class App_AutoPerfecto(QApplication):
         """
         Esta función inserta un mantenimiento a la aplicación
         """
-        if self.logica.validar_crear_editar_mantenimiento(nombre, descripcion):
-            self.logica.aniadir_mantenimiento(nombre, descripcion)
-        else:
-            self.vista_lista_mantenimientos.error_mantenimiento()
+        # if self.logica.validar_crear_editar_mantenimiento(nombre, descripcion):
+        #     self.logica.aniadir_mantenimiento(nombre, descripcion)
+        # else:
+        #     self.vista_lista_mantenimientos.error_mantenimiento()
+        # self.vista_lista_mantenimientos.mostrar_mantenimientos(self.logica.dar_mantenimientos())
+
+        response = self.logica.aniadir_mantenimiento(nombre, descripcion)
+
+        if response != True:
+             self.vista_lista_mantenimientos.error_mantenimiento(response)
+           
         self.vista_lista_mantenimientos.mostrar_mantenimientos(self.logica.dar_mantenimientos())
+
 
     def editar_mantenimiento(self, id, nombre, descripcion):
         """

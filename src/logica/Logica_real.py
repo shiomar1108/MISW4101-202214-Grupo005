@@ -46,9 +46,9 @@ class Logica_real:
                 if len(locals()[field]) > 50:
                     return "Error: {} debe tener menos de 50 caracteres".format(field)
                 treeshold = 3
-                if field == 'marca':
+                if field == "marca":
                     treeshold = 2
-                
+
                 if len(locals()[field]) <= treeshold:
                     return "Error: {} debe tener más de 3 caracteres".format(field)
 
@@ -93,11 +93,17 @@ class Logica_real:
         else:
             return "Error: auto con Placa " + placa + " ya esta registrado"
 
-    def crear_mantenimiento(self, nombre, descripcion):
+    def aniadir_mantenimiento(self, nombre, descripcion):
         required_fields = ["nombre", "descripcion"]
         for field in required_fields:
             if len(locals()[field]) == 0:
-                return False
+                return f"Error: {field} es requerido"
+
+            if field == "nombre":
+                if len(locals()[field]) < 3:
+                    return f"Error: {field} debe tener más de 3 caracteres"
+                if len(locals()[field]) > 200:
+                    return f"Error: {field} debe tener menos de 200 caracteres"
 
         busqueda = (
             session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).all()
@@ -111,7 +117,7 @@ class Logica_real:
             session.commit()
             return True
         else:
-            return False
+            return "Error: mantenimiento con Nombre " + nombre + " ya esta registrado"
 
     # Funciones relacionadas a Autos
     def dar_auto(self, placa):
@@ -158,9 +164,9 @@ class Logica_real:
         if placa is None or len(placa) == 0:
             return "Error: placa es requerida"
 
-        required_numeric_fields = ['precio_venta', 'kilometraje_venta']
+        required_numeric_fields = ["precio_venta", "kilometraje_venta"]
         for field in required_numeric_fields:
-            if field not in locals() or locals()[field] == '':
+            if field not in locals() or locals()[field] == "":
                 return "Error: {} es requerido".format(field)
 
             if not isinstance(locals()[field], (int, float)) or locals()[field] < 0:
