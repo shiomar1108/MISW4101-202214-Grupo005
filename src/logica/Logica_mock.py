@@ -347,7 +347,7 @@ class Logica_mock:
                 return accion
         return None
 
-    def crear_accion(self, id_auto, kilometraje, valor, fecha, mantenimiento):
+    def crear_accion(self, mantenimiento, id_auto, valor, kilometraje, fecha):
         # n_accion = {}
         # n_accion['Mantenimiento'] = mantenimiento
         # n_accion['Auto'] = self.autos[id_auto]['Marca']
@@ -362,8 +362,12 @@ class Logica_mock:
 
         str_fields = ["fecha", "mantenimiento"]
         for field in str_fields:
-            if not isinstance(locals()[field], str):
+            try:
+                int(locals()[field])
                 return "Error: {} debe ser un String".format(field)
+            except:
+                if len(locals()[field]) > 50:
+                    return "Error: {} debe tener menos de 50 caracteres".format(field)
 
         if not isinstance(valor, (float)):
             return "Error: valor debe ser un número"
@@ -389,24 +393,24 @@ class Logica_mock:
         acciones = self.dar_acciones_auto(id_auto)
         for dato in acciones:
             if (
-                dato.get("costo") == valor
+                dato.get("valor") == valor
                 and dato.get("kilometraje") == kilometraje
                 and dato.get("fecha") == fecha
-                and dato.get("mantenimiento") == manto_tempo.id
+                and dato.get("mantenimiento") == manto_tempo.nombre
             ):
                 return "Error: La Accion no debe estar repetidas"
 
         auto = session.query(Auto).filter(Auto.id == id_auto).first()
         accion = Accion(
             kilometraje=kilometraje,
-            costo=valor,
+            valor=valor,
             fecha=fecha,
             auto=id_auto,
-            mantenimiento=manto_tempo.id,
+            mantenimiento=manto_tempo.nombre,
         )
         auto.acciones.append(accion)
         session.commit()
-        return True
+        return True    
 
     def editar_accion(
         self, id_accion, mantenimiento, id_auto, valor, kilometraje, fecha

@@ -138,8 +138,8 @@ class App_AutoPerfecto(QApplication):
         Esta función crea una nueva acción asociada a un auto
         """
         if self.logica.validar_crear_editar_accion(None, mantenimiento, self.auto_actual, valor, kilometraje, fecha):
-            self.logica.crear_accion(mantenimiento, self.auto_actual, float(valor), float(kilometraje), fecha)
-            nombre_auto = self.logica.dar_auto(self.auto_actual)['Marca']
+            self.logica.crear_accion(mantenimiento, self.auto_actual, float(valor), int(kilometraje), fecha)
+            nombre_auto = self.logica.dar_auto(self.auto_actual)['marca']
             self.vista_lista_acciones.mostrar_acciones(nombre_auto, self.logica.dar_acciones_auto(self.auto_actual))
         else:
             self.vista_lista_acciones.error_crear_editar_accion()

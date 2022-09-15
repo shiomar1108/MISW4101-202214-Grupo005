@@ -125,22 +125,21 @@ class Vista_lista_acciones(QWidget):
                 child.widget().deleteLater()
 
         numero_fila=1
-        print(acciones)
         for accion in self.acciones:
             
             etiqueta_mantenimiento = QLabel(accion["mantenimiento"])
             etiqueta_mantenimiento.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_mantenimiento, numero_fila, 0, alignment=Qt.AlignTop)
 
-            etiqueta_kilometraje = QLabel(str(accion["Kilometraje"]))
+            etiqueta_kilometraje = QLabel(str(accion["kilometraje"]))
             etiqueta_kilometraje.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_kilometraje, numero_fila, 1, alignment=Qt.AlignTop|Qt.AlignCenter)
 
-            etiqueta_valor = QLabel("{:,.3f}".format(float(accion["Valor"])))
+            etiqueta_valor = QLabel("{:,.3f}".format(float(accion["valor"])))
             etiqueta_valor.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_valor, numero_fila, 2, alignment=Qt.AlignTop|Qt.AlignCenter)
             
-            etiqueta_fecha = QLabel(accion["Fecha"])
+            etiqueta_fecha = QLabel(accion["fecha"])
             etiqueta_fecha.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_fecha, numero_fila, 3, alignment=Qt.AlignTop|Qt.AlignCenter)
             
