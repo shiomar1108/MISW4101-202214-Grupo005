@@ -1,13 +1,60 @@
-from decimal import Decimal
 import unittest
+import random
+import string
 from unittest import result
 from faker import Faker
+from faker.providers import BaseProvider
+from datetime import date
 
 from src.logica.Logica_real import Logica_real
 from src.modelo.conn import Session
 from src.modelo.auto import Auto
 from src.modelo.accion import Accion
 from src.modelo.mantenimiento import Mantenimiento
+
+
+class ProveedorAuto(BaseProvider):
+    """clase para generar marcas de autos aleatorias"""
+
+    def marca_auto(self):
+        marcas = [
+            "Toyota",
+            "Renault",
+            "Chevrolet",
+            "Tesla",
+            "BMW",
+            "Volkswagen",
+            "Honda",
+            "Hyundai",
+            "Kia",
+            "Mazda",
+            "Nissan",
+            "Suzuki",
+            "Audi",
+            "Mercedes-Benz",
+            "Fiat",
+            "Ford",
+            "Peugeot",
+            "Citroën",
+            "Dodge",
+            "Chrysler",
+            "Jeep",
+            "Mitsubishi",
+            "Subaru",
+            "Volvo",
+            "Land Rover",
+            "Jaguar",
+            "Porsche",
+            "Mini",
+            "Smart",
+            "Lexus",
+            "Infiniti",
+            "Acura",
+            "Isuzu",
+            "Daihatsu",
+        ]
+
+        return random.choice(marcas)
 
 
 class ModeloTestEmptySetUp(unittest.TestCase):
@@ -35,6 +82,7 @@ class ModeloTestTDD(unittest.TestCase):
         self.logica = Logica_real()
         self.session = Session()
         self.data_factory = Faker()
+        self.data_factory.add_provider(ProveedorAuto)
 
         self.auto1 = Auto(
             marca="volkswagen",
@@ -115,39 +163,40 @@ class ModeloTestTDD(unittest.TestCase):
     def test_caso03_1_agregar_auto_campo_placa_mas_de_6_caracteres(self):
         """test que verifica que el campo placa no tenga mas de 6 caracteres"""
         resultado = self.logica.crear_auto(
-            marca="renault",
-            modelo=1995,
-            placa="XXX0011",
-            color="negro",
-            cilindraje=1.6,
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(1900, date.today().year),
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(1000, 9999)),
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
             combustible="GASOLINA PREMIUM",
-            kilometraje=1000,
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertFalse(resultado)
 
     def test_caso03_2_agregar_auto_campo_placa_letras(self):
         """test que verifica que el campo tenga 3 letras al inicio"""
         resultado = self.logica.crear_auto(
-            marca="renault",
-            modelo=1995,
-            placa="000123",
-            color="negro",
-            cilindraje=1.6,
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(1900, date.today().year),
+            placa=str(self.data_factory.random_int(100000, 999999)),
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
             combustible="GASOLINA PREMIUM",
-            kilometraje=1000,
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertFalse(resultado)
 
     def test_caso03_3_agregar_auto_campo_placa_numeros(self):
         """test que verifica que el campo placa tenga tres numero al final"""
         resultado = self.logica.crear_auto(
-            marca="renault",
-            modelo=1995,
-            placa="XXXYYY",
-            color="negro",
-            cilindraje=1.6,
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(1900, date.today().year),
+            placa=self.data_factory.bothify(text="??????").upper(),
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
             combustible="GASOLINA PREMIUM",
-            kilometraje=1000,
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertFalse(resultado)
 
@@ -170,10 +219,10 @@ class ModeloTestTDD(unittest.TestCase):
             marca="volkswagen",
             modelo=2019,
             placa="AAA001",
-            color="azul",
-            cilindraje=1.4,
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
             combustible="HIBRIDO",
-            kilometraje=26000,
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertFalse(resultado)
 
@@ -195,7 +244,8 @@ class ModeloTestTDD(unittest.TestCase):
         resultado = self.logica.crear_auto(
             marca="",
             modelo="",
-            placa="AAA005",
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)),
             color="",
             cilindraje="",
             combustible="",
@@ -208,7 +258,8 @@ class ModeloTestTDD(unittest.TestCase):
         resultado = self.logica.crear_auto(
             marca="",
             modelo="",
-            placa="AAA005",
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)),
             color="azul",
             cilindraje="",
             combustible="",
@@ -219,9 +270,10 @@ class ModeloTestTDD(unittest.TestCase):
     def test_caso06_4_crear_auto_vacio(self):
         """test que verifica que los campos al crear un auto no esten vacios"""
         resultado = self.logica.crear_auto(
-            marca="volkswagen",
+            marca=self.data_factory.marca_auto(),
             modelo="",
-            placa="AAA005",
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)),
             color="",
             cilindraje="",
             combustible="",
@@ -232,13 +284,14 @@ class ModeloTestTDD(unittest.TestCase):
     def test_caso07_crear_auto_campo_modelo_invalido(self):
         """test que verifica que el campo modelo del auto sean 4 digitos"""
         resultado = self.logica.crear_auto(
-            marca="nissan",
+            marca=self.data_factory.marca_auto(),
             modelo=19995,
-            placa="ABC001",
-            color="azul",
-            cilindraje=2500,
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)),
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
             combustible="GASOLINA",
-            kilometraje=14000,
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertFalse(resultado)
 
@@ -408,8 +461,8 @@ class Test_Modelo_Venta(unittest.TestCase):
     def test_HU005_1_vender_automovil(self):
         """test que verifica que se pueda vender un automovil"""
         resultado = self.logica.vender_auto(
-            placa="AAA001",          
-            precio_venta=self.data_factory.random_int(1000000, 10000000000) / 100,            
+            placa="AAA001",
+            precio_venta=self.data_factory.random_int(1000000, 10000000000) / 100,
             kilometraje_venta=self.data_factory.random_int(0, 300000),
         )
         self.assertTrue(resultado)
@@ -764,8 +817,12 @@ class Test_Modelo_Accion(unittest.TestCase):
             fecha="25-08-2021",
             kilometraje=80000,
         )
-        lista = self.logica.dar_acciones_auto( id_auto=1)
-        if(lista[0].get("kilometraje") > lista[1].get("kilometraje") > lista[2].get("kilometraje") ):
+        lista = self.logica.dar_acciones_auto(id_auto=1)
+        if (
+            lista[0].get("kilometraje")
+            > lista[1].get("kilometraje")
+            > lista[2].get("kilometraje")
+        ):
             resultado = True
         else:
             resultado = False
@@ -787,9 +844,12 @@ class Test_Modelo_Accion(unittest.TestCase):
             fecha="15-02-2020",
             kilometraje=25000,
         )
-        busqueda = self.logica.dar_accion(id_auto=1,id_accion=2)
-        if(busqueda != None):
-            if(busqueda.get("kilometraje") == 25000 and busqueda.get("fecha") == "15-02-2020") :
+        busqueda = self.logica.dar_accion(id_auto=1, id_accion=2)
+        if busqueda != None:
+            if (
+                busqueda.get("kilometraje") == 25000
+                and busqueda.get("fecha") == "15-02-2020"
+            ):
                 resultado = True
             else:
                 resultado = False
@@ -800,7 +860,7 @@ class Test_Modelo_Accion(unittest.TestCase):
     def test_HU010_3_ver_accion_invalida(self):
         """test que verifica el error al pedir la lista de acciones de un auto invalido"""
         lista = self.logica.dar_acciones_auto(id_auto=3)
-        if(lista == None):
+        if lista == None:
             resultado = True
         else:
             resultado = False
@@ -816,9 +876,8 @@ class Test_Modelo_Accion(unittest.TestCase):
             kilometraje=150000,
         )
         lista = self.logica.dar_accion(id_auto=1, id_accion=3)
-        if(lista == None):
+        if lista == None:
             resultado = True
         else:
             resultado = False
         self.assertTrue(resultado)
-

@@ -5,8 +5,9 @@ from sqlalchemy.orm import relationship
 
 from .conn import Base
 
+
 class Auto(Base):
-    __tablename__ = 'auto'
+    __tablename__ = "auto"
 
     id = Column(Integer, primary_key=True)
     marca = Column(String)
@@ -22,4 +23,4 @@ class Auto(Base):
     gasto_anual = Column(Float)
     gasto_kilometro = Column(Float)
     vendido = Column(Boolean)
-    acciones = relationship('Accion', cascade='all, delete, delete-orphan')
+    acciones = relationship("Accion", cascade="all, delete, delete-orphan")
