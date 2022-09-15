@@ -32,7 +32,7 @@ class ModeloTestTDD(unittest.TestCase):
     def setUp(self):
         self.logica = Logica_real()
         self.session = Session()
-        self.data_factory = Faker()
+        self.data_factory = Faker("es_ES")
 
         self.auto1 = Auto(
             marca="volkswagen",
@@ -244,10 +244,10 @@ class ModeloTestTDD(unittest.TestCase):
         """test que verifica que el campo kilometraje del auto sea un numero"""
         resultado = self.logica.crear_auto(
             marca="nissan",
-            modelo=1995,
+            modelo=self.data_factory.random_int(min=1900, max=2025),
             placa="ABC001",
-            color="azul",
-            cilindraje=2500,
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
             combustible="GASOLINA",
             kilometraje="14000",
         )
@@ -257,12 +257,12 @@ class ModeloTestTDD(unittest.TestCase):
         """test que verifica que el campo color del auto sea un texto"""
         resultado = self.logica.crear_auto(
             marca="nissan",
-            modelo=1995,
+            modelo=self.data_factory.random_int(min=1900, max=2025),
             placa="ABC001",
             color=123,
-            cilindraje=2500,
+            cilindraje=self.data_factory.pyint(),
             combustible="GASOLINA",
-            kilometraje=14000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.assertFalse(resultado)
 
@@ -270,12 +270,12 @@ class ModeloTestTDD(unittest.TestCase):
         """test que verifica que el campo cilindraje del auto sea un numero"""
         resultado = self.logica.crear_auto(
             marca="nissan",
-            modelo=1995,
+            modelo=self.data_factory.random_int(min=1900, max=2025),
             placa="ABC001",
-            color="azul",
+            color=self.data_factory.color_name(),
             cilindraje="2500",
             combustible="GASOLINA",
-            kilometraje=14000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.assertFalse(resultado)
 
@@ -283,12 +283,12 @@ class ModeloTestTDD(unittest.TestCase):
         """test que verifica que el campo combustible del auto sea un texto"""
         resultado = self.logica.crear_auto(
             marca="nissan",
-            modelo=1995,
+            modelo=self.data_factory.random_int(min=1900, max=2025),
             placa="ABC001",
-            color="azul",
-            cilindraje=2500,
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
             combustible=123,
-            kilometraje=14000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.assertFalse(resultado)
 
@@ -307,21 +307,21 @@ class ModeloTestTDD(unittest.TestCase):
     def test_caso12_3_crear_mantenimento_vacio(self):
         """test que verifica que los campos al crear un manenimiento no esten vacios"""
         resultado = self.logica.crear_mantenimiento(
-            nombre="", descripcion="Pago por nuevas llantas"
+            nombre="", descripcion=self.data_factory.text()
         )
         self.assertFalse(resultado)
 
     def test_caso13_crear_mantenimento_ya_existente(self):
         """test que verifica que no se pueda crear un mantenimiento ya existente"""
         resultado = self.logica.crear_mantenimiento(
-            nombre="Cambio de aceite", descripcion="Cambio de aceite"
+            nombre="Cambio de aceite", descripcion=self.data_factory.text()
         )
         self.assertFalse(resultado)
 
     def test_caso14_mantenimiento_creado_debe_ser_visible(self):
         """test que verifica que despues de creado un mantenimiento se vea en la lista"""
         self.logica.crear_mantenimiento(
-            nombre="Cambio de Llantas", descripcion="Pago por nuevas llantas"
+            nombre="Cambio de Llantas", descripcion=self.data_factory.text()
         )
         lista = self.logica.dar_mantenimientos()
         if lista[len(lista) - 1].get("nombre") == "Cambio de Llantas":
@@ -337,7 +337,7 @@ class Test_Modelo_Venta(unittest.TestCase):
     def setUp(self):
         self.logica = Logica_real()
         self.session = Session()
-        self.data_factory = Faker()
+        self.data_factory = Faker("es_ES")
 
         self.auto1 = Auto(
             marca="volkswagen",
@@ -470,7 +470,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             marca="volkswagen",
             modelo=2016,
             placa="XXX001",
-            color="gris",
+            color=self.data_factory.color_name(),
             cilindraje=2.5,
             combustible="GASOLINA",
             kilometraje_compra=0,
@@ -485,7 +485,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             marca="Nissan",
             modelo=2016,
             placa="AAA001",
-            color="Rojo",
+            color=self.data_factory.color_name(),
             cilindraje=2.5,
             combustible="DIESEL",
             kilometraje_compra=25000,
