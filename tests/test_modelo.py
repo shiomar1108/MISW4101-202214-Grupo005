@@ -180,7 +180,37 @@ class ModeloTestTDD(unittest.TestCase):
         self.session.commit()
         self.session.close()
 
-    
+    def test_caso02_dar_autos_ordenados(self):
+        """Test que verifica que la lista se regrese en orden cronologico"""
+        auto1 = {
+            "marca": self.data_factory.marca_auto(),
+            "modelo": self.data_factory.random_int(1900, date.today().year),
+            "placa": "ABB123",
+            "color": self.data_factory.color(),
+            "cilindraje": self.data_factory.random_int(10, 50) / 10,
+            "combustible": self.data_factory.text(8),
+            "kilometraje": self.data_factory.random_int(0, 500000),
+        }
+
+        auto2 = {
+            "marca": self.data_factory.marca_auto(),
+            "modelo": self.data_factory.random_int(1900, date.today().year),
+            "placa": "AAA123",
+            "color": self.data_factory.color(),
+            "cilindraje": self.data_factory.random_int(10, 50) / 10,
+            "combustible": self.data_factory.text(8),
+            "kilometraje": self.data_factory.random_int(0, 500000),
+        }
+
+        self.logica.crear_auto(**auto1)
+        self.logica.crear_auto(**auto2)
+
+        busqueda = self.logica.dar_autos()
+        placas = []
+        for auto in busqueda:
+            placas.append(auto['placa'])
+
+        self.assertEqual(placas, sorted(placas))
 
     def test_caso03_1_agregar_auto_campo_placa_mas_de_6_caracteres(self):
         """test que verifica que el campo placa no tenga mas de 6 caracteres"""
