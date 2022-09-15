@@ -262,7 +262,7 @@ class ModeloTestTDD(unittest.TestCase):
     def test_caso04_crear_auto_ya_creado(self):
         """test que verifica que los datos del auto no esten repetidos"""
         resultado = self.logica.crear_auto(
-            marca="volkswagen",
+            marca="Ford",
             modelo=2016,
             placa="XXX001",
             color="gris",
@@ -272,10 +272,10 @@ class ModeloTestTDD(unittest.TestCase):
         )
         self.assertEqual(resultado, "Error: auto con Placa XXX001 ya esta registrado")
 
-    def test_caso05_crear_auto_placa_y_marca_duplicados(self):
-        """test que verifica que el campo placa del auto no este duplicado"""
+    def test_caso05_crear_auto_placa_duplicada_1(self):
+        """test que verifica que el campo placa del auto no este duplicada"""
         resultado = self.logica.crear_auto(
-            marca="volkswagen",
+            marca="Seat",
             modelo=2019,
             placa="AAA001",
             color=self.data_factory.color(),
@@ -284,6 +284,19 @@ class ModeloTestTDD(unittest.TestCase):
             kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: auto con Placa AAA001 ya esta registrado")
+
+    def test_caso05_crear_auto_marca_duplicado_2(self):
+        """test que verifica que el campo marca del auto no este duplicado"""
+        resultado = self.logica.crear_auto(
+            marca="volkswagen",
+            modelo=2019,
+            placa="AAA005",
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
+            combustible="HIBRIDO",
+            kilometraje=self.data_factory.random_int(0, 500000),
+        )
+        self.assertEqual(resultado, "Error: auto de la Marca volkswagen ya esta registrado")
 
     def test_caso06_1_crear_auto_vacio(self):
         """test que verifica que los campos al crear un auto no esten vacios"""
@@ -368,7 +381,7 @@ class ModeloTestTDD(unittest.TestCase):
             combustible="GASOLINA",
             kilometraje="asd",
         )
-        self.assertEqual(resultado, "Error: kilometraje debe ser un numero")
+        self.assertEqual(resultado, "Error: kilometraje debe ser un número")
 
     def test_caso09_crear_auto_campo_color_invalido(self):
         """test que verifica que el campo color del auto sea un texto"""
@@ -394,7 +407,7 @@ class ModeloTestTDD(unittest.TestCase):
             combustible="GASOLINA",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "Error: cilindraje debe ser un numero o un decimal")
+        self.assertEqual(resultado, "Error: cilindraje debe ser un número o un decimal")
 
     def test_caso11_crear_auto_campo_combustible_invalido(self):
         """test que verifica que el campo combustible del auto sea un texto"""

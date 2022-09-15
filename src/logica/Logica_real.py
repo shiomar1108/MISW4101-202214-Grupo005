@@ -12,7 +12,7 @@ class Logica_real:
         Base.metadata.create_all(engine)
 
     def crear_auto(
-        self, marca, modelo, placa, color, cilindraje, combustible, kilometraje
+        self, marca, placa, modelo, kilometraje, color, cilindraje, combustible
     ):
         required_fields = [
             "marca",
@@ -30,12 +30,12 @@ class Logica_real:
         try:
             modelo = int(modelo)
         except:
-            return "Error: modelo debe ser un numero"
+            return "Error: modelo debe ser un número"
 
         try:
             kilometraje = int(kilometraje)
         except:
-            return "Error: kilometraje debe ser un numero"
+            return "Error: kilometraje debe ser un número"
 
         str_fields = ["marca", "placa", "color", "combustible"]
         for field in str_fields:
@@ -50,12 +50,12 @@ class Logica_real:
                     treeshold = 2
 
                 if len(locals()[field]) <= treeshold:
-                    return "Error: {} debe tener más de 3 caracteres".format(field)
+                    return f"Error: {field} debe tener más de {treeshold} caracteres"
 
         try:
             cilindraje = int(cilindraje)
         except:
-            mensaje = "Error: cilindraje debe ser un numero o un decimal"
+            mensaje = "Error: cilindraje debe ser un número o un decimal"
             try:
                 cilindraje = float(cilindraje)
             except:
@@ -69,6 +69,10 @@ class Logica_real:
             chunks = [placa[i : i + 3] for i in range(0, len(placa), 3)]
             if chunks[1].isalpha() or chunks[0].isnumeric():
                 return "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
+
+        busqueda = session.query(Auto).filter(Auto.marca == marca).all()
+        if len(busqueda) != 0:
+            return "Error: auto de la Marca " + marca + " ya esta registrado"
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 0:

@@ -100,7 +100,7 @@ class Logica_mock:
     def dar_autos(self):
         # return self.autos.copy()
         lista = []
-        autos = session.query(Auto).all()
+        autos = session.query(Auto).order_by(Auto.placa).all()
         for auto in autos:
             lista.append(auto.__dict__)
         return lista
@@ -172,6 +172,10 @@ class Logica_mock:
             chunks = [placa[i : i + 3] for i in range(0, len(placa), 3)]
             if chunks[1].isalpha() or chunks[0].isnumeric():
                 return "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
+
+        busqueda = session.query(Auto).filter(Auto.marca == marca).all()
+        if len(busqueda) != 0:
+            return "Error: auto de la Marca " + marca + " ya esta registrado"
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 0:
