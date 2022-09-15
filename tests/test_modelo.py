@@ -1,6 +1,7 @@
 import unittest
 import random
 import string
+from pprint import pprint
 from unittest import result
 from faker import Faker
 from faker.providers import BaseProvider
@@ -56,25 +57,54 @@ class ProveedorAuto(BaseProvider):
 
         return random.choice(marcas)
 
-"""se comento esta linea por que borra la base de datos,
-    no se usa el test por que si el usuario tiene un carro creado
-    no hay manera de devolver la lista vacia"""
-# class ModeloTestEmptySetUp(unittest.TestCase):
-#     """clase que contiene los test con el setUp vacio"""
 
-#     def setUp(self):
-#         """Se ejecuta antes de cada prueba"""
-#         self.logica = Logica_real()
-#         self.session = Session()
+class ModeloTestEmptySetUp(unittest.TestCase):
+    """clase que contiene los test con el setUp vacio"""
 
-#     def test_caso01_dar_lista_autos_vacia(self):
-#         """Test que verifica que la lista de autos este vacia"""
-#         busqueda = self.logica.dar_autos()
-#         if len(busqueda) == 0:
-#             resultado = True
-#         else:
-#             resultado = False
-#         self.assertTrue(resultado)
+    def setUp(self):
+        """Se ejecuta antes de cada prueba"""
+        self.logica = Logica_real()
+        self.session = Session()
+
+        busqueda = self.session.query(Auto).all()
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        self.session.commit()
+
+    def tearDown(self):
+        self.session = Session()
+
+        """Consulta todos los autos"""
+        busqueda = self.session.query(Auto).all()
+
+        """Borra todos los autos"""
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        self.session.commit()
+        self.session.close()
+
+    def test_caso01_dar_lista_autos_vacia(self):
+        """Test que verifica que la lista de autos este vacia"""
+        busqueda = self.logica.dar_autos()
+        if len(busqueda) == 0:
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_caso02_dar_2_autos_ordenados(self):
+        """Test que verifica que la lista de autos este ordenada por placa"""
+        self.logica.crear_auto("Toyota", "Corolla", "ABC123", "Rojo", 1500, "Gasolina", 0)
+        self.logica.crear_auto("Toyota", "Corolla", "XYZ789", "Rojo", 1500, "Gasolina", 0)
+        busqueda = self.logica.dar_autos()
+        resultado = True
+        for i in range(len(busqueda) - 1):
+            if busqueda[i]["placa"] > busqueda[i + 1]["placa"]:
+                resultado = False
+                break
+        self.assertTrue(resultado)
 
 
 class ModeloTestTDD(unittest.TestCase):
@@ -150,17 +180,7 @@ class ModeloTestTDD(unittest.TestCase):
         self.session.commit()
         self.session.close()
 
-    def test_caso02_dar_autos_ordenados(self):
-        """Test que verifica que la lista se regrese en orden cronologico"""
-        busqueda = self.logica.dar_autos()
-        if (
-            busqueda[0].get("placa") == self.auto1.placa
-            and busqueda[1].get("placa") == self.auto2.placa
-        ):
-            resultado = True
-        else:
-            resultado = False
-        self.assertTrue(resultado)
+    
 
     def test_caso03_1_agregar_auto_campo_placa_mas_de_6_caracteres(self):
         """test que verifica que el campo placa no tenga mas de 6 caracteres"""

@@ -92,7 +92,7 @@ class Logica_real:
 
     def dar_autos(self):
         lista = []
-        autos = session.query(Auto).all()
+        autos = session.query(Auto).order_by(Auto.placa).all()
         for auto in autos:
             lista.append(auto.__dict__)
         return lista
