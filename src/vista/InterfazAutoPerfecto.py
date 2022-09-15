@@ -32,25 +32,49 @@ class App_AutoPerfecto(QApplication):
         """
         Esta función guarda un nuevo auto o los cambios sobre una existente
         """
-        if self.logica.validar_crear_editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)==True:
-            if self.auto_actual == -1:
-                self.logica.crear_auto(marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
-            else:
-                self.logica.editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
-            self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+        if self.auto_actual == -1:
+            response = self.logica.crear_auto(marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
         else:
-            return False
+            response = self.logica.editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
+
+        if response == True:
+            self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+
+        return response
+
+
+        # self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+
+
+
+        # if self.logica.validar_crear_editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)==True:
+        #     if self.auto_actual == -1:
+        #         self.logica.crear_auto(marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
+        #     else:
+        #         self.logica.editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
+        #     self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+        # else:
+        #     return False
 
     def vender_auto(self, kilometrajeVenta, valorVenta):
         """
         Esta función actualiza la venta de un auto
-        """
-        if self.logica.validar_vender_auto(self.auto_actual, kilometrajeVenta, valorVenta):
-            self.logica.vender_auto(self.auto_actual, float(kilometrajeVenta), float(valorVenta))
-            return True
-        else:
-            self.vista_lista_autos.error_vender_auto()
-            return False
+        """ 
+        response = self.logica.vender_auto(self.auto_actual, kilometrajeVenta, valorVenta)
+
+        if response != True:
+            self.vista_lista_autos.error_vender_auto(response)
+
+        self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+        return response
+
+
+        # if self.logica.validar_vender_auto(self.auto_actual, kilometrajeVenta, valorVenta):
+        #     self.logica.vender_auto(self.auto_actual, float(kilometrajeVenta), float(valorVenta))
+        #     return True
+        # else:
+        #     self.vista_lista_autos.error_vender_auto()
+        #     return False
         #self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
 
     def aniadir_mantenimiento(self, nombre, descripcion):

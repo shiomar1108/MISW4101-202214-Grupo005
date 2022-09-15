@@ -131,26 +131,39 @@ class Vista_auto(QWidget):
         """
         Esta función guarda los cambios al auto (editando o guardando los nuevos autos)
         """    
-        
-        kilometraje = int(self.texto_kilometraje.text())
-        modelo = int(self.texto_modelo.text())
-        cilindraje = self.texto_cilindraje.text()
-        if "." in cilindraje:
-            cilindraje = float(cilindraje)
-        else:
-            cilindraje = int(cilindraje)
+        kilometraje = ""
+        modelo = ""
+        cilindraje = ""
 
-        if self.interfaz.guardar_auto(self.texto_marca.text(), self.texto_placa.text(), modelo, kilometraje, \
-        self.texto_color.text(), cilindraje, self.texto_tipo_combustible.text()) != False:
+        if self.texto_kilometraje.text() != "":
+            kilometraje = int(self.texto_kilometraje.text())
+
+        if self.texto_modelo.text() != "":
+            modelo = int(self.texto_modelo.text())
+        
+
+        if self.texto_cilindraje.text() != "":
+            cilindraje = self.texto_cilindraje.text()
+            if "." in cilindraje:
+                cilindraje = float(cilindraje)
+            else:
+                cilindraje = int(cilindraje)
+        
+
+        response = self.interfaz.guardar_auto(self.texto_marca.text(), self.texto_placa.text(), modelo, kilometraje, \
+        self.texto_color.text(), cilindraje, self.texto_tipo_combustible.text())
+
+
+        if response == True:
             self.hide()
             self.interfaz.mostrar_vista_lista_autos()
         else:
-            self.error_auto()
+            self.error_auto(response)
     
-    def error_auto(self):
+    def error_auto(self, response):
         mensaje_error=QMessageBox()
         mensaje_error.setIcon(QMessageBox.Question)
-        mensaje_error.setText("Verifique que todos los campos se encuentren diligenciados y que el kilometraje sea un valor numérico.")        
+        mensaje_error.setText(response)        
         mensaje_error.setWindowTitle("Error al guardar")
         mensaje_error.setWindowIcon(QIcon("src/recursos/smallLogo.png"))
         mensaje_error.setStandardButtons(QMessageBox.Ok ) 

@@ -14,61 +14,53 @@ class Logica_real:
     def crear_auto(
         self, marca, modelo, placa, color, cilindraje, combustible, kilometraje
     ):
-        required_fields = [
-            "marca",
-            "modelo",
-            "placa",
-            "color",
-            "cilindraje",
-            "combustible",
-            "kilometraje",
-        ]
+        required_fields = ['marca', 'modelo', 'placa', 'color', 'cilindraje', 'combustible', 'kilometraje']
         for field in required_fields:
-            if field not in locals():
-                return False
+            if field not in locals() or locals()[field] == '':
+                return "Error: {} es requerido".format(field)
 
-        int_fields = ["kilometraje", "modelo"]
+        int_fields = ['kilometraje', 'modelo']
         for field in int_fields:
             if not isinstance(locals()[field], int):
-                return False
+                return "Error: {} debe ser un numero".format(field)
 
-        str_fields = ["marca", "placa", "color", "combustible"]
+        str_fields = ['marca', 'placa', 'color', 'combustible']
         for field in str_fields:
             if not isinstance(locals()[field], str):
-                return False
+                return "Error: {} debe ser un String".format(field)
 
         if not isinstance(cilindraje, (int, float)):
-            return False
+            return "Error: cilindraje debe ser un numero o un decimal"
 
-        if len(placa) != 6 or modelo > 9999:
-            return False
+        if(len(placa) != 6 or modelo > 9999):
+            return "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999"
         else:
-            chunks = [placa[i : i + 3] for i in range(0, len(placa), 3)]
-            if chunks[1].isalpha() or chunks[0].isnumeric():
-                return False
+            chunks = [placa[i:i+3] for i in range(0, len(placa), 3)]
+            if(chunks[1].isalpha() or chunks[0].isnumeric() ):
+                return "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 0:
             auto = Auto(
-                marca=marca,
-                modelo=modelo,
-                placa=placa,
-                color=color,
-                cilindraje=cilindraje,
+                marca=marca, 
+                modelo=modelo, 
+                placa=placa, 
+                color=color, 
+                cilindraje=cilindraje, 
                 combustible=combustible,
-                kilometraje_compra=kilometraje,
-                precio_venta=0,
-                kilometraje_venta=0,
-                gasto_total=0,
-                gasto_anual=0,
-                gasto_kilometro=0,
-                vendido=False,
+                kilometraje_compra = kilometraje,
+                precio_venta = 0,
+                kilometraje_venta = 0,
+                gasto_total = 0,
+                gasto_anual = 0,
+                gasto_kilometro = 0,
+                vendido = False,
             )
             session.add(auto)
             session.commit()
             return True
         else:
-            return False
+            return 'Error: auto con Placa ' + placa + ' ya esta registrado'
 
     def crear_mantenimiento(self, nombre, descripcion):
         required_fields = ["nombre", "descripcion"]
@@ -133,12 +125,15 @@ class Logica_real:
 
     def vender_auto(self, placa, precio_venta, kilometraje_venta):
         if placa is None or len(placa) == 0:
-            return False
+            return "Error: placa es requerida"
 
-        required_numeric_fields = ["precio_venta", "kilometraje_venta"]
+        required_numeric_fields = ['precio_venta', 'kilometraje_venta']
         for field in required_numeric_fields:
+            if field not in locals() or locals()[field] == '':
+                return "Error: {} es requerido".format(field)
+
             if not isinstance(locals()[field], (int, float)) or locals()[field] < 0:
-                return False
+                return "Error: {} debe ser un numero mayor a 0".format(field)
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 1:
@@ -150,9 +145,9 @@ class Logica_real:
                 session.commit()
                 return True
             else:
-                return False
+                return "Error: auto con placa " + placa + " ya fue vendido"
         else:
-            return False
+            return "Error: auto con Placa " + placa + " no existe"
 
     # Funciones relacionadas a Mantenimientos
     def agregar_mantenimiento(self, nombre):
