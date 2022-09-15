@@ -296,7 +296,9 @@ class ModeloTestTDD(unittest.TestCase):
             combustible="HIBRIDO",
             kilometraje=self.data_factory.random_int(0, 500000),
         )
-        self.assertEqual(resultado, "Error: auto de la Marca volkswagen ya esta registrado")
+        self.assertEqual(
+            resultado, "Error: auto de la Marca volkswagen ya esta registrado"
+        )
 
     def test_caso06_1_crear_auto_vacio(self):
         """test que verifica que los campos al crear un auto no esten vacios"""
@@ -570,9 +572,7 @@ class Test_Modelo_Venta(unittest.TestCase):
             valor=self.data_factory.random_int(1000000, 1000000000) / 100,
             kilometraje="abc",
         )
-        self.assertEqual(
-            resultado, "Error: kilometraje debe ser un número"
-        )
+        self.assertEqual(resultado, "Error: kilometraje debe ser un número")
 
     def test_HU005_5_vender_automovil_precio_venta_negativo(self):
         """test que verifica que no se pueda vender un automovil con precio de venta negativo"""
@@ -590,9 +590,7 @@ class Test_Modelo_Venta(unittest.TestCase):
             valor=self.data_factory.random_int(1000000, 1000000000) / 100,
             kilometraje=-1,
         )
-        self.assertEqual(
-            resultado, "Error: kilometraje debe ser un numero mayor a 0"
-        )
+        self.assertEqual(resultado, "Error: kilometraje debe ser un numero mayor a 0")
 
 
 class Test_Modelo_Accion(unittest.TestCase):
@@ -674,7 +672,7 @@ class Test_Modelo_Accion(unittest.TestCase):
 
     def test_HU012_1_crear_accion(self):
         """test que verifica que se puede agregar una accion a un auto"""
-        fecha = self.data_factory.date(pattern="%d-%m-%Y")
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
         costo = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         resultado = self.logica.crear_accion(
             id_auto=1,
@@ -696,9 +694,9 @@ class Test_Modelo_Accion(unittest.TestCase):
     def test_HU012_2_crear_dos_acciones(self):
         """test que verifica que se puede agregar varias acciones a un auto"""
         found = 0
-        fecha1 = self.data_factory.date(pattern="%d-%m-%Y")
-        fecha2 = self.data_factory.date(pattern="%d-%m-%Y")
-        fecha3 = self.data_factory.date(pattern="%d-%m-%Y")
+        fecha1 = self.data_factory.date(pattern="%Y-%m-%d")
+        fecha2 = self.data_factory.date(pattern="%Y-%m-%d")
+        fecha3 = self.data_factory.date(pattern="%Y-%m-%d")
         costo1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         costo2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         costo3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
@@ -739,14 +737,14 @@ class Test_Modelo_Accion(unittest.TestCase):
         resultado = self.logica.crear_accion(
             id_auto="", mantenimiento="", valor="", fecha="", kilometraje=""
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: id_auto es requerido")
 
     def test_HU012_3_crear_acciones_vacias_2(self):
         """test que verifica que no se puede agregar una accion vacia a un auto"""
         resultado = self.logica.crear_accion(
             id_auto=1, mantenimiento="", valor="", fecha="", kilometraje=""
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: mantenimiento es requerido")
 
     def test_HU012_3_crear_acciones_vacias_3(self):
         """test que verifica que no se puede agregar una accion vacia a un auto"""
@@ -757,7 +755,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             fecha="",
             kilometraje="",
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: valor es requerido")
 
     def test_HU012_3_crear_acciones_vacias_4(self):
         """test que verifica que no se puede agregar una accion vacia a un auto"""
@@ -770,7 +768,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             fecha="",
             kilometraje="",
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: fecha es requerido")
 
     def test_HU012_3_crear_acciones_vacias_3(self):
         """test que verifica que no se puede agregar una accion vacia a un auto"""
@@ -780,10 +778,10 @@ class Test_Modelo_Accion(unittest.TestCase):
             valor=self.data_factory.pyfloat(
                 left_digits=5, right_digits=2, positive=True
             ),
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje="",
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: kilometraje es requerido")
 
     def test_HU012_3_crear_acciones_vacias_4(self):
         """test que verifica que no se puede agregar una accion vacia a un auto"""
@@ -796,7 +794,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             fecha="",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: fecha es requerido")
 
     def test_HU012_4_crear_accion_costo_invalido(self):
         """test que verifica que no se puede agregar una accion con un costo invalido"""
@@ -804,10 +802,10 @@ class Test_Modelo_Accion(unittest.TestCase):
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor="25000.3",
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: valor debe ser un número")
 
     def test_HU012_5_crear_accion_kilometraje_invalido(self):
         """test que verifica que no se puede agregar una accion con un kilometraje invalido"""
@@ -817,10 +815,10 @@ class Test_Modelo_Accion(unittest.TestCase):
             valor=self.data_factory.pyfloat(
                 left_digits=5, right_digits=2, positive=True
             ),
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje="150000",
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: kilometraje debe ser un Entero")
 
     def test_HU012_6_crear_accion_fecha_invalido_1(self):
         """test que verifica que no se puede agregar una accion con una fecha invalida"""
@@ -833,7 +831,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             fecha=189750369,
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: fecha debe ser un String")
 
     def test_HU012_6_crear_accion_fecha_invalido_2(self):
         """test que verifica que no se puede agregar una accion con una fecha invalida"""
@@ -846,7 +844,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             fecha="25-08",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: La fecha debe ser en formato AAAA-MM-DD")
 
     def test_HU012_7_crear_accion_Mantenimiento_invalido(self):
         """test que verifica que no se puede agregar una accion con un mantenimiento invalido"""
@@ -856,16 +854,16 @@ class Test_Modelo_Accion(unittest.TestCase):
             valor=self.data_factory.pyfloat(
                 left_digits=5, right_digits=2, positive=True
             ),
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: El Mantenimiento debe existir")
 
     def test_HU012_8_crear_accion_duplicada_1(self):
         """test que verifica que no se puede agregar una accion duplicada"""
         kilo = self.data_factory.random_int(min=0, max=999999)
         costo = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        fecha = self.data_factory.date(pattern="%d-%m-%Y")
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
@@ -880,7 +878,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             fecha=fecha,
             kilometraje=kilo,
         )
-        self.assertFalse(resultado)
+        self.assertEqual(resultado, "Error: La Accion no debe estar repetidas")
 
     def test_HU012_8_crear_accion_duplicada_2(self):
         """test que verifica que no se puede agregar una accion duplicada"""
@@ -890,14 +888,14 @@ class Test_Modelo_Accion(unittest.TestCase):
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=costo,
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje=kilo,
         )
         resultado = self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de Llantas",
             valor=costo,
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje=kilo,
         )
         self.assertTrue(resultado)
@@ -910,7 +908,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             valor=self.data_factory.pyfloat(
                 left_digits=5, right_digits=2, positive=True
             ),
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
@@ -919,7 +917,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             valor=self.data_factory.pyfloat(
                 left_digits=5, right_digits=2, positive=True
             ),
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
@@ -928,7 +926,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             valor=self.data_factory.pyfloat(
                 left_digits=5, right_digits=2, positive=True
             ),
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         lista = self.logica.dar_acciones_auto(id_auto=1)
@@ -950,11 +948,11 @@ class Test_Modelo_Accion(unittest.TestCase):
             valor=self.data_factory.pyfloat(
                 left_digits=5, right_digits=2, positive=True
             ),
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         kilo = self.data_factory.random_int(min=0, max=999999)
-        fecha = self.data_factory.date(pattern="%d-%m-%Y")
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Carga de Diesel",
@@ -991,7 +989,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             valor=self.data_factory.pyfloat(
                 left_digits=5, right_digits=2, positive=True
             ),
-            fecha=self.data_factory.date(pattern="%d-%m-%Y"),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         lista = self.logica.dar_accion(id_auto=1, id_accion=3)

@@ -2,9 +2,9 @@ from src.modelo.auto import Auto
 from src.modelo.mantenimiento import Mantenimiento
 from src.modelo.accion import Accion
 from datetime import datetime
+import operator
 
 from src.modelo.conn import engine, Base, session
-import operator
 
 
 class Logica_mock:
@@ -158,7 +158,7 @@ class Logica_mock:
         try:
             cilindraje = int(cilindraje)
         except:
-            mensaje = "Error: cilindraje debe ser un numero o un decimal"
+            mensaje = "Error: cilindraje debe ser un número o un decimal"
             try:
                 cilindraje = float(cilindraje)
             except:
@@ -347,7 +347,7 @@ class Logica_mock:
                 return accion
         return None
 
-    def crear_accion(self, mantenimiento, id_auto, valor, kilometraje, fecha):
+    def crear_accion(self, id_auto, kilometraje, valor, fecha, mantenimiento):
         # n_accion = {}
         # n_accion['Mantenimiento'] = mantenimiento
         # n_accion['Auto'] = self.autos[id_auto]['Marca']
@@ -355,36 +355,36 @@ class Logica_mock:
         # n_accion['Kilometraje'] = kilometraje
         # n_accion['Fecha'] = fecha
         # self.acciones.append(n_accion)
-        required_fields = ["id_auto", "kilometraje", "valor", "fecha", "mantenimiento"]
+        required_fields = ["id_auto", "mantenimiento", "valor", "fecha", "kilometraje"]
         for field in required_fields:
-            if field not in locals():
-                return False
+            if field not in locals() or locals()[field] == "":
+                return "Error: {} es requerido".format(field)
 
         str_fields = ["fecha", "mantenimiento"]
         for field in str_fields:
             if not isinstance(locals()[field], str):
-                return False
+                return "Error: {} debe ser un String".format(field)
 
         if not isinstance(valor, (float)):
-            return False
+            return "Error: valor debe ser un número"
 
         int_fields = ["id_auto", "kilometraje"]
         for field in int_fields:
             if not isinstance(locals()[field], int):
-                return False
+                return "Error: {} debe ser un Entero".format(field)
 
         busqueda = session.query(Auto).filter(Auto.id == id_auto).all()
         if len(busqueda) != 1:
-            return False
+            return "Error: El Auto debe existir"
 
         manto_tempo = self.agregar_mantenimiento(nombre=mantenimiento)
         if manto_tempo == None:
-            return False
+            return "Error: El Mantenimiento debe existir"
 
         try:
-            datetime_object = datetime.strptime(fecha, "%d-%m-%Y")
+            datetime_object = datetime.strptime(fecha, "%Y-%m-%d")
         except ValueError as ve:
-            return False
+            return "Error: La fecha debe ser en formato AAAA-MM-DD"
 
         acciones = self.dar_acciones_auto(id_auto)
         for dato in acciones:
@@ -394,7 +394,7 @@ class Logica_mock:
                 and dato.get("fecha") == fecha
                 and dato.get("mantenimiento") == manto_tempo.id
             ):
-                return False
+                return "Error: La Accion no debe estar repetidas"
 
         auto = session.query(Auto).filter(Auto.id == id_auto).first()
         accion = Accion(
@@ -406,7 +406,6 @@ class Logica_mock:
         )
         auto.acciones.append(accion)
         session.commit()
-
         return True
 
     def editar_accion(
@@ -461,3 +460,8 @@ class Logica_mock:
         gastos = [("Total", auto["gasto_anual"]), ("Anual", auto["gasto_total"])]
 
         return gastos, auto["gasto_kilometro"]
+
+    def agregar_mantenimiento(self, nombre):
+        return (
+            session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
+        )

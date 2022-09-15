@@ -125,9 +125,10 @@ class Vista_lista_acciones(QWidget):
                 child.widget().deleteLater()
 
         numero_fila=1
+        print(acciones)
         for accion in self.acciones:
             
-            etiqueta_mantenimiento = QLabel(accion["Mantenimiento"])
+            etiqueta_mantenimiento = QLabel(accion["mantenimiento"])
             etiqueta_mantenimiento.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_mantenimiento, numero_fila, 0, alignment=Qt.AlignTop)
 
