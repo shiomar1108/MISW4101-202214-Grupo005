@@ -443,7 +443,7 @@ class Logica_mock:
     ):
         validacion = False
         try:
-            float(kilometraje)
+            int(kilometraje)
             float(valor)
             validacion = True
         except ValueError:

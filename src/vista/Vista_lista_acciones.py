@@ -135,7 +135,7 @@ class Vista_lista_acciones(QWidget):
             etiqueta_kilometraje.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_kilometraje, numero_fila, 1, alignment=Qt.AlignTop|Qt.AlignCenter)
 
-            etiqueta_valor = QLabel("{:,.3f}".format(float(accion["valor"])))
+            etiqueta_valor = QLabel( "$" + "{:,.2f}".format(float(accion["valor"])))
             etiqueta_valor.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_valor, numero_fila, 2, alignment=Qt.AlignTop|Qt.AlignCenter)
             
@@ -222,7 +222,7 @@ class Vista_lista_acciones(QWidget):
     def error_crear_editar_accion(self):
             mensaje_error=QMessageBox()
             mensaje_error.setIcon(QMessageBox.Question)
-            mensaje_error.setText("Verifique que todos los campos se encuentren diligenciados y que Kilometraje y Valor sean valores numéricos.")        
+            mensaje_error.setText("Verifique que todos los campos se encuentren diligenciados: <br> Kilometraje debe ser un numero entero. <br> Valor debe ser un numero con decimal. ")
             mensaje_error.setWindowTitle("Error al guardar")
             mensaje_error.setWindowIcon(QIcon("src/recursos/smallLogo.png"))
             mensaje_error.setStandardButtons(QMessageBox.Ok ) 
