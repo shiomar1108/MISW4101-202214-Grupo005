@@ -11,6 +11,20 @@ class Logica_real:
     def __init__(self):
         Base.metadata.create_all(engine)
 
+    def dar_autos(self):
+        lista = []
+        autos = session.query(Auto).order_by(Auto.placa).all()
+        for auto in autos:
+            lista.append(auto.__dict__)
+        return lista
+
+    def dar_auto(self, placa):
+        auto = session.query(Auto).filter(Auto.placa == placa).first()
+        if auto != None:
+            return auto.__dict__
+        else:
+            return None
+
     def crear_auto(
         self, marca, placa, modelo, kilometraje, color, cilindraje, combustible
     ):
@@ -97,47 +111,6 @@ class Logica_real:
         else:
             return "Error: auto con Placa " + placa + " ya esta registrado"
 
-    def aniadir_mantenimiento(self, nombre, descripcion):
-        required_fields = ["nombre", "descripcion"]
-        for field in required_fields:
-            if len(locals()[field]) == 0:
-                return f"Error: {field} es requerido"
-
-            if field == "nombre":
-                if len(locals()[field]) < 3:
-                    return f"Error: {field} debe tener más de 3 caracteres"
-                if len(locals()[field]) > 200:
-                    return f"Error: {field} debe tener menos de 200 caracteres"
-
-        busqueda = (
-            session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).all()
-        )
-        if len(busqueda) == 0:
-            mantenimiento = Mantenimiento(
-                nombre=nombre,
-                descripcion=descripcion,
-            )
-            session.add(mantenimiento)
-            session.commit()
-            return True
-        else:
-            return "Error: mantenimiento con Nombre " + nombre + " ya esta registrado"
-
-    # Funciones relacionadas a Autos
-    def dar_auto(self, placa):
-        auto = session.query(Auto).filter(Auto.placa == placa).first()
-        if auto != None:
-            return auto.__dict__
-        else:
-            return None
-
-    def dar_autos(self):
-        lista = []
-        autos = session.query(Auto).order_by(Auto.placa).all()
-        for auto in autos:
-            lista.append(auto.__dict__)
-        return lista
-
     def editar_auto(
         self,
         placa_og,
@@ -200,12 +173,6 @@ class Logica_real:
         else:
             return "Error: auto con Placa " + placa + " no existe"
 
-    # Funciones relacionadas a Mantenimientos
-    def agregar_mantenimiento(self, nombre):
-        return (
-            session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
-        )
-
     def dar_mantenimientos(self):
         lista = []
         mantos = session.query(Mantenimiento).all()
@@ -213,72 +180,31 @@ class Logica_real:
             lista.append(manto.__dict__)
         return lista
 
-    def dar_mantenimiento(self, nombre):
-        manto = (
-            session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
-        )
-        if manto != None:
-            return manto.__dict__
-        else:
-            return None
-
-    # Funciones relacionadas a Acciones
-    def crear_accion(self, id_auto, kilometraje, valor, fecha, mantenimiento):
-
-        required_fields = ["id_auto", "kilometraje", "valor", "fecha", "mantenimiento"]
+    def aniadir_mantenimiento(self, nombre, descripcion):
+        required_fields = ["nombre", "descripcion"]
         for field in required_fields:
-            if field not in locals():
-                return False
+            if len(locals()[field]) == 0:
+                return f"Error: {field} es requerido"
 
-        str_fields = ["fecha", "mantenimiento"]
-        for field in str_fields:
-            if not isinstance(locals()[field], str):
-                return False
+            if field == "nombre":
+                if len(locals()[field]) < 3:
+                    return f"Error: {field} debe tener más de 3 caracteres"
+                if len(locals()[field]) > 200:
+                    return f"Error: {field} debe tener menos de 200 caracteres"
 
-        if not isinstance(valor, (float)):
-            return False
-
-        int_fields = ["id_auto", "kilometraje"]
-        for field in int_fields:
-            if not isinstance(locals()[field], int):
-                return False
-
-        busqueda = session.query(Auto).filter(Auto.id == id_auto).all()
-        if len(busqueda) != 1:
-            return False
-
-        manto_tempo = self.agregar_mantenimiento(nombre=mantenimiento)
-        if manto_tempo == None:
-            return False
-
-        try:
-            datetime_object = datetime.strptime(fecha, "%d-%m-%Y")
-        except ValueError as ve:
-            return False
-
-        acciones = self.dar_acciones_auto(id_auto)
-        for dato in acciones:
-            if (
-                dato.get("costo") == valor
-                and dato.get("kilometraje") == kilometraje
-                and dato.get("fecha") == fecha
-                and dato.get("mantenimiento") == manto_tempo.id
-            ):
-                return False
-
-        auto = session.query(Auto).filter(Auto.id == id_auto).first()
-        accion = Accion(
-            kilometraje=kilometraje,
-            costo=valor,
-            fecha=fecha,
-            auto=id_auto,
-            mantenimiento=manto_tempo.id,
+        busqueda = (
+            session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).all()
         )
-        auto.acciones.append(accion)
-        session.commit()
-
-        return True
-
+        if len(busqueda) == 0:
+            mantenimiento = Mantenimiento(
+                nombre=nombre,
+                descripcion=descripcion,
+            )
+            session.add(mantenimiento)
+            session.commit()
+            return True
+        else:
+            return "Error: mantenimiento con Nombre " + nombre + " ya esta registrado"
     def dar_acciones_auto(self, id_auto):
         lista = []
         auto = session.query(Auto).filter(Auto.id == id_auto).first()
@@ -296,3 +222,66 @@ class Logica_real:
             if accion.get("id") == id_accion:
                 return accion
         return None
+
+    def crear_accion(self, mantenimiento, id_auto, valor, kilometraje, fecha):
+        required_fields = ["id_auto", "mantenimiento", "valor", "fecha", "kilometraje"]
+        for field in required_fields:
+            if field not in locals() or locals()[field] == "":
+                return "Error: {} es requerido".format(field)
+
+        str_fields = ["fecha", "mantenimiento"]
+        for field in str_fields:
+            try:
+                int(locals()[field])
+                return "Error: {} debe ser un String".format(field)
+            except:
+                if len(locals()[field]) > 50:
+                    return "Error: {} debe tener menos de 50 caracteres".format(field)
+
+        if not isinstance(valor, (float)):
+            return "Error: valor debe ser un número"
+
+        int_fields = ["id_auto", "kilometraje"]
+        for field in int_fields:
+            if not isinstance(locals()[field], int):
+                return "Error: {} debe ser un Entero".format(field)
+
+        busqueda = session.query(Auto).filter(Auto.id == id_auto).all()
+        if len(busqueda) != 1:
+            return "Error: El Auto debe existir"
+
+        manto_tempo = self.agregar_mantenimiento(nombre=mantenimiento)
+        if manto_tempo == None:
+            return "Error: El Mantenimiento debe existir"
+
+        try:
+            datetime_object = datetime.strptime(fecha, "%Y-%m-%d")
+        except ValueError as ve:
+            return "Error: La fecha debe ser en formato AAAA-MM-DD"
+
+        acciones = self.dar_acciones_auto(id_auto)
+        for dato in acciones:
+            if (
+                dato.get("valor") == valor
+                and dato.get("kilometraje") == kilometraje
+                and dato.get("fecha") == fecha
+                and dato.get("mantenimiento") == manto_tempo.nombre
+            ):
+                return "Error: La Accion no debe estar repetidas"
+
+        auto = session.query(Auto).filter(Auto.id == id_auto).first()
+        accion = Accion(
+            kilometraje=kilometraje,
+            valor=valor,
+            fecha=fecha,
+            auto=id_auto,
+            mantenimiento=manto_tempo.nombre,
+        )
+        auto.acciones.append(accion)
+        session.commit()
+        return True    
+
+    def agregar_mantenimiento(self, nombre):
+        return (
+            session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
+        )
