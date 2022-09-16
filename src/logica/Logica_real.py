@@ -283,7 +283,15 @@ class Logica_real:
         return True
 
     def dar_reporte_ganancias(self, id_auto):
-        return [("Total", 0)], 0
+        acciones = self.dar_acciones_auto(id_auto)
+        if acciones is None:
+            return "Error: El Auto debe existir"
+
+        ganancias = 0
+        for accion in acciones:
+            ganancias += accion.get("valor")
+
+        return [("Total", ganancias)], 0
 
     def agregar_mantenimiento(self, nombre):
         return (

@@ -1,6 +1,6 @@
 import unittest
 import random
-
+from pprint import pprint
 from faker import Faker
 from faker.providers import BaseProvider
 from datetime import date
@@ -1157,3 +1157,5 @@ class Test_Modelo_Gastos(unittest.TestCase):
             else:
                 resultado = False
         self.assertTrue(resultado)
+
+
