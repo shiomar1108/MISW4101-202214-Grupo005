@@ -210,7 +210,7 @@ class Logica_real:
         lista = []
         auto = session.query(Auto).filter(Auto.id == id_auto).first()
         if auto is None:
-            return None
+            return lista
 
         for accion in auto.acciones:
             lista.append(accion.__dict__)
@@ -239,8 +239,8 @@ class Logica_real:
                 if len(locals()[field]) > 50:
                     return "Error: {} debe tener menos de 50 caracteres".format(field)
 
-        if not isinstance(valor, (float)):
-            return "Error: valor debe ser un número"
+        if not isinstance(valor, (float)) or valor <= 0:
+            return "Error: valor debe ser un número con decimal mayor a 0"
 
         int_fields = ["id_auto", "kilometraje"]
         for field in int_fields:
@@ -284,8 +284,8 @@ class Logica_real:
 
     def dar_reporte_ganancias(self, id_auto):
         acciones = self.dar_acciones_auto(id_auto)
-        if acciones is None:
-            return "Error: El Auto debe existir"
+        if len(acciones) == 0:
+            return [("Total", 0)], 0
 
         ganancias = 0
         for accion in acciones:
