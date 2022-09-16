@@ -998,3 +998,162 @@ class Test_Modelo_Accion(unittest.TestCase):
         else:
             resultado = False
         self.assertTrue(resultado)
+
+class Test_Modelo_Gastos(unittest.TestCase):
+    """Clase que contiene los test de la logica"""
+
+    def setUp(self):
+        self.logica = Logica_real()
+        self.session = Session()
+        self.data_factory = Faker("es_ES")
+        self.data_factory.add_provider(ProveedorAuto)
+
+        self.auto1 = Auto(
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            placa="XXX001",
+            color="gris",
+            cilindraje=self.data_factory.pyfloat(left_digits=3, right_digits=1, positive=True),
+            combustible="GASOLINA",
+            kilometraje_compra=0,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
+        self.auto2 = Auto(
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            placa="AAA001",
+            color="Rojo",
+            cilindraje=self.data_factory.pyfloat(left_digits=3, right_digits=1, positive=True),
+            combustible="DIESEL",
+            kilometraje_compra=25000,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
+
+        self.manto1 = Mantenimiento(
+            nombre="Cambio de aceite", descripcion="Cambio de aceite"
+        )
+        self.manto2 = Mantenimiento(
+            nombre="Gasolina", descripcion="Pago por carga de Gasolina"
+        )
+        self.manto3 = Mantenimiento(
+            nombre="Seguro", descripcion="Prima anual por coberturas del Seguro"
+        )
+
+        self.session.add(self.auto1)
+        self.session.add(self.auto2)
+        self.session.add(self.manto1)
+        self.session.add(self.manto2)
+        self.session.add(self.manto3)
+        self.session.commit()
+
+    def tearDown(self):
+        self.session = Session()
+
+        """Consulta todos los autos"""
+        busqueda = self.session.query(Auto).all()
+
+        """Borra todos los autos"""
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        """Consulta todos los Mantenimientos"""
+        busqueda = self.session.query(Mantenimiento).all()
+
+        """Borra todos los Mantenimientos"""
+        for manto in busqueda:
+            self.session.delete(manto)
+
+        self.session.commit()
+        self.session.close()
+
+    def test_HU014_1_gasto_total_0(self):
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            if(gastos[1] == 0):
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
+
+    def test_HU014_1_gasto_total_1(self):
+        kilo = self.data_factory.random_int(min=0, max=999999)
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=kilo,
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            if(gastos[1] == valor):
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU014_1_gasto_total_2(self):
+        kilo1 = self.data_factory.random_int(min=0, max=999999)
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        kilo2 = self.data_factory.random_int(min=0, max=999999)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=kilo1,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=kilo2,
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            if(gastos[1] == (valor1 + valor2)):
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU014_1_gasto_total_3(self):
+        kilo1 = self.data_factory.random_int(min=0, max=999999)
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        kilo2 = self.data_factory.random_int(min=0, max=999999)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=kilo1,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=kilo2,
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=2)
+        for gastos in lista_gastos:
+            if(gastos[1] == 0):
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)

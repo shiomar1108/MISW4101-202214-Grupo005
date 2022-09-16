@@ -205,6 +205,7 @@ class Logica_real:
             return True
         else:
             return "Error: mantenimiento con Nombre " + nombre + " ya esta registrado"
+
     def dar_acciones_auto(self, id_auto):
         lista = []
         auto = session.query(Auto).filter(Auto.id == id_auto).first()
@@ -279,7 +280,10 @@ class Logica_real:
         )
         auto.acciones.append(accion)
         session.commit()
-        return True    
+        return True
+
+    def dar_reporte_ganancias(self, id_auto):
+        return [("Total", 0)], 0
 
     def agregar_mantenimiento(self, nombre):
         return (
