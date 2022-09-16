@@ -1159,3 +1159,22 @@ class Test_Modelo_Gastos(unittest.TestCase):
         self.assertTrue(resultado)
 
 
+    def test_HU014_2_gasto_total_0(self):
+        """Prueba que los gastos sea un numero positivo"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=-10,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+
+        for gastos in lista_gastos:
+            if(gastos[1] >= 0):
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
