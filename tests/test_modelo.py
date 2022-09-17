@@ -1183,9 +1183,9 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_1_gasto_anual_1(self):
         """Prueba que los gastos por año"""
         found = 0
-        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor1 = 10021.86
+        valor2 = 25362.16
+        valor3 = 85693.6
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
@@ -1226,10 +1226,10 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_1_gasto_anual_2(self):
         """Prueba que los gastos por año"""
         found = 0
-        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor1 = 10021.86
+        valor2 = 25362.16
+        valor3 = 85693.69
+        valor4 = 96944.57
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
@@ -1276,10 +1276,10 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_1_gasto_anual_3(self):
         """Prueba que los gastos por año"""
         found = 0
-        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor1 = 10021.86
+        valor2 = 25362.16
+        valor3 = 85693.69
+        valor4 = 96944.57
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
@@ -1324,10 +1324,10 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_2_gasto_anual_invalido(self):
         """Prueba que los gastos por año con valor invalido"""
         found = 0
-        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor1 = 10021.86
         valor2 = -25362.16
-        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = 85693.69
+        valor4 = 96944.57
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",

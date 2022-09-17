@@ -332,7 +332,7 @@ class Logica_mock:
         lista = []
         auto = session.query(Auto).filter(Auto.id == id_auto).first()
         if auto is None:
-            return None
+            return lista
 
         for accion in auto.acciones:
             lista.append(accion.__dict__)
@@ -369,8 +369,8 @@ class Logica_mock:
                 if len(locals()[field]) > 50:
                     return "Error: {} debe tener menos de 50 caracteres".format(field)
 
-        if not isinstance(valor, (float)):
-            return "Error: valor debe ser un número"
+        if not isinstance(valor, (float)) or valor <= 0:
+            return "Error: valor debe ser un número con decimal mayor a 0"
 
         int_fields = ["id_auto", "kilometraje"]
         for field in int_fields:
@@ -410,7 +410,7 @@ class Logica_mock:
         )
         auto.acciones.append(accion)
         session.commit()
-        return True    
+        return True
 
     def editar_accion(
         self, id_accion, mantenimiento, id_auto, valor, kilometraje, fecha
@@ -451,7 +451,7 @@ class Logica_mock:
 
         return validacion
 
-    def dar_reporte_ganancias(self, placa):
+    def dar_reporte_ganancias(self, id_auto):
         # n_auto = self.autos[id_auto]['Marca']
 
         # for gasto in self.gastos:
@@ -459,11 +459,44 @@ class Logica_mock:
         #         return gasto['Gastos'], gasto['ValorKilometro']
 
         # return [('Total',0)], 0
-        auto = session.query(Auto).filter(Auto.placa == placa).first().__dict__
+        acciones = self.dar_acciones_auto(id_auto)
+        if len(acciones) == 0:
+            return [("Total", 0)], 0
 
-        gastos = [("Total", auto["gasto_anual"]), ("Anual", auto["gasto_total"])]
+        ganancias = 0
+        lista_year = []
+        lista_valor = []
+        lista_calculo =[]
+        for i in range(0, len(acciones), 1):
+            accion = acciones[i]
+            #calculo gasto total
+            ganancias += accion.get("valor")
+            #calculo gasto por año
+            year = accion.get("fecha")[:4]
+            try:
+                index = lista_year.index(year)
+                lista_valor[index] += accion.get("valor")
+            except:
+                lista_year.append(year)
+                lista_valor.append(accion.get("valor"))
+            #gasto x kilometro ultimo año
+            if((datetime.today() - datetime.strptime(accion.get('fecha'), '%Y-%m-%d')).days < 365):
+                if((i+1) == len(acciones)):
+                    calculo_Accion = (accion.get("valor"))/(accion.get("kilometraje") - self.dar_auto(id_auto= id_auto).get("kilometraje_compra"))
+                    lista_calculo.append(calculo_Accion)
+                else:
+                    calculo_Accion = (accion.get("valor"))/(accion.get("kilometraje") - acciones[i+1].get("kilometraje"))
+                    lista_calculo.append(calculo_Accion)
+                    
+        lista = list(map(lambda x, y: (x, y), lista_year, lista_valor))
+        lista_ordenada = sorted(lista, key=lambda tup: tup[0])
+        lista_ordenada.append(("Total", ganancias))
+        if(len(lista_calculo) == 0):
+            calculo_Accion = 0
+        else:
+            calculo_Accion = (sum(lista_calculo))/(len(lista_calculo))
 
-        return gastos, auto["gasto_kilometro"]
+        return lista_ordenada, calculo_Accion
 
     def agregar_mantenimiento(self, nombre):
         return (
