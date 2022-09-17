@@ -1183,29 +1183,29 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_1_gasto_anual_1(self):
         """Prueba que los gastos por año"""
         found = 0
-        valor1 = 10021.86
-        valor2 = 25362.16
-        valor3 = 85693.69
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
             fecha="2019-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=30000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
             fecha="2020-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=50000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
             fecha="2021-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=100000,
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
 
@@ -1226,37 +1226,37 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_1_gasto_anual_2(self):
         """Prueba que los gastos por año"""
         found = 0
-        valor1 = 10021.86
-        valor2 = 25362.16
-        valor3 = 85693.69
-        valor4 = 96944.57
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
             fecha="2019-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=30000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
             fecha="2020-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=95000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
             fecha="2021-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=150000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor4,
             fecha="2019-03-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=40000,
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
@@ -1276,37 +1276,37 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_1_gasto_anual_3(self):
         """Prueba que los gastos por año"""
         found = 0
-        valor1 = 10021.86
-        valor2 = 25362.16
-        valor3 = 85693.69
-        valor4 = 96944.57
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
             fecha="2019-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=30000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
-            fecha="2020-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            fecha="2020-03-15",
+            kilometraje=90000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
             fecha="2020-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=80000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor4,
             fecha="2019-03-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=40000,
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
@@ -1324,37 +1324,37 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_2_gasto_anual_invalido(self):
         """Prueba que los gastos por año con valor invalido"""
         found = 0
-        valor1 = 10021.86
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         valor2 = -25362.16
-        valor3 = 85693.69
-        valor4 = 96944.57
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
             fecha="2019-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=25000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
-            fecha="2020-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            fecha="2020-03-15",
+            kilometraje=100000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
             fecha="2020-02-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=90000,
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor4,
             fecha="2019-03-15",
-            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            kilometraje=30000,
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
@@ -1389,6 +1389,38 @@ class Test_Modelo_Gastos(unittest.TestCase):
         kilo1 = 800
         valor2 = 2400.00
         kilo2 = 1600
+        valor3 = 1200.00
+        kilo3 = 0
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2022-02-15",
+            kilometraje=kilo1,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2022-05-15",
+            kilometraje=kilo2,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor3,
+            fecha="2021-05-15",
+            kilometraje=kilo3,
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        self.assertEqual(valor_kilometro,3.0)
+
+    def test_HU016_1_gasto_xKilometro_3(self):
+        """Prueba que los gastos por kilometros se calculen bien"""
+        valor1 = 2400.00
+        kilo1 = 800
+        valor2 = 2400.00
+        kilo2 = 1600
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
@@ -1406,15 +1438,15 @@ class Test_Modelo_Gastos(unittest.TestCase):
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         self.assertEqual(valor_kilometro,3.0)
 
-    # def test_HU016_2_gasto_xKilometro(self):
-    #     """Prueba que los gastos por kilometros usen valores del ultimo año"""
-    #     valor1 = 10021.86
-    #     self.logica.crear_accion(
-    #         id_auto=1,
-    #         mantenimiento="Cambio de aceite",
-    #         valor=valor1,
-    #         fecha="2021-02-15",
-    #         kilometraje=self.data_factory.random_int(min=0, max=999999),
-    #     )
-    #     lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
-    #     self.assertNotEqual(valor_kilometro,valor1)
+    def test_HU016_2_gasto_xKilometro(self):
+        """Prueba que los gastos por kilometros usen valores del ultimo año"""
+        valor1 = 10021.86
+        self.logica.crear_accion(
+             id_auto=1,
+             mantenimiento="Cambio de aceite",
+             valor=valor1,
+             fecha="2021-02-15",
+             kilometraje=self.data_factory.random_int(min=0, max=999999),
+         )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        self.assertEqual(valor_kilometro,0)
