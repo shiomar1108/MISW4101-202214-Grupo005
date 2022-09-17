@@ -288,10 +288,23 @@ class Logica_real:
             return [("Total", 0)], 0
 
         ganancias = 0
+        lista_year = []
+        lista_valor = []
         for accion in acciones:
             ganancias += accion.get("valor")
+            year = accion.get("fecha")[:4]
+            try:
+                index = lista_year.index(year)
+                lista_valor[index] += accion.get("valor")
+            except:
+                lista_year.append(year)
+                lista_valor.append(accion.get("valor"))     
 
-        return [("Total", ganancias)], 0
+        lista = list(map(lambda x, y: (x, y), lista_year, lista_valor))
+        lista_ordenada = sorted(lista, key=lambda tup: tup[0])
+
+        lista_ordenada.append(("Total", ganancias))
+        return lista_ordenada, 0
 
     def agregar_mantenimiento(self, nombre):
         return (

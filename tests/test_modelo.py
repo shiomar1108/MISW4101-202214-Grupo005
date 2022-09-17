@@ -1083,6 +1083,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         self.session.close()
 
     def test_HU014_1_gasto_total_0(self):
+        """ test que valida el campo de valor total del reporte sin acciones """
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
             if gastos[1] == 0:
@@ -1092,6 +1093,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         self.assertTrue(resultado)
 
     def test_HU014_1_gasto_total_1(self):
+        """ test que valida el campo de valor total del reporte con una accion"""
         valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
@@ -1109,6 +1111,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         self.assertTrue(resultado)
 
     def test_HU014_1_gasto_total_2(self):
+        """ test que valida el campo de valor total del reporte con dos acciones"""
         valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
@@ -1134,6 +1137,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         self.assertTrue(resultado)
 
     def test_HU014_1_gasto_total_3(self):
+        """ test que valida el campo de valor total del reporte sin acciones del carro escogido"""
         valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
@@ -1178,80 +1182,192 @@ class Test_Modelo_Gastos(unittest.TestCase):
 
     def test_HU015_1_gasto_anual_1(self):
         """Prueba que los gastos por año"""
-        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        found = 0
+        valor1 = 10021.86
+        valor2 = 25362.16
+        valor3 = 85693.69
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
-            fecha=2019,
+            fecha="2019-02-15",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
-            fecha=2020,
+            fecha="2020-02-15",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
-            fecha=2021,
+            fecha="2021-02-15",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
 
         for gastos in lista_gastos:
             #If gasto(2019) == valor1 and gasto(2020) == valor2 and gasto(2021) == valor3
-            if gastos[0] == valor1 and gastos[1] == valor2 and gastos[2] == valor3:
-                resultado = True
+            if gastos[0] == "2019" and gastos[1] == valor1:
+                found += 1
+            elif gastos[0] == "2020" and gastos[1] == valor2:
+                found += 1
+            elif gastos[0] == "2021" and gastos[1] == valor3:
+                found += 1
+            elif gastos[0] == "Total" and gastos[1] == (valor1+valor2+valor3):
+                found += 1
             else:
-                resultado = False
-        self.assertTrue(resultado)
+                found += 0
+        self.assertEqual(found,4)
 
     def test_HU015_1_gasto_anual_2(self):
         """Prueba que los gastos por año"""
-        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        found = 0
+        valor1 = 10021.86
+        valor2 = 25362.16
+        valor3 = 85693.69
+        valor4 = 96944.57
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
-            fecha=2019,
+            fecha="2019-02-15",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
-            fecha=2020,
+            fecha="2020-02-15",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
-            fecha=2021,
+            fecha="2021-02-15",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor4,
-            fecha=2019,
+            fecha="2019-03-15",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
-
         for gastos in lista_gastos:
-            #If gasto(2019) == valor1 and gasto(2020) == valor2 and gasto(2021) == valor3
-            if gastos[0] == (valor1+valor4) and gastos[1] == valor2 and gastos[2] == valor3:
-                resultado = True
+            #If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == (valor1+valor4):
+                found += 1
+            elif gastos[0] == "2020" and gastos[1] == valor2:
+                found += 1
+            elif gastos[0] == "2021" and gastos[1] == valor3:
+                found += 1
+            elif gastos[0] == "Total" and gastos[1] == (valor1+valor2+valor3+valor4):
+                found += 1
             else:
-                resultado = False
-        self.assertTrue(resultado)
+                found += 0
+        self.assertEqual(found,4)
+
+    def test_HU015_1_gasto_anual_3(self):
+        """Prueba que los gastos por año"""
+        found = 0
+        valor1 = 10021.86
+        valor2 = 25362.16
+        valor3 = 85693.69
+        valor4 = 96944.57
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2019-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2020-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor3,
+            fecha="2020-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor4,
+            fecha="2019-03-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            #If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == (valor1+valor4):
+                found += 1
+            elif gastos[0] == "2020" and gastos[1] == (valor2+valor3):
+                found += 1
+            elif gastos[0] == "Total" and gastos[1] == (valor1+valor2+valor3+valor4):
+                found += 1
+            else:
+                found += 0
+        self.assertEqual(found,3)
+
+    def test_HU015_1_gasto_anual_invalido(self):
+        """Prueba que los gastos por año con valor invalido"""
+        found = 0
+        valor1 = 10021.86
+        valor2 = -25362.16
+        valor3 = 85693.69
+        valor4 = 96944.57
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2019-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2020-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor3,
+            fecha="2020-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor4,
+            fecha="2019-03-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            #If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == (valor1+valor4):
+                found += 1
+            elif gastos[0] == "2020" and gastos[1] == (valor2+valor3):
+                found += 1
+            elif gastos[0] == "Total" and gastos[1] == (valor1+valor2+valor3+valor4):
+                found += 1
+            else:
+                found += 0
+        self.assertNotEqual(found,3)
+
+
+        
