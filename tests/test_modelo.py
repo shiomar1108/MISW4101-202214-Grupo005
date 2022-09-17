@@ -1321,7 +1321,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
                 found += 0
         self.assertEqual(found,3)
 
-    def test_HU015_1_gasto_anual_invalido(self):
+    def test_HU015_2_gasto_anual_invalido(self):
         """Prueba que los gastos por año con valor invalido"""
         found = 0
         valor1 = 10021.86
@@ -1369,5 +1369,52 @@ class Test_Modelo_Gastos(unittest.TestCase):
                 found += 0
         self.assertNotEqual(found,3)
 
+    def test_HU016_1_gasto_xKilometro(self):
+        """Prueba que los gastos por kilometros se calculen bien"""
+        valor1 = 2400.00
+        kilo1 = 800
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2022-02-15",
+            kilometraje=kilo1,
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        self.assertEqual(valor_kilometro,(valor1/kilo1))
 
-        
+    def test_HU016_1_gasto_xKilometro_2(self):
+        """Prueba que los gastos por kilometros se calculen bien"""
+        valor1 = 2400.00
+        kilo1 = 800
+        valor2 = 2400.00
+        kilo2 = 1600
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2022-02-15",
+            kilometraje=kilo1,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2022-05-15",
+            kilometraje=kilo2,
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        self.assertEqual(valor_kilometro,3.0)
+
+    # def test_HU016_2_gasto_xKilometro(self):
+    #     """Prueba que los gastos por kilometros usen valores del ultimo año"""
+    #     valor1 = 10021.86
+    #     self.logica.crear_accion(
+    #         id_auto=1,
+    #         mantenimiento="Cambio de aceite",
+    #         valor=valor1,
+    #         fecha="2021-02-15",
+    #         kilometraje=self.data_factory.random_int(min=0, max=999999),
+    #     )
+    #     lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+    #     self.assertNotEqual(valor_kilometro,valor1)

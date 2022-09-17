@@ -18,8 +18,8 @@ class Logica_real:
             lista.append(auto.__dict__)
         return lista
 
-    def dar_auto(self, placa):
-        auto = session.query(Auto).filter(Auto.placa == placa).first()
+    def dar_auto(self, id_auto):
+        auto = session.query(Auto).filter(Auto.id == id_auto).first()
         if auto != None:
             return auto.__dict__
         else:
@@ -290,6 +290,7 @@ class Logica_real:
         ganancias = 0
         lista_year = []
         lista_valor = []
+        calculo_Accion = 0
         for accion in acciones:
             ganancias += accion.get("valor")
             year = accion.get("fecha")[:4]
@@ -298,13 +299,21 @@ class Logica_real:
                 lista_valor[index] += accion.get("valor")
             except:
                 lista_year.append(year)
-                lista_valor.append(accion.get("valor"))     
+                lista_valor.append(accion.get("valor"))
+            if((datetime.today() - datetime.strptime(accion.get('fecha'), '%Y-%m-%d')).days < 365):
+                if(len(acciones) > 1):
+                    print("mas de una accion")
+                else:
+                    calculo_Accion = (accion.get("valor"))/(accion.get("kilometraje") - self.dar_auto(id_auto= id_auto).get("kilometraje_compra"))
+                    print(calculo_Accion)
+            else:
+                print("No esta dentro del ultimo Año")
 
         lista = list(map(lambda x, y: (x, y), lista_year, lista_valor))
         lista_ordenada = sorted(lista, key=lambda tup: tup[0])
 
         lista_ordenada.append(("Total", ganancias))
-        return lista_ordenada, 0
+        return lista_ordenada, calculo_Accion
 
     def agregar_mantenimiento(self, nombre):
         return (
