@@ -490,7 +490,7 @@ class Logica_mock:
                     
         lista = list(map(lambda x, y: (x, y), lista_year, lista_valor))
         lista_ordenada = sorted(lista, key=lambda tup: tup[0])
-        lista_ordenada.append(("Total", ganancias))
+        lista_ordenada.append(("Total", round(ganancias, 2)))
         if(len(lista_calculo) == 0):
             calculo_Accion = 0
         else:

@@ -1130,7 +1130,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
-            if gastos[1] == (valor1 + valor2):
+            if gastos[1] == round((valor1 + valor2), 2):
                 resultado = True
             else:
                 resultado = False
@@ -1183,29 +1183,29 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_1_gasto_anual_1(self):
         """Prueba que los gastos por año"""
         found = 0
-        valor1 = 10021.86
-        valor2 = 25362.16
-        valor3 = 85693.6
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
             fecha="2019-02-15",
-            kilometraje=30000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
             fecha="2020-02-15",
-            kilometraje=50000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
             fecha="2021-02-15",
-            kilometraje=100000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
 
@@ -1217,7 +1217,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
                 found += 1
             elif gastos[0] == "2021" and gastos[1] == valor3:
                 found += 1
-            elif gastos[0] == "Total" and gastos[1] == (valor1+valor2+valor3):
+            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3), 2):
                 found += 1
             else:
                 found += 0
@@ -1226,37 +1226,37 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_1_gasto_anual_2(self):
         """Prueba que los gastos por año"""
         found = 0
-        valor1 = 10021.86
-        valor2 = 25362.16
-        valor3 = 85693.69
-        valor4 = 96944.57
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
             fecha="2019-02-15",
-            kilometraje=30000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
             fecha="2020-02-15",
-            kilometraje=95000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
             fecha="2021-02-15",
-            kilometraje=150000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor4,
             fecha="2019-03-15",
-            kilometraje=40000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
@@ -1267,7 +1267,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
                 found += 1
             elif gastos[0] == "2021" and gastos[1] == valor3:
                 found += 1
-            elif gastos[0] == "Total" and gastos[1] == (valor1+valor2+valor3+valor4):
+            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3+valor4), 2):
                 found += 1
             else:
                 found += 0
@@ -1276,37 +1276,37 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_1_gasto_anual_3(self):
         """Prueba que los gastos por año"""
         found = 0
-        valor1 = 10021.86
-        valor2 = 25362.16
-        valor3 = 85693.69
-        valor4 = 96944.57
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
             fecha="2019-02-15",
-            kilometraje=30000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
             fecha="2020-03-15",
-            kilometraje=90000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
             fecha="2020-02-15",
-            kilometraje=80000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor4,
             fecha="2019-03-15",
-            kilometraje=40000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
@@ -1315,7 +1315,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
                 found += 1
             elif gastos[0] == "2020" and gastos[1] == (valor2+valor3):
                 found += 1
-            elif gastos[0] == "Total" and gastos[1] == (valor1+valor2+valor3+valor4):
+            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3+valor4), 2):
                 found += 1
             else:
                 found += 0
@@ -1324,37 +1324,38 @@ class Test_Modelo_Gastos(unittest.TestCase):
     def test_HU015_2_gasto_anual_invalido(self):
         """Prueba que los gastos por año con valor invalido"""
         found = 0
-        valor1 = 10021.86
-        valor2 = -25362.16
-        valor3 = 85693.69
-        valor4 = 96944.57
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = -10000
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor1,
             fecha="2019-02-15",
-            kilometraje=25000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor2,
             fecha="2020-03-15",
-            kilometraje=100000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor3,
             fecha="2020-02-15",
-            kilometraje=90000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
             valor=valor4,
             fecha="2019-03-15",
-            kilometraje=30000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
@@ -1363,7 +1364,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
                 found += 1
             elif gastos[0] == "2020" and gastos[1] == (valor2+valor3):
                 found += 1
-            elif gastos[0] == "Total" and gastos[1] == (valor1+valor2+valor3+valor4):
+            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3+valor4), 2):
                 found += 1
             else:
                 found += 0
