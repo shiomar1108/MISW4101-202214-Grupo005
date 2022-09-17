@@ -30,5 +30,5 @@ echo '                                                                 '
 set /p "id=Indique Operacion: "
 
 if /I %id%==APP (%work_dir%\venv\Scripts\python.exe %work_dir%\__main__.py)
-if /I %id%==TEST (%work_dir%\venv\Scripts\python.exe -m unittest discover -s tests -v
-PAUSE )
+if /I %id%==TEST (%work_dir%\venv\Scripts\python.exe -m unittest discover -s tests -v)
+PAUSE

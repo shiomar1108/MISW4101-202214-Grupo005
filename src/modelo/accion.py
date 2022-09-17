@@ -6,12 +6,11 @@ from .conn import Base
 
 
 class Accion(Base):
-    __tablename__ = 'accion'
+    __tablename__ = "accion"
 
     id = Column(Integer, primary_key=True)
-    descripcion = Column(String)
-    kilometraje = Column(Float)
-    costo = Column(Float)
+    kilometraje = Column(Integer)
+    valor = Column(Float)
     fecha = Column(String)
-    mantenimiento = relationship('Mantenimiento')
-    auto = Column(Integer, ForeignKey('auto.id'))
+    mantenimiento = Column(Integer, ForeignKey("mantenimiento.nombre"))
+    auto = Column(String, ForeignKey("auto.id"))

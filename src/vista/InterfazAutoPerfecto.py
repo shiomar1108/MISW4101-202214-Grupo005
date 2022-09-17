@@ -32,36 +32,68 @@ class App_AutoPerfecto(QApplication):
         """
         Esta función guarda un nuevo auto o los cambios sobre una existente
         """
-        if self.logica.validar_crear_editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)==True:
-            if self.auto_actual == -1:
-                self.logica.crear_auto(marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
-            else:
-                self.logica.editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
-            self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+        if self.auto_actual == -1:
+            response = self.logica.crear_auto(marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
         else:
-            return False
+            response = self.logica.editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
+
+        if response == True:
+            self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+
+        return response
+
+
+        # self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+
+
+
+        # if self.logica.validar_crear_editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)==True:
+        #     if self.auto_actual == -1:
+        #         self.logica.crear_auto(marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
+        #     else:
+        #         self.logica.editar_auto(self.auto_actual, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible)
+        #     self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+        # else:
+        #     return False
 
     def vender_auto(self, kilometrajeVenta, valorVenta):
         """
         Esta función actualiza la venta de un auto
-        """
-        if self.logica.validar_vender_auto(self.auto_actual, kilometrajeVenta, valorVenta):
-            self.logica.vender_auto(self.auto_actual, float(kilometrajeVenta), float(valorVenta))
-            return True
-        else:
-            self.vista_lista_autos.error_vender_auto()
-            return False
+        """ 
+        response = self.logica.vender_auto(self.auto_actual, kilometrajeVenta, valorVenta)
+
+        if response != True:
+            self.vista_lista_autos.error_vender_auto(response)
+
+        self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
+        return response
+
+
+        # if self.logica.validar_vender_auto(self.auto_actual, kilometrajeVenta, valorVenta):
+        #     self.logica.vender_auto(self.auto_actual, float(kilometrajeVenta), float(valorVenta))
+        #     return True
+        # else:
+        #     self.vista_lista_autos.error_vender_auto()
+        #     return False
         #self.vista_lista_autos.mostrar_autos(self.logica.dar_autos())
 
     def aniadir_mantenimiento(self, nombre, descripcion):
         """
         Esta función inserta un mantenimiento a la aplicación
         """
-        if self.logica.validar_crear_editar_mantenimiento(nombre, descripcion):
-            self.logica.aniadir_mantenimiento(nombre, descripcion)
-        else:
-            self.vista_lista_mantenimientos.error_mantenimiento()
+        # if self.logica.validar_crear_editar_mantenimiento(nombre, descripcion):
+        #     self.logica.aniadir_mantenimiento(nombre, descripcion)
+        # else:
+        #     self.vista_lista_mantenimientos.error_mantenimiento()
+        # self.vista_lista_mantenimientos.mostrar_mantenimientos(self.logica.dar_mantenimientos())
+
+        response = self.logica.aniadir_mantenimiento(nombre, descripcion)
+
+        if response != True:
+             self.vista_lista_mantenimientos.error_mantenimiento(response)
+           
         self.vista_lista_mantenimientos.mostrar_mantenimientos(self.logica.dar_mantenimientos())
+
 
     def editar_mantenimiento(self, id, nombre, descripcion):
         """
@@ -106,8 +138,8 @@ class App_AutoPerfecto(QApplication):
         Esta función crea una nueva acción asociada a un auto
         """
         if self.logica.validar_crear_editar_accion(None, mantenimiento, self.auto_actual, valor, kilometraje, fecha):
-            self.logica.crear_accion(mantenimiento, self.auto_actual, float(valor), float(kilometraje), fecha)
-            nombre_auto = self.logica.dar_auto(self.auto_actual)['Marca']
+            self.logica.crear_accion(mantenimiento, self.auto_actual, float(valor), int(kilometraje), fecha)
+            nombre_auto = self.logica.dar_auto(self.auto_actual)['marca']
             self.vista_lista_acciones.mostrar_acciones(nombre_auto, self.logica.dar_acciones_auto(self.auto_actual))
         else:
             self.vista_lista_acciones.error_crear_editar_accion()

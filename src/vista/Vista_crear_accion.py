@@ -46,7 +46,7 @@ class Dialogo_crear_accion(QDialog):
 
         self.combobox_mantenimientos = QComboBox(self)
         for mantenimiento in self.mantenimientos:
-            self.combobox_mantenimientos.addItem(mantenimiento["Nombre"])
+            self.combobox_mantenimientos.addItem(mantenimiento["nombre"])
         distribuidor_dialogo.addWidget(self.combobox_mantenimientos,numero_fila,1,1,3)
         numero_fila=numero_fila+1
 

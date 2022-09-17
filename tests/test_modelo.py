@@ -1,6 +1,8 @@
-from pickle import FALSE
 import unittest
-from unittest import result
+import random
+from faker import Faker
+from faker.providers import BaseProvider
+from datetime import date
 
 from src.logica.Logica_real import Logica_real
 from src.modelo.conn import Session
@@ -8,522 +10,1444 @@ from src.modelo.auto import Auto
 from src.modelo.accion import Accion
 from src.modelo.mantenimiento import Mantenimiento
 
-#Clase de ejemplo, debe tener un nombre que termina con el sufijo TestCase, y conservar la herencia
-class ModeloTestCase(unittest.TestCase):
 
-	#Instancia el atributo logica para cada prueba
-	def setUp(self):
-		self.logica = Logica_real()
-		self.session = Session()
-		
-		self.auto1 = Auto(
-			marca = 'volkswagen',
-		 	modelo = 2016, 
-			placa = 'XXX001', 
-			color = 'gris', 
-			cilindraje = 2.5, 
-			combustible= 'GASOLINA', 
-			kilometraje_compra = 0, 
-			precio_venta=0,
-			kilometraje_venta = 0,
-			gasto_total = 0,
-			gasto_anual = 0,
-			gasto_kilometro = 0,
-			vendido = False,
-		)
-		self.auto2 = Auto(
-			marca = 'Nissan',
-		 	modelo = 2016, 
-			placa = 'AAA001', 
-			color = 'Rojo', 
-			cilindraje = 2.5, 
-			combustible= 'DIESEL', 
-			kilometraje_compra = 25000, 
-			precio_venta=0,
-			kilometraje_venta = 0,
-			gasto_total = 0,
-			gasto_anual = 0,
-			gasto_kilometro = 0,
-			vendido = False,
-		)
-		self.manto1 = Mantenimiento(nombre='Cambio de Filtro', descripcion='Pago por nuevo filtro de gasolina')
-		self.manto2 = Mantenimiento(nombre='Cambio de Llantas', descripcion='Pago por nuevas llantas')
-		self.accion1 = Accion(
-			kilometraje=15000, 
-			costo=9600, 
-			fecha='01/09/2022',
-			mantenimiento = [self.manto1] ,
-		)
+class ProveedorAuto(BaseProvider):
+    """clase para generar marcas de autos aleatorias"""
 
-		self.session.add(self.auto1)
-		self.session.add(self.auto2)
-		self.session.add(self.manto1)
-		self.session.add(self.manto2)
-		self.session.add(self.accion1)
-		self.session.commit()
+    def marca_auto(self):
+        marcas = [
+            "Toyota",
+            "Renault",
+            "Chevrolet",
+            "Tesla",
+            "BMW",
+            "Volkswagen",
+            "Honda",
+            "Hyundai",
+            "Kia",
+            "Mazda",
+            "Nissan",
+            "Suzuki",
+            "Audi",
+            "Mercedes-Benz",
+            "Fiat",
+            "Ford",
+            "Peugeot",
+            "Citroën",
+            "Dodge",
+            "Chrysler",
+            "Jeep",
+            "Mitsubishi",
+            "Subaru",
+            "Volvo",
+            "Land Rover",
+            "Jaguar",
+            "Porsche",
+            "Mini",
+            "Smart",
+            "Lexus",
+            "Infiniti",
+            "Acura",
+            "Isuzu",
+            "Daihatsu",
+        ]
 
-
-	def tearDown(self):
-		self.session = Session()
-
-		'''Consulta todos los autos'''
-		busqueda = self.session.query(Auto).all()
-
-		'''Borra todos los autos'''
-		for auto in busqueda:
-			self.session.delete(auto)
-
-		'''Consulta todos los Mantenimientos'''
-		busqueda = self.session.query(Mantenimiento).all()
-
-		'''Borra todos los Mantenimientos'''
-		for manto in busqueda:
-			self.session.delete(manto)
-
-		'''Consulta todos las Acciones'''
-		busqueda = self.session.query(Accion).all()
-
-		'''Borra todos los Mantenimientos'''
-		for accion in busqueda:
-			self.session.delete(accion)
-			
-		self.session.commit()
-		self.session.close()
-
-
-	def test_crear_auto(self):
-		resultado = self.logica.crear_auto(
-			marca='renault', 
-			modelo=1995, 
-			placa='XXX003', 
-			color='negro', 
-			cilindraje=1.6, 
-			combustible= 'GASOLINA PREMIUM', 
-			kilometraje= 1000
-		)
-		self.assertTrue(resultado)
-
-	def test_dar_auto(self):
-		temp = self.logica.dar_auto(placa='XXX001')
-		if(temp.get('placa') == 'XXX001'):
-			resultado = True
-		else:
-			resultado = False
-		self.assertTrue(resultado)
-
-	def test_dar_auto_negativo(self):
-		temp = self.logica.dar_auto(placa='XXX002')
-		if(temp == None ):
-			resultado = True
-		else:
-			resultado = False
-		self.assertTrue(resultado)
-
-	def test_dar_autos(self):
-		busqueda = self.logica.dar_autos()
-		if len(busqueda) == 2:
-			resultado = True
-		else:
-			resultado = False
-		self.assertTrue(resultado)
-
-	def test_editar_auto(self):
-		resultado1 = self.logica.editar_auto(placa_og='XXX001', marca_n = 'volkswagen', modelo_n = 2019, placa_n = 'XXX001', color_n = 'Negro', cilindraje_n = 2.5, combustible_n= 'GASOLINA', kilometraje_n = 0,  ) 
-		if(resultado1):
-			temp = self.logica.dar_auto(placa='XXX001')
-			if(temp.get('modelo') == 2019 and temp.get('color') == "Negro"):
-				resultadoT = True
-			else:
-				resultadoT = False
-		else:
-			resultadoT = False
-		self.assertTrue(resultadoT)
-
-	def test_editar_auto_negativo(self):
-		resultado1 = self.logica.editar_auto(placa_og='XXX005', marca_n = 'volkswagen', modelo_n = 2019, placa_n = 'XXX001', color_n = 'Negro', cilindraje_n = 2.5, combustible_n= 'GASOLINA', kilometraje_n = 0,  ) 
-		if(resultado1):
-			temp = self.logica.dar_auto(placa='XXX001')
-			if(temp.modelo == '2019' and temp.color == "Negro"):
-				resultadoT = True
-			else:
-				resultadoT = False
-		else:
-			resultadoT = False
-		self.assertFalse(resultadoT)
-
-	def test_crear_mantenimiento(self):
-		resultado = self.logica.crear_mantenimiento(nombre='Polarizado', descripcion='Pago por colocacion de Polarizado en Ventana')
-		self.assertTrue(resultado)
-
-	def test_crear_mantenimiento_ya_creado(self):
-		resultado = self.logica.crear_mantenimiento(nombre='Cambio de Filtro', descripcion='Pago por nuevo filtro de gasolina')
-		self.assertFalse(resultado)
-
-	def test_dar_mantenimiento(self):
-		temp = self.logica.dar_mantenimiento(nombre= self.manto1.nombre)
-		if(temp.get('nombre') == self.manto1.nombre and temp.get('descripcion') == self.manto1.descripcion):
-			resultado = True
-		else:
-			resultado = False
-		self.assertTrue(resultado)
-
-	def test_dar_mantenimiento_negativo(self):
-		temp = self.logica.dar_mantenimiento(nombre= "Rines")
-		if(temp == None):
-			resultado = True
-		else:
-			resultado = False
-		self.assertTrue(resultado)
-
-	def test_dar_mantenimentos(self):
-		busqueda = self.logica.dar_mantenimientos()
-		if len(busqueda) == 2:
-			resultado = True
-		else:
-			resultado = False
-		self.assertTrue(resultado)
-
-	def test_crear_accion(self):
-		resultado = self.logica.crear_accion(kilometraje= 1500,costo=850,fecha='15-08-2022', nombre='Cambio de Filtro')
-		self.assertTrue(resultado)
-
-	def test_crear_accion_ya_creado(self):
-		resultado = self.logica.crear_accion(kilometraje= 15000,costo=9600,fecha='01/09/2022', nombre='Cambio de Filtro')
-		self.assertFalse(resultado)
-
-	def test_vender_auto(self):
-		resultado = self.logica.vender_auto(placa='XXX001', precio_venta=15000000, kilometraje_venta= 352000)
-		self.assertTrue(resultado)
-
-	def test_vender_auto_ya_vendido(self):
-		self.logica.vender_auto(placa='XXX001', precio_venta=15000000, kilometraje_venta= 352000)
-		resultado = self.logica.vender_auto(placa='XXX001', precio_venta=15000000, kilometraje_venta= 352000)
-		self.assertFalse(resultado)
-
-	def test_aniadir_accion(self):
-		resultado = self.logica.aniadir_accion(
-			placa= 'XXX001', 
-			descripcion='se agrego el filtro X de mejor marca',
-			kilometraje= 25000, 
-			costo= 5820, 
-			fecha= '11-01-2021'
-		)
-
-		self.assertTrue(resultado)
+        return random.choice(marcas)
 
 
 class ModeloTestEmptySetUp(unittest.TestCase):
-	"""clase que contiene los test con el setUp vacio"""
-	def setUp(self):
-		"""Se ejecuta antes de cada prueba"""
-		self.logica = Logica_real()
-		self.session = Session()
+    """clase que contiene los test con el setUp vacio"""
 
-	def test_caso1_dar_lista_autos_vacia(self):
-		"""Test que verifica que la lista de autos este vacia"""
-		busqueda = self.logica.dar_autos()
-		if len(busqueda) == 0:
-			resultado = True
-		else:
-			resultado = False
-		self.assertTrue(resultado)
+    def setUp(self):
+        """Se ejecuta antes de cada prueba"""
+        self.logica = Logica_real()
+        self.session = Session()
 
+        busqueda = self.session.query(Auto).all()
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        self.session.commit()
+
+    def tearDown(self):
+        self.session = Session()
+
+        """Consulta todos los autos"""
+        busqueda = self.session.query(Auto).all()
+
+        """Borra todos los autos"""
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        self.session.commit()
+        self.session.close()
+
+    def test_caso01_dar_lista_autos_vacia(self):
+        """Test que verifica que la lista de autos este vacia"""
+        busqueda = self.logica.dar_autos()
+        if len(busqueda) == 0:
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_caso02_dar_2_autos_ordenados(self):
+        """Test que verifica que la lista de autos este ordenada por placa"""
+        self.logica.crear_auto(
+            "Toyota", "Corolla", "ABC123", "Rojo", 1500, "Gasolina", 0
+        )
+        self.logica.crear_auto(
+            "Toyota", "Corolla", "XYZ789", "Rojo", 1500, "Gasolina", 0
+        )
+        busqueda = self.logica.dar_autos()
+        resultado = True
+        for i in range(len(busqueda) - 1):
+            if busqueda[i]["placa"] > busqueda[i + 1]["placa"]:
+                resultado = False
+                break
+        self.assertTrue(resultado)
 
 
 class ModeloTestTDD(unittest.TestCase):
-	"""Clase que contiene los test de la logica"""
-	def setUp(self):
-		self.logica = Logica_real()
-		self.session = Session()
-		
-		self.auto1 = Auto(
-			marca = 'volkswagen',
-		 	modelo = 2016, 
-			placa = 'XXX001', 
-			color = 'gris', 
-			cilindraje = 2.5, 
-			combustible= 'GASOLINA', 
-			kilometraje_compra = 0, 
-			precio_venta=0,
-			kilometraje_venta = 0,
-			gasto_total = 0,
-			gasto_anual = 0,
-			gasto_kilometro = 0,
-			vendido = False,
-		)
-		self.auto2 = Auto(
-			marca = 'Nissan',
-		 	modelo = 2016, 
-			placa = 'AAA001', 
-			color = 'Rojo', 
-			cilindraje = 2.5, 
-			combustible= 'DIESEL', 
-			kilometraje_compra = 25000, 
-			precio_venta=0,
-			kilometraje_venta = 0,
-			gasto_total = 0,
-			gasto_anual = 0,
-			gasto_kilometro = 0,
-			vendido = False,
-		)
+    """Clase que contiene los test de la logica"""
 
-		self.manto1 = Mantenimiento(
-			nombre='Cambio de aceite', 
-			descripcion='Cambio de aceite'
-		)
+    def setUp(self):
+        self.logica = Logica_real()
+        self.session = Session()
+        self.data_factory = Faker("es_ES")
+        self.data_factory.add_provider(ProveedorAuto)
 
-		self.session.add(self.auto1)
-		self.session.add(self.auto2)
-		self.session.add(self.manto1)
-		self.session.commit()
+        self.auto1 = Auto(
+            marca="volkswagen",
+            modelo=2016,
+            placa="XXX001",
+            color="gris",
+            cilindraje=2.5,
+            combustible="GASOLINA",
+            kilometraje_compra=0,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
+        self.auto2 = Auto(
+            marca="Nissan",
+            modelo=2016,
+            placa="AAA001",
+            color="Rojo",
+            cilindraje=2.5,
+            combustible="DIESEL",
+            kilometraje_compra=25000,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
+
+        self.manto1 = Mantenimiento(
+            nombre="Cambio de aceite", descripcion="Cambio de aceite"
+        )
+        self.manto2 = Mantenimiento(
+            nombre="Cambio de Llantas", descripcion="Pago por nuevas llantas"
+        )
+
+        self.session.add(self.auto1)
+        self.session.add(self.auto2)
+        self.session.add(self.manto1)
+        self.session.add(self.manto2)
+        self.session.commit()
+
+    def tearDown(self):
+        self.session = Session()
+
+        """Consulta todos los autos"""
+        busqueda = self.session.query(Auto).all()
+
+        """Borra todos los autos"""
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        """Consulta todos los Mantenimientos"""
+        busqueda = self.session.query(Mantenimiento).all()
+
+        """Borra todos los Mantenimientos"""
+        for manto in busqueda:
+            self.session.delete(manto)
+
+        self.session.commit()
+        self.session.close()
+
+    def test_caso02_dar_autos_ordenados(self):
+        """Test que verifica que la lista se regrese en orden cronologico"""
+        auto1 = {
+            "marca": self.data_factory.marca_auto(),
+            "modelo": self.data_factory.random_int(1900, date.today().year),
+            "placa": "ABB123",
+            "color": self.data_factory.color(),
+            "cilindraje": self.data_factory.random_int(10, 50) / 10,
+            "combustible": self.data_factory.text(8),
+            "kilometraje": self.data_factory.random_int(0, 500000),
+        }
+
+        auto2 = {
+            "marca": self.data_factory.marca_auto(),
+            "modelo": self.data_factory.random_int(1900, date.today().year),
+            "placa": "AAA123",
+            "color": self.data_factory.color(),
+            "cilindraje": self.data_factory.random_int(10, 50) / 10,
+            "combustible": self.data_factory.text(8),
+            "kilometraje": self.data_factory.random_int(0, 500000),
+        }
+
+        self.logica.crear_auto(**auto1)
+        self.logica.crear_auto(**auto2)
+
+        busqueda = self.logica.dar_autos()
+        placas = []
+        for auto in busqueda:
+            placas.append(auto["placa"])
+
+        self.assertEqual(placas, sorted(placas))
+
+    def test_caso03_1_agregar_auto_campo_placa_mas_de_6_caracteres(self):
+        """test que verifica que el campo placa no tenga mas de 6 caracteres"""
+        resultado = self.logica.crear_auto(
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(1900, date.today().year),
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(1000, 9999)),
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
+            combustible="GASOLINA PREMIUM",
+            kilometraje=self.data_factory.random_int(0, 500000),
+        )
+        self.assertEqual(
+            resultado,
+            "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999",
+        )
+
+    def test_caso03_2_agregar_auto_campo_placa_letras(self):
+        """test que verifica que el campo tenga 3 letras al inicio"""
+        resultado = self.logica.crear_auto(
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(1900, date.today().year),
+            placa=str(self.data_factory.random_int(100000, 999999)),
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
+            combustible="GASOLINA PREMIUM",
+            kilometraje=self.data_factory.random_int(0, 500000),
+        )
+        self.assertEqual(resultado, "Error: placa debe ser un String")
+
+    def test_caso03_3_agregar_auto_campo_placa_numeros(self):
+        """test que verifica que el campo placa tenga tres numero al final"""
+        resultado = self.logica.crear_auto(
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(1900, date.today().year),
+            placa=self.data_factory.bothify(text="??????").upper(),
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
+            combustible="GASOLINA PREMIUM",
+            kilometraje=self.data_factory.random_int(0, 500000),
+        )
+        self.assertEqual(
+            resultado, "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
+        )
+
+    def test_caso04_crear_auto_ya_creado(self):
+        """test que verifica que los datos del auto no esten repetidos"""
+        resultado = self.logica.crear_auto(
+            marca="Ford",
+            modelo=2016,
+            placa="XXX001",
+            color="gris",
+            cilindraje=2.5,
+            combustible="GASOLINA",
+            kilometraje=0,
+        )
+        self.assertEqual(resultado, "Error: auto con Placa XXX001 ya esta registrado")
+
+    def test_caso05_crear_auto_placa_duplicada_1(self):
+        """test que verifica que el campo placa del auto no este duplicada"""
+        resultado = self.logica.crear_auto(
+            marca="Seat",
+            modelo=2019,
+            placa="AAA001",
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
+            combustible="HIBRIDO",
+            kilometraje=self.data_factory.random_int(0, 500000),
+        )
+        self.assertEqual(resultado, "Error: auto con Placa AAA001 ya esta registrado")
+
+    def test_caso05_crear_auto_marca_duplicado_2(self):
+        """test que verifica que el campo marca del auto no este duplicado"""
+        resultado = self.logica.crear_auto(
+            marca="volkswagen",
+            modelo=2019,
+            placa="AAA005",
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
+            combustible="HIBRIDO",
+            kilometraje=self.data_factory.random_int(0, 500000),
+        )
+        self.assertEqual(
+            resultado, "Error: auto de la Marca volkswagen ya esta registrado"
+        )
+
+    def test_caso06_1_crear_auto_vacio(self):
+        """test que verifica que los campos al crear un auto no esten vacios"""
+        resultado = self.logica.crear_auto(
+            marca="",
+            modelo="",
+            placa="",
+            color="",
+            cilindraje="",
+            combustible="",
+            kilometraje="",
+        )
+        self.assertEqual(resultado, "Error: marca es requerido")
+
+    def test_caso06_2_crear_auto_vacio(self):
+        """test que verifica que los campos al crear un auto no esten vacios"""
+        resultado = self.logica.crear_auto(
+            marca="",
+            modelo="",
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)),
+            color="",
+            cilindraje="",
+            combustible="",
+            kilometraje="",
+        )
+        self.assertEqual(resultado, "Error: marca es requerido")
+
+    def test_caso06_3_crear_auto_vacio(self):
+        """test que verifica que los campos al crear un auto no esten vacios"""
+        resultado = self.logica.crear_auto(
+            marca="",
+            modelo="",
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)),
+            color="azul",
+            cilindraje="",
+            combustible="",
+            kilometraje="",
+        )
+        self.assertEqual(resultado, "Error: marca es requerido")
+
+    def test_caso06_4_crear_auto_vacio(self):
+        """test que verifica que los campos al crear un auto no esten vacios"""
+        resultado = self.logica.crear_auto(
+            marca=self.data_factory.marca_auto(),
+            modelo="",
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)),
+            color="",
+            cilindraje="",
+            combustible="",
+            kilometraje="",
+        )
+        self.assertEqual(resultado, "Error: modelo es requerido")
+
+    def test_caso07_crear_auto_campo_modelo_invalido(self):
+        """test que verifica que el campo modelo del auto sean 4 digitos"""
+        resultado = self.logica.crear_auto(
+            marca=self.data_factory.marca_auto(),
+            modelo=19995,
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)),
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
+        )
+        self.assertEqual(
+            resultado,
+            "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999",
+        )
+
+    def test_caso08_crear_auto_campo_kilometraje_invalido(self):
+        """test que verifica que el campo kilometraje del auto sea un numero"""
+        resultado = self.logica.crear_auto(
+            marca="nissan",
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            placa="ABC001",
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje="asd",
+        )
+        self.assertEqual(resultado, "Error: kilometraje debe ser un número")
+
+    def test_caso09_crear_auto_campo_color_invalido(self):
+        """test que verifica que el campo color del auto sea un texto"""
+        resultado = self.logica.crear_auto(
+            marca="nissan",
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            placa="ABC001",
+            color=123,
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: color debe ser un String")
+
+    def test_caso10_crear_auto_campo_clindraje_invalido(self):
+        """test que verifica que el campo cilindraje del auto sea un numero"""
+        resultado = self.logica.crear_auto(
+            marca="nissan",
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            placa="ABC001",
+            color=self.data_factory.color_name(),
+            cilindraje="asd",
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: cilindraje debe ser un número o un decimal")
+
+    def test_caso11_crear_auto_campo_combustible_invalido(self):
+        """test que verifica que el campo combustible del auto sea un texto"""
+        resultado = self.logica.crear_auto(
+            marca="nissan",
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            placa="ABC001",
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible=123,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: combustible debe ser un String")
+
+    def test_caso12_1_crear_mantenimento_vacio(self):
+        """test que verifica que los campos al crear un manenimiento no esten vacios"""
+        resultado = self.logica.aniadir_mantenimiento(nombre="", descripcion="")
+        self.assertEqual(resultado, "Error: nombre es requerido")
+
+    def test_caso12_2_crear_mantenimento_vacio(self):
+        """test que verifica que los campos al crear un manenimiento no esten vacios"""
+        resultado = self.logica.aniadir_mantenimiento(
+            nombre="Cambio de Llantas", descripcion=""
+        )
+        self.assertEqual(resultado, "Error: descripcion es requerido")
+
+    def test_caso12_3_crear_mantenimento_vacio(self):
+        """test que verifica que los campos al crear un manenimiento no esten vacios"""
+        resultado = self.logica.aniadir_mantenimiento(
+            nombre="", descripcion="Pago por nuevas llantas"
+        )
+        self.assertEqual(resultado, "Error: nombre es requerido")
+
+    def test_caso13_crear_mantenimento_ya_existente(self):
+        """test que verifica que no se pueda crear un mantenimiento ya existente"""
+        resultado = self.logica.aniadir_mantenimiento(
+            nombre="Cambio de aceite", descripcion="Cambio de aceite"
+        )
+        self.assertEqual(
+            resultado,
+            "Error: mantenimiento con Nombre Cambio de aceite ya esta registrado",
+        )
+
+    def test_caso14_mantenimiento_creado_debe_ser_visible(self):
+        """test que verifica que despues de creado un mantenimiento se vea en la lista"""
+        self.logica.aniadir_mantenimiento(
+            nombre="Cambio de Llantas", descripcion="Pago por nuevas llantas"
+        )
+        lista = self.logica.dar_mantenimientos()
+        if lista[len(lista) - 1].get("nombre") == "Cambio de Llantas":
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
 
 
-	def tearDown(self):
-		self.session = Session()
+class Test_Modelo_Venta(unittest.TestCase):
+    """Clase que contiene los test de la logica"""
 
-		'''Consulta todos los autos'''
-		busqueda = self.session.query(Auto).all()
+    def setUp(self):
+        self.logica = Logica_real()
+        self.session = Session()
+        self.data_factory = Faker("es_ES")
 
-		'''Borra todos los autos'''
-		for auto in busqueda:
-			self.session.delete(auto)
+        self.auto1 = Auto(
+            marca="volkswagen",
+            modelo=2016,
+            placa="XXX001",
+            color="gris",
+            cilindraje=2.5,
+            combustible="GASOLINA",
+            kilometraje_compra=0,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
+        self.auto2 = Auto(
+            marca="Nissan",
+            modelo=2016,
+            placa="AAA001",
+            color="Rojo",
+            cilindraje=2.5,
+            combustible="DIESEL",
+            kilometraje_compra=25000,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
 
-		'''Consulta todos los Mantenimientos'''
-		busqueda = self.session.query(Mantenimiento).all()
+        self.manto1 = Mantenimiento(
+            nombre="Cambio de aceite", descripcion="Cambio de aceite"
+        )
+        self.manto2 = Mantenimiento(
+            nombre="Cambio de Llantas", descripcion="Pago por nuevas llantas"
+        )
 
-		'''Borra todos los Mantenimientos'''
-		for manto in busqueda:
-			self.session.delete(manto)
-			
-		self.session.commit()
-		self.session.close()
+        self.session.add(self.auto1)
+        self.session.add(self.auto2)
+        self.session.add(self.manto1)
+        self.session.add(self.manto2)
+        self.session.commit()
 
-	def test_caso2_dar_autos_ordenados(self):
-		"""Test que verifica que la lista se regrese en orden cronologico"""
-		busqueda = self.logica.dar_autos()
-		if (busqueda[0].get('placa') == self.auto1.placa and busqueda[1].get('placa') == self.auto2.placa):
-			resultado = True
-		else:
-			resultado = False
-		self.assertTrue(resultado)	
+    def tearDown(self):
+        self.session = Session()
+
+        """Consulta todos los autos"""
+        busqueda = self.session.query(Auto).all()
+
+        """Borra todos los autos"""
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        """Consulta todos los Mantenimientos"""
+        busqueda = self.session.query(Mantenimiento).all()
+
+        """Borra todos los Mantenimientos"""
+        for manto in busqueda:
+            self.session.delete(manto)
+
+        self.session.commit()
+        self.session.close()
+
+    def test_HU005_1_vender_automovil(self):
+        """test que verifica que se pueda vender un automovil"""
+        resultado = self.logica.vender_auto(
+            placa="AAA001",
+            valor=self.data_factory.random_int(1000000, 10000000000) / 100,
+            kilometraje=self.data_factory.random_int(0, 300000),
+        )
+        self.assertTrue(resultado)
+
+    def test_HU005_2_vender_automovil_no_existente(self):
+        """test que verifica que no se pueda vender un automovil que no existe"""
+        resultado = self.logica.vender_auto(
+            placa="AAA002",
+            valor=self.data_factory.random_int(1000000, 1000000000) / 100,
+            kilometraje=self.data_factory.random_int(0, 300000),
+        )
+        self.assertEqual(resultado, "Error: auto con Placa AAA002 no existe")
+
+    def test_HU005_3_vender_automovil_precio_venta_string(self):
+        """test que verifica que no se pueda vender un automovil sin precio de venta"""
+        resultado = self.logica.vender_auto(
+            placa="AAA001",
+            valor="abc",
+            kilometraje=self.data_factory.random_int(0, 300000),
+        )
+        self.assertEqual(resultado, "Error: valor debe ser un decimal")
+
+    def test_HU005_4_vender_automovil_kilometraje_venta_string(self):
+        """test que verifica que no se pueda vender un automovil sin kilometraje de venta"""
+        resultado = self.logica.vender_auto(
+            placa="AAA001",
+            valor=self.data_factory.random_int(1000000, 1000000000) / 100,
+            kilometraje="abc",
+        )
+        self.assertEqual(resultado, "Error: kilometraje debe ser un número")
+
+    def test_HU005_5_vender_automovil_precio_venta_negativo(self):
+        """test que verifica que no se pueda vender un automovil con precio de venta negativo"""
+        resultado = self.logica.vender_auto(
+            placa="AAA001",
+            valor=-1,
+            kilometraje=self.data_factory.random_int(0, 300000),
+        )
+        self.assertEqual(resultado, "Error: valor debe ser un numero mayor a 0")
+
+    def test_HU005_6_vender_automovil_kilometraje_venta_negativo(self):
+        """test que verifica que no se pueda vender un automovil con kilometraje de venta negativo"""
+        resultado = self.logica.vender_auto(
+            placa="AAA001",
+            valor=self.data_factory.random_int(1000000, 1000000000) / 100,
+            kilometraje=-1,
+        )
+        self.assertEqual(resultado, "Error: kilometraje debe ser un numero mayor a 0")
 
 
-	def test_caso3_1_agregar_auto_campo_placa_mas_de_6_caracteres(self):
-		"""test que verifica que el campo placa no tenga mas de 6 caracteres"""
-		resultado = self.logica.crear_auto(
-			marca='renault', 
-			modelo=1995, 
-			placa='XXX0011', 
-			color='negro', 
-			cilindraje=1.6, 
-			combustible= 'GASOLINA PREMIUM', 
-			kilometraje= 1000 
-		)
-		self.assertFalse(resultado)
+class Test_Modelo_Accion(unittest.TestCase):
+    """Clase que contiene los test de la logica"""
 
-	def test_caso3_2_agregar_auto_campo_placa_letras(self):
-		"""test que verifica que el campo tenga 3 letras al inicio"""
-		resultado = self.logica.crear_auto(
-			marca='renault', 
-			modelo=1995, 
-			placa='000123', 
-			color='negro', 
-			cilindraje=1.6, 
-			combustible= 'GASOLINA PREMIUM', 
-			kilometraje= 1000 
-		)
-		self.assertFalse(resultado)
+    def setUp(self):
+        self.logica = Logica_real()
+        self.session = Session()
+        self.data_factory = Faker()
 
-	def test_caso3_3_agregar_auto_campo_placa_numeros(self):
-		"""test que verifica que el campo placa tenga tres numero al final"""
-		resultado = self.logica.crear_auto(
-			marca='renault', 
-			modelo=1995, 
-			placa='XXXYYY', 
-			color='negro', 
-			cilindraje=1.6, 
-			combustible= 'GASOLINA PREMIUM', 
-			kilometraje= 1000 
-		)
-		self.assertFalse(resultado)
+        self.auto1 = Auto(
+            marca="volkswagen",
+            modelo=2016,
+            placa="XXX001",
+            color=self.data_factory.color_name(),
+            cilindraje=2.5,
+            combustible="GASOLINA",
+            kilometraje_compra=0,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
+        self.auto2 = Auto(
+            marca="Nissan",
+            modelo=2016,
+            placa="AAA001",
+            color=self.data_factory.color_name(),
+            cilindraje=2.5,
+            combustible="DIESEL",
+            kilometraje_compra=25000,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
 
-	def test_caso4_crear_auto_ya_creado(self):
-		"""test que verifica que los datos del auto no esten repetidos"""
-		resultado = self.logica.crear_auto(marca='volkswagen', modelo=2016, placa='XXX001', color='gris', cilindraje=2.5, combustible= 'GASOLINA', kilometraje= 0)
-		self.assertFalse(resultado)
+        self.manto1 = Mantenimiento(
+            nombre="Cambio de aceite", descripcion="Cambio de aceite"
+        )
+        self.manto2 = Mantenimiento(
+            nombre="Cambio de Llantas", descripcion="Pago por nuevas llantas"
+        )
+        self.manto3 = Mantenimiento(
+            nombre="Carga de Diesel", descripcion="Pago por cargar combustible"
+        )
 
-	def test_caso5_crear_auto_placa_y_marca_duplicados(self):
-		"""test que verifica que el campo placa del auto no este duplicado"""
-		resultado = self.logica.crear_auto(
-			marca='volkswagen', 
-			modelo=2019, 
-			placa='AAA001', 
-			color='azul', 
-			cilindraje=1.4, 
-			combustible= 'HIBRIDO', 
-			kilometraje= 26000
-		)
-		self.assertFalse(resultado)
+        self.session.add(self.auto1)
+        self.session.add(self.auto2)
+        self.session.add(self.manto1)
+        self.session.add(self.manto2)
+        self.session.add(self.manto3)
 
-	def test_caso6_1_crear_auto_vacio(self):
-		"""test que verifica que los campos al crear un auto no esten vacios"""
-		resultado = self.logica.crear_auto(
-			marca='', 
-			modelo='', 
-			placa='', 
-			color='', 
-			cilindraje='', 
-			combustible= '', 
-			kilometraje= ''
-		)
-		self.assertFalse(resultado)
+        self.session.commit()
 
-	def test_caso6_2_crear_auto_vacio(self):
-		"""test que verifica que los campos al crear un auto no esten vacios"""
-		resultado = self.logica.crear_auto(
-			marca='', 
-			modelo='', 
-			placa='AAA005', 
-			color='', 
-			cilindraje='', 
-			combustible= '', 
-			kilometraje= ''
-		)
-		self.assertFalse(resultado)
+    def tearDown(self):
+        self.session = Session()
 
-	def test_caso6_3_crear_auto_vacio(self):
-		"""test que verifica que los campos al crear un auto no esten vacios"""
-		resultado = self.logica.crear_auto(
-			marca='', 
-			modelo='', 
-			placa='AAA005', 
-			color='azul', 
-			cilindraje='', 
-			combustible= '', 
-			kilometraje= ''
-		)
-		self.assertFalse(resultado)
+        """Consulta todos los autos"""
+        busqueda = self.session.query(Auto).all()
 
-	def test_caso6_4_crear_auto_vacio(self):
-		"""test que verifica que los campos al crear un auto no esten vacios"""
-		resultado = self.logica.crear_auto(
-			marca='volkswagen', 
-			modelo='', 
-			placa='AAA005', 
-			color='', 
-			cilindraje='', 
-			combustible= '', 
-			kilometraje= ''
-		)
-		self.assertFalse(resultado)
+        """Borra todos los autos"""
+        for auto in busqueda:
+            self.session.delete(auto)
 
-	def test_caso7_crear_auto_campo_modelo_invalido(self):
-		"""test que verifica que el campo modelo del auto sean 4 digitos"""
-		resultado = self.logica.crear_auto(
-			marca='nissan', 
-			modelo=19995,
-			placa='ABC001', 
-			color='azul', 
-			cilindraje=2500, 
-			combustible= 'GASOLINA', 
-			kilometraje= 14000
-		)
-		self.assertFalse(resultado)
+        """Consulta todos los Mantenimientos"""
+        busqueda = self.session.query(Mantenimiento).all()
 
-	def test_caso8_crear_auto_campo_kilometraje_invalido(self):
-		"""test que verifica que el campo kilometraje del auto sea un numero"""
-		resultado = self.logica.crear_auto(
-			marca='nissan', 
-			modelo=1995,
-			placa='ABC001', 
-			color='azul', 
-			cilindraje=2500, 
-			combustible= 'GASOLINA', 
-			kilometraje= '14000'
-		)
-		self.assertFalse(resultado)
+        """Borra todos los Mantenimientos"""
+        for manto in busqueda:
+            self.session.delete(manto)
 
-	def test_caso9_crear_auto_campo_color_invalido(self):
-		"""test que verifica que el campo color del auto sea un texto"""
-		resultado = self.logica.crear_auto(
-			marca='nissan', 
-			modelo=1995,
-			placa='ABC001', 
-			color=123, 
-			cilindraje=2500,
-			combustible= 'GASOLINA', 
-			kilometraje= 14000
-		)
-		self.assertFalse(resultado)
+        self.session.commit()
+        self.session.close()
 
-	def test_caso10_crear_auto_campo_clindraje_invalido(self):
-		"""test que verifica que el campo cilindraje del auto sea un numero"""
-		resultado = self.logica.crear_auto(
-			marca='nissan', 
-			modelo=1995,
-			placa='ABC001', 
-			color='azul', 
-			cilindraje="2500",
-			combustible= 'GASOLINA', 
-			kilometraje= 14000
-		)
-		self.assertFalse(resultado)
+    def test_HU012_1_crear_accion(self):
+        """test que verifica que se puede agregar una accion a un auto"""
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=fecha,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        if resultado == True:
+            acciones = self.logica.dar_acciones_auto(id_auto=1)
+            for accion in acciones:
+                if accion.get("valor") == valor and accion.get("fecha") == fecha:
+                    resultado = True
+                    continue
+                else:
+                    resultado = False
+        self.assertTrue(resultado)
 
-	def test_caso11_crear_auto_campo_combustible_invalido(self):
-		"""test que verifica que el campo combustible del auto sea un texto"""
-		resultado = self.logica.crear_auto(
-			marca='nissan', 
-			modelo=1995,
-			placa='ABC001', 
-			color='azul', 
-			cilindraje=2500,
-			combustible= 123, 
-			kilometraje= 14000
-		)
-		self.assertFalse(resultado)
+    def test_HU012_2_crear_dos_acciones(self):
+        """test que verifica que se puede agregar varias acciones a un auto"""
+        found = 0
+        fecha1 = self.data_factory.date(pattern="%Y-%m-%d")
+        fecha2 = self.data_factory.date(pattern="%Y-%m-%d")
+        fecha3 = self.data_factory.date(pattern="%Y-%m-%d")
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha=fecha1,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de Llantas",
+            valor=valor2,
+            fecha=fecha2,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de Llantas",
+            valor=valor3,
+            fecha=fecha3,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        acciones = self.logica.dar_acciones_auto(id_auto=1)
+        if len(acciones) == 3:
+            for accion in acciones:
+                if accion.get("valor") == valor1 and accion.get("fecha") == fecha1:
+                    found += 1
+                elif accion.get("valor") == valor2 and accion.get("fecha") == fecha2:
+                    found += 1
+                else:
+                    found += 0
+        self.assertEqual(found, 2)
 
-	def test_caso12_1_crear_mantenimento_vacio(self):
-		"""test que verifica que los campos al crear un manenimiento no esten vacios"""
-		resultado = self.logica.crear_mantenimiento(
-			nombre='', 
-			descripcion=''
-		)
-		self.assertFalse(resultado)
+    def test_HU012_3_crear_acciones_vacias_1(self):
+        """test que verifica que no se puede agregar una accion vacia a un auto"""
+        resultado = self.logica.crear_accion(
+            id_auto="", mantenimiento="", valor="", fecha="", kilometraje=""
+        )
+        self.assertEqual(resultado, "Error: id_auto es requerido")
 
-	def test_caso12_2_crear_mantenimento_vacio(self):
-		"""test que verifica que los campos al crear un manenimiento no esten vacios"""
-		resultado = self.logica.crear_mantenimiento(
-			nombre='Cambio de Llantas', 
-			descripcion=''
-		)
-		self.assertFalse(resultado)
+    def test_HU012_3_crear_acciones_vacias_2(self):
+        """test que verifica que no se puede agregar una accion vacia a un auto"""
+        resultado = self.logica.crear_accion(
+            id_auto=1, mantenimiento="", valor="", fecha="", kilometraje=""
+        )
+        self.assertEqual(resultado, "Error: mantenimiento es requerido")
 
-	def test_caso12_3_crear_mantenimento_vacio(self):
-		"""test que verifica que los campos al crear un manenimiento no esten vacios"""
-		resultado = self.logica.crear_mantenimiento(
-			nombre='', 
-			descripcion='Pago por nuevas llantas'
-		)
-		self.assertFalse(resultado)
+    def test_HU012_3_crear_acciones_vacias_3(self):
+        """test que verifica que no se puede agregar una accion vacia a un auto"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor="",
+            fecha="",
+            kilometraje="",
+        )
+        self.assertEqual(resultado, "Error: valor es requerido")
 
-	def test_caso13_crear_mantenimento_ya_existente(self):
-		"""test que verifica que no se pueda crear un mantenimiento ya existente"""
-		resultado = self.logica.crear_mantenimiento(
-			nombre='Cambio de aceite', 
-			descripcion='Cambio de aceite'
-		)
-		self.assertFalse(resultado)
+    def test_HU012_3_crear_acciones_vacias_4(self):
+        """test que verifica que no se puede agregar una accion vacia a un auto"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha="",
+            kilometraje="",
+        )
+        self.assertEqual(resultado, "Error: fecha es requerido")
 
-	def test_caso14_mantenimiento_creado_debe_ser_visible(self):
-		"""test que verifica que despues de creado un mantenimiento se vea en la lista"""
-		self.logica.crear_mantenimiento(
-			nombre='Cambio de Llantas', 
-			descripcion='Pago por nuevas llantas'
-		)
-		lista = self.logica.dar_mantenimientos()
-		if (lista[len(lista)-1].get('nombre') == 'Cambio de Llantas'):
-			resultado = True
-		else:
-			resultado = False
-		self.assertTrue(resultado)	
-		
+    def test_HU012_3_crear_acciones_vacias_3(self):
+        """test que verifica que no se puede agregar una accion vacia a un auto"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje="",
+        )
+        self.assertEqual(resultado, "Error: kilometraje es requerido")
+
+    def test_HU012_3_crear_acciones_vacias_4(self):
+        """test que verifica que no se puede agregar una accion vacia a un auto"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha="",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: fecha es requerido")
+
+    def test_HU012_4_crear_accion_valor_invalido(self):
+        """test que verifica que no se puede agregar una accion con un valor invalido"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor="25000.3",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(
+            resultado, "Error: valor debe ser un número con decimal mayor a 0"
+        )
+
+    def test_HU012_5_crear_accion_kilometraje_invalido(self):
+        """test que verifica que no se puede agregar una accion con un kilometraje invalido"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje="150000",
+        )
+        self.assertEqual(resultado, "Error: kilometraje debe ser un Entero")
+
+    def test_HU012_6_crear_accion_fecha_invalido_1(self):
+        """test que verifica que no se puede agregar una accion con una fecha invalida"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=189750369,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: fecha debe ser un String")
+
+    def test_HU012_6_crear_accion_fecha_invalido_2(self):
+        """test que verifica que no se puede agregar una accion con una fecha invalida"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha="25-08",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: La fecha debe ser en formato AAAA-MM-DD")
+
+    def test_HU012_7_crear_accion_Mantenimiento_invalido(self):
+        """test que verifica que no se puede agregar una accion con un mantenimiento invalido"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Gasolina",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: El Mantenimiento debe existir")
+
+    def test_HU012_8_crear_accion_duplicada_1(self):
+        """test que verifica que no se puede agregar una accion duplicada"""
+        kilo = self.data_factory.random_int(min=0, max=999999)
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=fecha,
+            kilometraje=kilo,
+        )
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=fecha,
+            kilometraje=kilo,
+        )
+        self.assertEqual(resultado, "Error: La Accion no debe estar repetidas")
+
+    def test_HU012_8_crear_accion_duplicada_2(self):
+        """test que verifica que no se puede agregar una accion duplicada"""
+        kilo = self.data_factory.random_int(min=0, max=999999)
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=kilo,
+        )
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de Llantas",
+            valor=valor,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=kilo,
+        )
+        self.assertTrue(resultado)
+
+    def test_HU010_1_ver_lista_acciones_ordenada(self):
+        """test que verifica que la lista de acciones estan ordenadas en descentente por kilometro"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de Llantas",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista = self.logica.dar_acciones_auto(id_auto=1)
+        if (
+            lista[0].get("kilometraje")
+            > lista[1].get("kilometraje")
+            > lista[2].get("kilometraje")
+        ):
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU010_2_ver_accion_especifica(self):
+        """test que verifica que el retornar una accion especifica de un auto"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        kilo = self.data_factory.random_int(min=0, max=999999)
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=fecha,
+            kilometraje=kilo,
+        )
+        busqueda = self.logica.dar_accion(id_auto=1, id_accion=2)
+        if busqueda != None:
+            if busqueda.get("kilometraje") == kilo and busqueda.get("fecha") == fecha:
+                resultado = True
+            else:
+                resultado = False
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU010_3_ver_accion_invalida(self):
+        """test que verifica el error al pedir la lista de acciones de un auto invalido"""
+        lista = self.logica.dar_acciones_auto(id_auto=3)
+        if len(lista) == 0:
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU010_4_ver_accion_especifica_invalida(self):
+        """test que verifica el error al pedir la una accion invalida de un auto valido"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Carga de Diesel",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista = self.logica.dar_accion(id_auto=1, id_accion=3)
+        if lista == None:
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+
+class Test_Modelo_Gastos(unittest.TestCase):
+    """Clase que contiene los test de la logica"""
+
+    def setUp(self):
+        self.logica = Logica_real()
+        self.session = Session()
+        self.data_factory = Faker("es_ES")
+        self.data_factory.add_provider(ProveedorAuto)
+
+        self.auto1 = Auto(
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            placa="XXX001",
+            color="gris",
+            cilindraje=self.data_factory.pyfloat(
+                left_digits=3, right_digits=1, positive=True
+            ),
+            combustible="GASOLINA",
+            kilometraje_compra=0,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
+        self.auto2 = Auto(
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            placa="AAA001",
+            color="Rojo",
+            cilindraje=self.data_factory.pyfloat(
+                left_digits=3, right_digits=1, positive=True
+            ),
+            combustible="DIESEL",
+            kilometraje_compra=25000,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
+
+        self.manto1 = Mantenimiento(
+            nombre="Cambio de aceite", descripcion="Cambio de aceite"
+        )
+        self.manto2 = Mantenimiento(
+            nombre="Gasolina", descripcion="Pago por carga de Gasolina"
+        )
+        self.manto3 = Mantenimiento(
+            nombre="Seguro", descripcion="Prima anual por coberturas del Seguro"
+        )
+
+        self.session.add(self.auto1)
+        self.session.add(self.auto2)
+        self.session.add(self.manto1)
+        self.session.add(self.manto2)
+        self.session.add(self.manto3)
+        self.session.commit()
+
+    def tearDown(self):
+        self.session = Session()
+
+        """Consulta todos los autos"""
+        busqueda = self.session.query(Auto).all()
+
+        """Borra todos los autos"""
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        """Consulta todos los Mantenimientos"""
+        busqueda = self.session.query(Mantenimiento).all()
+
+        """Borra todos los Mantenimientos"""
+        for manto in busqueda:
+            self.session.delete(manto)
+
+        self.session.commit()
+        self.session.close()
+
+    def test_HU014_1_gasto_total_0(self):
+        """ test que valida el campo de valor total del reporte sin acciones """
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            if gastos[1] == 0:
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU014_1_gasto_total_1(self):
+        """ test que valida el campo de valor total del reporte con una accion"""
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            if gastos[1] == valor:
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU014_1_gasto_total_2(self):
+        """ test que valida el campo de valor total del reporte con dos acciones"""
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            if gastos[1] == round((valor1 + valor2), 2):
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU014_1_gasto_total_3(self):
+        """ test que valida el campo de valor total del reporte sin acciones del carro escogido"""
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=2)
+        for gastos in lista_gastos:
+            if gastos[1] == 0:
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU014_2_gasto_total_0(self):
+        """Prueba que los gastos sea un numero positivo"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=-10.0,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+
+        for gastos in lista_gastos:
+            if gastos[1] >= 0:
+                resultado = True
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU015_1_gasto_anual_1(self):
+        """Prueba que los gastos por año"""
+        found = 0
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2019-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2020-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor3,
+            fecha="2021-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+
+        for gastos in lista_gastos:
+            #If gasto(2019) == valor1 and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == valor1:
+                found += 1
+            elif gastos[0] == "2020" and gastos[1] == valor2:
+                found += 1
+            elif gastos[0] == "2021" and gastos[1] == valor3:
+                found += 1
+            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3), 2):
+                found += 1
+            else:
+                found += 0
+        self.assertEqual(found,4)
+
+    def test_HU015_1_gasto_anual_2(self):
+        """Prueba que los gastos por año"""
+        found = 0
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2019-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2020-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor3,
+            fecha="2021-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor4,
+            fecha="2019-03-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            #If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == (valor1+valor4):
+                found += 1
+            elif gastos[0] == "2020" and gastos[1] == valor2:
+                found += 1
+            elif gastos[0] == "2021" and gastos[1] == valor3:
+                found += 1
+            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3+valor4), 2):
+                found += 1
+            else:
+                found += 0
+        self.assertEqual(found,4)
+
+    def test_HU015_1_gasto_anual_3(self):
+        """Prueba que los gastos por año"""
+        found = 0
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2019-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2020-03-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor3,
+            fecha="2020-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor4,
+            fecha="2019-03-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            #If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == (valor1+valor4):
+                found += 1
+            elif gastos[0] == "2020" and gastos[1] == (valor2+valor3):
+                found += 1
+            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3+valor4), 2):
+                found += 1
+            else:
+                found += 0
+        self.assertEqual(found,3)
+
+    def test_HU015_2_gasto_anual_invalido(self):
+        """Prueba que los gastos por año con valor invalido"""
+        found = 0
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor2 = -10000
+        valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2019-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2020-03-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor3,
+            fecha="2020-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor4,
+            fecha="2019-03-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        for gastos in lista_gastos:
+            #If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == (valor1+valor4):
+                found += 1
+            elif gastos[0] == "2020" and gastos[1] == (valor2+valor3):
+                found += 1
+            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3+valor4), 2):
+                found += 1
+            else:
+                found += 0
+        self.assertNotEqual(found,3)
+
+    def test_HU016_1_gasto_xKilometro(self):
+        """Prueba que los gastos por kilometros se calculen bien"""
+        valor1 = 2400.00
+        kilo1 = 800
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2022-02-15",
+            kilometraje=kilo1,
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        self.assertEqual(valor_kilometro,(valor1/kilo1))
+
+    def test_HU016_1_gasto_xKilometro_2(self):
+        """Prueba que los gastos por kilometros se calculen bien"""
+        valor1 = 2400.00
+        kilo1 = 800
+        valor2 = 2400.00
+        kilo2 = 1600
+        valor3 = 1200.00
+        kilo3 = 0
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2022-02-15",
+            kilometraje=kilo1,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2022-05-15",
+            kilometraje=kilo2,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor3,
+            fecha="2021-05-15",
+            kilometraje=kilo3,
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        self.assertEqual(valor_kilometro,3.0)
+
+    def test_HU016_1_gasto_xKilometro_3(self):
+        """Prueba que los gastos por kilometros se calculen bien"""
+        valor1 = 2400.00
+        kilo1 = 800
+        valor2 = 2400.00
+        kilo2 = 1600
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2022-02-15",
+            kilometraje=kilo1,
+        )
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor2,
+            fecha="2022-05-15",
+            kilometraje=kilo2,
+        )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        self.assertEqual(valor_kilometro,3.0)
+
+    def test_HU016_2_gasto_xKilometro(self):
+        """Prueba que los gastos por kilometros usen valores del ultimo año"""
+        valor1 = 10021.86
+        self.logica.crear_accion(
+             id_auto=1,
+             mantenimiento="Cambio de aceite",
+             valor=valor1,
+             fecha="2021-02-15",
+             kilometraje=self.data_factory.random_int(min=0, max=999999),
+         )
+        lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
+        self.assertEqual(valor_kilometro,0)
