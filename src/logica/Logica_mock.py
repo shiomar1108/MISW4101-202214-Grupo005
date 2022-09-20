@@ -201,9 +201,6 @@ class Logica_mock:
 
         required_numeric_fields = ["valor", "kilometraje"]
         for field in required_numeric_fields:
-            if field not in locals() or locals()[field] == "":
-                return "Error: {} es requerido".format(field)
-
             if locals()[field] < 0:
                 return "Error: {} debe ser un numero mayor a 0".format(field)
 
@@ -295,8 +292,6 @@ class Logica_mock:
             "combustible": combustible,
             "kilometraje": kilometraje,
         }
-
-
         return output
 
 

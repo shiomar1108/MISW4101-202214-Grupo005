@@ -129,6 +129,76 @@ class Logica_real:
         else:
             return "Error: auto con Placa " + placa + " no existe"
 
+    def validar_crear_editar_auto(
+        self, marca, placa, modelo, kilometraje, color, cilindraje, combustible
+    ):
+        required_fields = [
+            "marca",
+            "modelo",
+            "placa",
+            "color",
+            "cilindraje",
+            "combustible",
+            "kilometraje",
+        ]
+        for field in required_fields:
+            if field not in locals() or locals()[field] == "":
+                return "Error: {} es requerido".format(field)
+
+        try:
+            modelo = int(modelo)
+        except:
+            return "Error: modelo debe ser un número"
+
+        try:
+            kilometraje = int(kilometraje)
+        except:
+            return "Error: kilometraje debe ser un número"
+
+        str_fields = ["marca", "placa", "color", "combustible"]
+        for field in str_fields:
+            try:
+                int(locals()[field])
+                return "Error: {} debe ser un String".format(field)
+            except:
+                if len(locals()[field]) > 50:
+                    return "Error: {} debe tener menos de 50 caracteres".format(field)
+                treeshold = 3
+                if field == "marca":
+                    treeshold = 2
+
+                if len(locals()[field]) <= treeshold:
+                    return f"Error: {field} debe tener más de {treeshold} caracteres"
+
+        try:
+            cilindraje = int(cilindraje)
+        except:
+            mensaje = "Error: cilindraje debe ser un número o un decimal"
+            try:
+                cilindraje = float(cilindraje)
+            except:
+                return mensaje
+
+        if len(placa) != 6 or modelo > 9999:
+            return (
+                "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999"
+            )
+        else:
+            chunks = [placa[i : i + 3] for i in range(0, len(placa), 3)]
+            if chunks[1].isalpha() or chunks[0].isnumeric():
+                return "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
+
+        output = {
+            "marca": marca,
+            "modelo": modelo,
+            "placa": placa,
+            "color": color,
+            "cilindraje": cilindraje,
+            "combustible": combustible,
+            "kilometraje": kilometraje,
+        }
+        return output
+
     def dar_mantenimientos(self):
         lista = []
         mantos = session.query(Mantenimiento).all()
@@ -238,6 +308,12 @@ class Logica_real:
         session.commit()
         return True
 
+    def editar_accion(
+        self, id_accion, mantenimiento, id_auto, valor, kilometraje, fecha
+    ):
+        return False
+        
+
     def dar_reporte_ganancias(self, id_auto):
         acciones = self.dar_acciones_auto(id_auto)
         if len(acciones) == 0:
@@ -289,73 +365,3 @@ class Logica_real:
         return (
             session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
         )
-
-    def validar_crear_editar_auto(
-        self, marca, placa, modelo, kilometraje, color, cilindraje, combustible
-    ):
-        required_fields = [
-            "marca",
-            "modelo",
-            "placa",
-            "color",
-            "cilindraje",
-            "combustible",
-            "kilometraje",
-        ]
-        for field in required_fields:
-            if field not in locals() or locals()[field] == "":
-                return "Error: {} es requerido".format(field)
-
-        try:
-            modelo = int(modelo)
-        except:
-            return "Error: modelo debe ser un número"
-
-        try:
-            kilometraje = int(kilometraje)
-        except:
-            return "Error: kilometraje debe ser un número"
-
-        str_fields = ["marca", "placa", "color", "combustible"]
-        for field in str_fields:
-            try:
-                int(locals()[field])
-                return "Error: {} debe ser un String".format(field)
-            except:
-                if len(locals()[field]) > 50:
-                    return "Error: {} debe tener menos de 50 caracteres".format(field)
-                treeshold = 3
-                if field == "marca":
-                    treeshold = 2
-
-                if len(locals()[field]) <= treeshold:
-                    return f"Error: {field} debe tener más de {treeshold} caracteres"
-
-        try:
-            cilindraje = int(cilindraje)
-        except:
-            mensaje = "Error: cilindraje debe ser un número o un decimal"
-            try:
-                cilindraje = float(cilindraje)
-            except:
-                return mensaje
-
-        if len(placa) != 6 or modelo > 9999:
-            return (
-                "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999"
-            )
-        else:
-            chunks = [placa[i : i + 3] for i in range(0, len(placa), 3)]
-            if chunks[1].isalpha() or chunks[0].isnumeric():
-                return "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
-
-        output = {
-            "marca": marca,
-            "modelo": modelo,
-            "placa": placa,
-            "color": color,
-            "cilindraje": cilindraje,
-            "combustible": combustible,
-            "kilometraje": kilometraje,
-        }
-        return output
