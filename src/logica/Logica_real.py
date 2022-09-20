@@ -358,6 +358,4 @@ class Logica_real:
             "combustible": combustible,
             "kilometraje": kilometraje,
         }
-
-
         return output
