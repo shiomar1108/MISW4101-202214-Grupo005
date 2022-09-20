@@ -3,14 +3,12 @@ name: develop_test
 # Controls when the action will run. 
 on:
   push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
+    - 'feature**'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   job1:
-    if: contains(github.event.commits[0].message, 'Develop')
+    if: contains(github.event.commits[0].message, 'Develop Ready')
     name: Pruebas
     runs-on: ubuntu-latest
     steps:
