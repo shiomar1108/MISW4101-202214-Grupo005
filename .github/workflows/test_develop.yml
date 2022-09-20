@@ -16,10 +16,6 @@ jobs:
     steps:
     - name: Checkout de repositorio
       uses: actions/checkout@v2
-    - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
     - name: Mezcla develop ->${{ github.ref }}
         uses: tukasz/direct-merge-action@master
         with:
