@@ -10,11 +10,22 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   job1:
+    if: contains(github.event.commits[0].message, 'Develop')
     name: Pruebas
     runs-on: ubuntu-latest
     steps:
     - name: Checkout de repositorio
       uses: actions/checkout@v2
+    - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+    - name: Mezcla develop ->${{ github.ref }}
+        uses: tukasz/direct-merge-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source-branch: develop
+          target-branch: ${{ github.ref }}
     - name: Configuración de entorno de python
       uses: actions/setup-python@v2
       with:
@@ -24,8 +35,18 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Correr pruebas
-      id: correr-pruebas
-      run: python -m unittest discover -s tests -v
+        id: correr-pruebas
+        run: python -m unittest discover -s tests -v
+      - name: Validar resultado con errores
+        if: ${{ failure() }}
+        env:
+          MENSAJE_ERROR: Una o varias pruebas fallaron
+        run: echo "::set-output name=respuesta::${MENSAJE_ERROR}"
+      - name: Validar resultado sin errores
+        if: ${{ success() }}
+        env:
+          MENSAJE_EXITO: Todas las pruebas fueron exitosas
+        run: echo "::set-output name=respuesta::${MENSAJE_EXITO}"
     - name: Cálculo de cubrimiento
       id: cubrimiento
       run: |
