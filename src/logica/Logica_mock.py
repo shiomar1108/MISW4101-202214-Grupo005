@@ -505,12 +505,12 @@ class Logica_mock:
         ganancias = 0
         lista_year = []
         lista_valor = []
-        lista_calculo =[]
+        lista_calculo = []
         for i in range(0, len(acciones), 1):
             accion = acciones[i]
-            #calculo gasto total
+            # calculo gasto total
             ganancias += accion.get("valor")
-            #calculo gasto por año
+            # calculo gasto por año
             year = accion.get("fecha")[:4]
             try:
                 index = lista_year.index(year)
@@ -518,22 +518,29 @@ class Logica_mock:
             except:
                 lista_year.append(year)
                 lista_valor.append(accion.get("valor"))
-            #gasto x kilometro ultimo año
-            if((datetime.today() - datetime.strptime(accion.get('fecha'), '%Y-%m-%d')).days < 365):
-                if((i+1) == len(acciones)):
-                    calculo_Accion = (accion.get("valor"))/(accion.get("kilometraje") - self.dar_auto(id_auto= id_auto).get("kilometraje_compra"))
+            # gasto x kilometro ultimo año
+            if (
+                datetime.today() - datetime.strptime(accion.get("fecha"), "%Y-%m-%d")
+            ).days < 365:
+                if (i + 1) == len(acciones):
+                    calculo_Accion = (accion.get("valor")) / (
+                        accion.get("kilometraje")
+                        - self.dar_auto(id_auto=id_auto).get("kilometraje_compra")
+                    )
                     lista_calculo.append(calculo_Accion)
                 else:
-                    calculo_Accion = (accion.get("valor"))/(accion.get("kilometraje") - acciones[i+1].get("kilometraje"))
+                    calculo_Accion = (accion.get("valor")) / (
+                        accion.get("kilometraje") - acciones[i + 1].get("kilometraje")
+                    )
                     lista_calculo.append(calculo_Accion)
-                    
+
         lista = list(map(lambda x, y: (x, y), lista_year, lista_valor))
         lista_ordenada = sorted(lista, key=lambda tup: tup[0])
         lista_ordenada.append(("Total", round(ganancias, 2)))
-        if(len(lista_calculo) == 0):
+        if len(lista_calculo) == 0:
             calculo_Accion = 0
         else:
-            calculo_Accion = (sum(lista_calculo))/(len(lista_calculo))
+            calculo_Accion = (sum(lista_calculo)) / (len(lista_calculo))
 
         return lista_ordenada, calculo_Accion
 

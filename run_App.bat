@@ -25,10 +25,14 @@ echo '                                                                 '
 echo '               Operaciones Soportadas                            '
 echo '                                                                 '
 echo '  * APP  - Lanzar la Aplicacion Auto-Perfecto                    '
-echo '  * TEST - Correr Pruebas de Unitarias                           ' 
+echo '  * TEST - Correr Pruebas de Unitarias                           '
+echo '  * COVER - Correr Analisis de Cobertura de Codigo               ' 
 echo '                                                                 '
 set /p "id=Indique Operacion: "
 
 if /I %id%==APP (%work_dir%\venv\Scripts\python.exe %work_dir%\__main__.py)
 if /I %id%==TEST (%work_dir%\venv\Scripts\python.exe -m unittest discover -s tests -v)
+if /I %id%==COVER (%work_dir%\venv\Scripts\coverage erase
+	%work_dir%\venv\Scripts\coverage run -m unittest discover -s tests -v
+%work_dir%\venv\Scripts\coverage report -m)
 PAUSE

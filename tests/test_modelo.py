@@ -91,12 +91,8 @@ class ModeloTestEmptySetUp(unittest.TestCase):
 
     def test_caso02_dar_2_autos_ordenados(self):
         """Test que verifica que la lista de autos este ordenada por placa"""
-        self.logica.crear_auto(
-            "Toyota", "Corolla", "ABC123", "Rojo", 1500, "Gasolina", 0
-        )
-        self.logica.crear_auto(
-            "Toyota", "Corolla", "XYZ789", "Rojo", 1500, "Gasolina", 0
-        )
+        self.logica.crear_auto("Toyota", 1995, "ABC123", "Rojo", 1500, "Gasolina", 0)
+        self.logica.crear_auto("Toyota", 2015, "XYZ789", "Rojo", 1500, "Gasolina", 0)
         busqueda = self.logica.dar_autos()
         resultado = True
         for i in range(len(busqueda) - 1):
@@ -352,13 +348,29 @@ class ModeloTestTDD(unittest.TestCase):
         )
         self.assertEqual(resultado, "Error: modelo es requerido")
 
-    def test_caso07_crear_auto_campo_modelo_invalido(self):
+    def test_caso07_crear_auto_campo_modelo_invalido_1(self):
         """test que verifica que el campo modelo del auto sean 4 digitos"""
         resultado = self.logica.crear_auto(
             marca=self.data_factory.marca_auto(),
             modelo=19995,
             placa=self.data_factory.bothify(text="???").upper()
             + str(self.data_factory.random_int(100, 999)),
+            color=self.data_factory.color(),
+            cilindraje=self.data_factory.random_int(10, 50) / 10,
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
+        )
+        self.assertEqual(
+            resultado,
+            "Error: placa debe ser de 6 caracteres y modelo debe ser menor a 9999",
+        )
+
+    def test_caso07_crear_auto_campo_modelo_invalido_2(self):
+        """test que verifica que el campo modelo del auto sean digitos"""
+        resultado = self.logica.crear_auto(
+            marca=self.data_factory.marca_auto(),
+            modelo="19995",
+            placa="AAA123" + str(self.data_factory.random_int(100, 999)),
             color=self.data_factory.color(),
             cilindraje=self.data_factory.random_int(10, 50) / 10,
             combustible="GASOLINA",
@@ -453,13 +465,35 @@ class ModeloTestTDD(unittest.TestCase):
     def test_caso14_mantenimiento_creado_debe_ser_visible(self):
         """test que verifica que despues de creado un mantenimiento se vea en la lista"""
         self.logica.aniadir_mantenimiento(
-            nombre="Cambio de Llantas", descripcion="Pago por nuevas llantas"
+            nombre="Cambio de Rines", descripcion="Pago por nuevos Rines"
         )
         lista = self.logica.dar_mantenimientos()
-        if lista[len(lista) - 1].get("nombre") == "Cambio de Llantas":
+        if lista[len(lista) - 1].get("nombre") == "Cambio de Rines":
             resultado = True
         else:
             resultado = False
+        self.assertTrue(resultado)
+
+    def test_caso15_mantenimiento_mayor_2_letras(self):
+        """test que verifica que despues de creado un mantenimiento tenga mas de tres letras"""
+        resultado = self.logica.aniadir_mantenimiento(
+            nombre="CF", descripcion="Pago por nuevas llantas"
+        )
+        self.assertEqual(resultado, "Error: nombre debe tener más de 3 caracteres")
+
+    def test_caso16_mantenimiento_menor_200_letras(self):
+        """test que verifica que despues de creado un mantenimiento tenga menos de 200 letras"""
+        resultado = self.logica.aniadir_mantenimiento(
+            nombre="CFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCF",
+            descripcion="Pago por nuevas llantas",
+        )
+        self.assertEqual(resultado, "Error: nombre debe tener menos de 200 caracteres")
+
+    def test_caso17_crear_mantenimiento_exitoso(self):
+        """test que verifica que se pueda crear un mantenimiento"""
+        resultado = self.logica.aniadir_mantenimiento(
+            nombre="Cambio de Llanta", descripcion="Pago por nuevas llantas"
+        )
         self.assertTrue(resultado)
 
 
@@ -829,6 +863,20 @@ class Test_Modelo_Venta(unittest.TestCase):
         )
         self.assertEqual(resultado, "Error: kilometraje debe ser un numero mayor a 0")
 
+    def test_HU005_1_vender_automovil_ya_vendido(self):
+        """test que verifica que no se pueda vender un automovil ya vendido"""
+        self.logica.vender_auto(
+            placa="AAA001",
+            valor=self.data_factory.random_int(1000000, 10000000000) / 100,
+            kilometraje=self.data_factory.random_int(0, 300000),
+        )
+        resultado = self.logica.vender_auto(
+            placa="AAA001",
+            valor=self.data_factory.random_int(1000000, 10000000000) / 100,
+            kilometraje=self.data_factory.random_int(0, 300000),
+        )
+        self.assertEqual(resultado, "Error: auto con placa AAA001 ya fue vendido")
+
 
 class Test_Modelo_Accion(unittest.TestCase):
     """Clase que contiene los test de la logica"""
@@ -1085,7 +1133,7 @@ class Test_Modelo_Accion(unittest.TestCase):
         )
         self.assertEqual(resultado, "Error: La fecha debe ser en formato AAAA-MM-DD")
 
-    def test_HU012_7_crear_accion_Mantenimiento_invalido(self):
+    def test_HU012_7_crear_accion_Mantenimiento_invalido_1(self):
         """test que verifica que no se puede agregar una accion con un mantenimiento invalido"""
         resultado = self.logica.crear_accion(
             id_auto=1,
@@ -1097,6 +1145,21 @@ class Test_Modelo_Accion(unittest.TestCase):
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
         self.assertEqual(resultado, "Error: El Mantenimiento debe existir")
+
+    def test_HU012_7_crear_accion_Mantenimiento_invalido_2(self):
+        """test que verifica que no se puede agregar una accion con un mantenimiento de mas de 50 caracteres"""
+        resultado = self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="CFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCFCF",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(
+            resultado, "Error: mantenimiento debe tener menos de 50 caracteres"
+        )
 
     def test_HU012_8_crear_accion_duplicada_1(self):
         """test que verifica que no se puede agregar una accion duplicada"""
@@ -1138,6 +1201,19 @@ class Test_Modelo_Accion(unittest.TestCase):
             kilometraje=kilo,
         )
         self.assertTrue(resultado)
+
+    def test_HU012_9_crear_accion_auto_invalido(self):
+        """test que verifica que no se puede agregar una accion a un auto que no exista"""
+        kilo = self.data_factory.random_int(min=0, max=999999)
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        resultado = self.logica.crear_accion(
+            id_auto=3,
+            mantenimiento="Cambio de Llantas",
+            valor=valor,
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            kilometraje=kilo,
+        )
+        self.assertEqual(resultado, "Error: El Auto debe existir")
 
     def test_HU010_1_ver_lista_acciones_ordenada(self):
         """test que verifica que la lista de acciones estan ordenadas en descentente por kilometro"""
@@ -1321,7 +1397,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         self.session.close()
 
     def test_HU014_1_gasto_total_0(self):
-        """ test que valida el campo de valor total del reporte sin acciones """
+        """test que valida el campo de valor total del reporte sin acciones"""
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
             if gastos[1] == 0:
@@ -1331,7 +1407,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         self.assertTrue(resultado)
 
     def test_HU014_1_gasto_total_1(self):
-        """ test que valida el campo de valor total del reporte con una accion"""
+        """test que valida el campo de valor total del reporte con una accion"""
         valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
             id_auto=1,
@@ -1349,7 +1425,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         self.assertTrue(resultado)
 
     def test_HU014_1_gasto_total_2(self):
-        """ test que valida el campo de valor total del reporte con dos acciones"""
+        """test que valida el campo de valor total del reporte con dos acciones"""
         valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
@@ -1375,7 +1451,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         self.assertTrue(resultado)
 
     def test_HU014_1_gasto_total_3(self):
-        """ test que valida el campo de valor total del reporte sin acciones del carro escogido"""
+        """test que valida el campo de valor total del reporte sin acciones del carro escogido"""
         valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.crear_accion(
@@ -1448,18 +1524,20 @@ class Test_Modelo_Gastos(unittest.TestCase):
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
 
         for gastos in lista_gastos:
-            #If gasto(2019) == valor1 and gasto(2020) == valor2 and gasto(2021) == valor3
+            # If gasto(2019) == valor1 and gasto(2020) == valor2 and gasto(2021) == valor3
             if gastos[0] == "2019" and gastos[1] == valor1:
                 found += 1
             elif gastos[0] == "2020" and gastos[1] == valor2:
                 found += 1
             elif gastos[0] == "2021" and gastos[1] == valor3:
                 found += 1
-            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3), 2):
+            elif gastos[0] == "Total" and gastos[1] == round(
+                (valor1 + valor2 + valor3), 2
+            ):
                 found += 1
             else:
                 found += 0
-        self.assertEqual(found,4)
+        self.assertEqual(found, 4)
 
     def test_HU015_1_gasto_anual_2(self):
         """Prueba que los gastos por año"""
@@ -1498,18 +1576,20 @@ class Test_Modelo_Gastos(unittest.TestCase):
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
-            #If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
-            if gastos[0] == "2019" and gastos[1] == (valor1+valor4):
+            # If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == (valor1 + valor4):
                 found += 1
             elif gastos[0] == "2020" and gastos[1] == valor2:
                 found += 1
             elif gastos[0] == "2021" and gastos[1] == valor3:
                 found += 1
-            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3+valor4), 2):
+            elif gastos[0] == "Total" and gastos[1] == round(
+                (valor1 + valor2 + valor3 + valor4), 2
+            ):
                 found += 1
             else:
                 found += 0
-        self.assertEqual(found,4)
+        self.assertEqual(found, 4)
 
     def test_HU015_1_gasto_anual_3(self):
         """Prueba que los gastos por año"""
@@ -1548,16 +1628,18 @@ class Test_Modelo_Gastos(unittest.TestCase):
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
-            #If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
-            if gastos[0] == "2019" and gastos[1] == (valor1+valor4):
+            # If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == (valor1 + valor4):
                 found += 1
-            elif gastos[0] == "2020" and gastos[1] == (valor2+valor3):
+            elif gastos[0] == "2020" and gastos[1] == (valor2 + valor3):
                 found += 1
-            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3+valor4), 2):
+            elif gastos[0] == "Total" and gastos[1] == round(
+                (valor1 + valor2 + valor3 + valor4), 2
+            ):
                 found += 1
             else:
                 found += 0
-        self.assertEqual(found,3)
+        self.assertEqual(found, 3)
 
     def test_HU015_2_gasto_anual_invalido(self):
         """Prueba que los gastos por año con valor invalido"""
@@ -1566,7 +1648,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
         valor2 = -10000
         valor3 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         valor4 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
-        
+
         self.logica.crear_accion(
             id_auto=1,
             mantenimiento="Cambio de aceite",
@@ -1597,16 +1679,18 @@ class Test_Modelo_Gastos(unittest.TestCase):
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
         for gastos in lista_gastos:
-            #If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
-            if gastos[0] == "2019" and gastos[1] == (valor1+valor4):
+            # If gasto(2019) == (valor1+valor4) and gasto(2020) == valor2 and gasto(2021) == valor3
+            if gastos[0] == "2019" and gastos[1] == (valor1 + valor4):
                 found += 1
-            elif gastos[0] == "2020" and gastos[1] == (valor2+valor3):
+            elif gastos[0] == "2020" and gastos[1] == (valor2 + valor3):
                 found += 1
-            elif gastos[0] == "Total" and gastos[1] == round((valor1+valor2+valor3+valor4), 2):
+            elif gastos[0] == "Total" and gastos[1] == round(
+                (valor1 + valor2 + valor3 + valor4), 2
+            ):
                 found += 1
             else:
                 found += 0
-        self.assertNotEqual(found,3)
+        self.assertNotEqual(found, 3)
 
     def test_HU016_1_gasto_xKilometro(self):
         """Prueba que los gastos por kilometros se calculen bien"""
@@ -1620,7 +1704,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
             kilometraje=kilo1,
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
-        self.assertEqual(valor_kilometro,(valor1/kilo1))
+        self.assertEqual(valor_kilometro, (valor1 / kilo1))
 
     def test_HU016_1_gasto_xKilometro_2(self):
         """Prueba que los gastos por kilometros se calculen bien"""
@@ -1652,7 +1736,7 @@ class Test_Modelo_Gastos(unittest.TestCase):
             kilometraje=kilo3,
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
-        self.assertEqual(valor_kilometro,3.0)
+        self.assertEqual(valor_kilometro, 3.0)
 
     def test_HU016_1_gasto_xKilometro_3(self):
         """Prueba que los gastos por kilometros se calculen bien"""
@@ -1675,17 +1759,79 @@ class Test_Modelo_Gastos(unittest.TestCase):
             kilometraje=kilo2,
         )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
-        self.assertEqual(valor_kilometro,3.0)
+        self.assertEqual(valor_kilometro, 3.0)
 
     def test_HU016_2_gasto_xKilometro(self):
         """Prueba que los gastos por kilometros usen valores del ultimo año"""
         valor1 = 10021.86
         self.logica.crear_accion(
-             id_auto=1,
-             mantenimiento="Cambio de aceite",
-             valor=valor1,
-             fecha="2021-02-15",
-             kilometraje=self.data_factory.random_int(min=0, max=999999),
-         )
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor1,
+            fecha="2021-02-15",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
         lista_gastos, valor_kilometro = self.logica.dar_reporte_ganancias(id_auto=1)
-        self.assertEqual(valor_kilometro,0)
+        self.assertEqual(valor_kilometro, 0)
+
+
+class ModeloTestEmptySetUp(unittest.TestCase):
+    """clase que contiene los test con el setUp vacio"""
+
+    def setUp(self):
+        """Se ejecuta antes de cada prueba"""
+        self.logica = Logica_real()
+        self.session = Session()
+        self.data_factory = Faker("es_ES")
+
+    def test_caso01_dar_lista_autos_vacia(self):
+        """Test que verifica que la lista de autos este vacia"""
+        busqueda = self.logica.dar_autos()
+        if len(busqueda) == 0:
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_caso01_dar_lista_auto_vacio(self):
+        """Test que verifica que no se regrese nada cuando el auto no exista"""
+        busqueda = self.logica.dar_auto(id_auto=1)
+        if busqueda == None:
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
+    def test_caso_marca_muy_larga(self):
+        """Test que verifica que no se cree un auto con marca de mas de 50 caracteres"""
+        resultado = self.logica.crear_auto(
+            "ToyotaGrisCorollaSuperEquipadoTurboHibridoLEDCajuela",
+            "ABC123",
+            self.data_factory.random_int(1900, date.today().year),
+            0,
+            "Rojo",
+            1500,
+            "Gasolina",
+        )
+        self.assertEqual(resultado, "Error: marca debe tener menos de 50 caracteres")
+
+    def test_caso_marca_muy_corta(self):
+        """Test que verifica que no se cree un auto con menos de mas de 2 caracteres"""
+        resultado = self.logica.crear_auto(
+            "VW",
+            "ABC123",
+            self.data_factory.random_int(1900, date.today().year),
+            0,
+            "Rojo",
+            1500,
+            "Gasolina",
+        )
+        self.assertEqual(resultado, "Error: marca debe tener más de 2 caracteres")
+
+    def test_caso_vender_sin_placa(self):
+        """Test que verifica que no se cpueda vender un carro con placa vacia"""
+        kilometraje = self.data_factory.random_int(0, 500000)
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        resultado = self.logica.vender_auto("", valor, kilometraje)
+
+        self.assertEqual(resultado, "Error: placa es requerida")
