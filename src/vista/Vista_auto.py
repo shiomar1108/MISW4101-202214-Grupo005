@@ -112,13 +112,13 @@ class Vista_auto(QWidget):
     def mostrar_auto(self, auto):
         self.auto=auto
         if (self.auto!=None):
-            self.texto_marca.setText(self.auto["Marca"])
-            self.texto_placa.setText(self.auto["Placa"])
-            self.texto_modelo.setText(self.auto["Modelo"])
-            self.texto_kilometraje.setText(str(self.auto["Kilometraje"]))
-            self.texto_color.setText(self.auto["Color"])
-            self.texto_cilindraje.setText(str(self.auto["Cilindraje"]))
-            self.texto_tipo_combustible.setText(self.auto["TipoCombustible"])
+            self.texto_marca.setText(self.auto["marca"])
+            self.texto_placa.setText(self.auto["placa"])
+            self.texto_modelo.setText(str(self.auto["modelo"]))
+            self.texto_kilometraje.setText(str(self.auto["kilometraje_compra"]))
+            self.texto_color.setText(self.auto["color"])
+            self.texto_cilindraje.setText(str(self.auto["cilindraje"]))
+            self.texto_tipo_combustible.setText(self.auto["combustible"])
 
     def volver(self):
         """
