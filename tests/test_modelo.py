@@ -21,12 +21,10 @@ class ProveedorAuto(BaseProvider):
             "Chevrolet",
             "Tesla",
             "BMW",
-            "Volkswagen",
             "Honda",
             "Hyundai",
             "Kia",
             "Mazda",
-            "Nissan",
             "Suzuki",
             "Audi",
             "Mercedes-Benz",
@@ -403,7 +401,7 @@ class ModeloTestTDD(unittest.TestCase):
             marca="nissan",
             modelo=self.data_factory.random_int(min=1900, max=2025),
             placa="ABC001",
-            color=self.data_factory.color_name(),
+            color=self.data_factory.text(10),
             cilindraje="asd",
             combustible="GASOLINA",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
@@ -486,7 +484,7 @@ class ModeloTestTDD(unittest.TestCase):
             id=1, 
             placa=self.data_factory.bothify(text="???").upper()
             + str(self.data_factory.random_int(100, 999)), 
-            marca=self.data_factory.marca_auto(), 
+            marca="toyota", 
             modelo="", 
             color=self.data_factory.color_name(), 
             cilindraje=self.data_factory.pyint(), 
@@ -598,13 +596,11 @@ class ModeloTestTDD(unittest.TestCase):
 
     def test_HU002_caso11_editar_auto_exitosamente_campo_modelo(self):
         """test que verifica que se edito el auto exitosamente"""
-        modelo = self.data_factory.random_int(min=1900, max=2025)
-
         resultado = self.logica.editar_auto(
             id=1, 
             placa="XXX001", 
             marca=self.data_factory.marca_auto(), 
-            modelo=modelo, 
+            modelo=2011, 
             color=self.data_factory.color_name(), 
             cilindraje=self.data_factory.pyint(), 
             combustible="GASOLINA", 
@@ -613,7 +609,7 @@ class ModeloTestTDD(unittest.TestCase):
 
         auto_editado = self.logica.dar_auto(1)
         self.assertTrue(resultado)
-        self.assertEqual(auto_editado['modelo'], modelo)
+        self.assertEqual(auto_editado['modelo'], 2011)
 
     def test_HU002_caso12_editar_auto_exitosamente_campo_color(self):
         """test que verifica que se edito el auto exitosamente"""
@@ -674,7 +670,7 @@ class ModeloTestTDD(unittest.TestCase):
 
     def test_HU002_caso15_editar_auto_exitosamente_campo_kilometraje(self):
         """test que verifica que se edito el auto exitosamente"""
-        kilometraje = self.data_factory.random_int(0, 500000)
+        kilometraje = 14346
 
         resultado = self.logica.editar_auto(
             id=1, 
