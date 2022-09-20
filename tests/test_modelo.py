@@ -468,7 +468,7 @@ class ModeloTestTDD(unittest.TestCase):
     def test_HU002_caso01_editar_auto_campo_marca_vacio(self):
         """test que verifica que el campo marca del auto no este vacio"""
         resultado = self.logica.editar_auto(
-            placa="ABC001", marca="", modelo=2020, color="rojo", cilindraje=1.5, combustible="GASOLINA", kilometraje=10000
+            id=1, placa="ABC001", marca="", modelo=2020, color="rojo", cilindraje=1.5, combustible="GASOLINA", kilometraje=10000
         )
         self.assertEqual(resultado, "Error: marca es requerido")
 
