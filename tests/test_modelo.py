@@ -468,9 +468,243 @@ class ModeloTestTDD(unittest.TestCase):
     def test_HU002_caso01_editar_auto_campo_marca_vacio(self):
         """test que verifica que el campo marca del auto no este vacio"""
         resultado = self.logica.editar_auto(
-            id=1, placa="ABC001", marca="", modelo=2020, color="rojo", cilindraje=1.5, combustible="GASOLINA", kilometraje=10000
+            id=1, 
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)), 
+            marca="", 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
         )
         self.assertEqual(resultado, "Error: marca es requerido")
+
+    def test_HU002_caso02_editar_auto_campo_modelo_vacio(self):
+        """test que verifica que el campo modelo del auto no este vacio"""
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)), 
+            marca=self.data_factory.marca_auto(), 
+            modelo="", 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+        self.assertEqual(resultado, "Error: modelo es requerido")
+
+    def test_HU002_caso03_editar_auto_campo_placa_vacio(self):
+        """test que verifica que el campo placa del auto no este vacio"""
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa="", 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+        self.assertEqual(resultado, "Error: placa es requerido")
+
+    def test_HU002_caso04_editar_auto_campo_color_vacio(self):
+        """test que verifica que el campo color del auto no este vacio"""
+        resultado = self.logica.editar_auto(
+            id=1,
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)), 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color="", 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+        self.assertEqual(resultado, "Error: color es requerido")
+
+    def test_HU002_caso05_editar_auto_campo_cilindraje_vacio(self):
+        """test que verifica que el campo cilindraje del auto no este vacio"""
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)), 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje="", 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+        self.assertEqual(resultado, "Error: cilindraje es requerido")
+
+    def test_HU002_caso06_editar_auto_campo_combustible_vacio(self):
+        """test que verifica que el campo combustible del auto no este vacio"""
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)), 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+        self.assertEqual(resultado, "Error: combustible es requerido")
+    
+    def test_HU002_caso07_editar_auto_campo_kilometraje_vacio(self):
+        """test que verifica que el campo kilometraje del auto no este vacio"""
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa=self.data_factory.bothify(text="???").upper()
+            + str(self.data_factory.random_int(100, 999)), 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", kilometraje=""
+        )
+        self.assertEqual(resultado, "Error: kilometraje es requerido")
+
+    def test_HU002_caso09_editar_auto_campo_placa_no_existente(self):
+        """test que verifica que el campo placa exista en la base de datos"""
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa="ABC123", 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+        self.assertEqual(resultado, "Error: auto con Placa ABC123 no existe")
+
+    def test_HU002_caso10_editar_auto_campo_placa_existente(self):
+        """test que verifica que el campo placa no exista en la base de datos"""
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa="AAA001", 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+        self.assertEqual(resultado, "Error: auto con Placa AAA001 ya esta registrado")
+
+    def test_HU002_caso11_editar_auto_exitosamente_campo_modelo(self):
+        """test que verifica que se edito el auto exitosamente"""
+        modelo = self.data_factory.random_int(min=1900, max=2025)
+
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa="XXX001", 
+            marca=self.data_factory.marca_auto(), 
+            modelo=modelo, 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+
+        auto_editado = self.logica.dar_auto(1)
+        self.assertTrue(resultado)
+        self.assertEqual(auto_editado['modelo'], modelo)
+
+    def test_HU002_caso12_editar_auto_exitosamente_campo_color(self):
+        """test que verifica que se edito el auto exitosamente"""
+        color = self.data_factory.color_name()
+
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa="XXX001", 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=color, 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+
+        auto_editado = self.logica.dar_auto(1)
+        self.assertTrue(resultado)
+        self.assertEqual(auto_editado['color'], color)
+
+    def test_HU002_caso13_editar_auto_exitosamente_campo_cilindraje(self):
+        """test que verifica que se edito el auto exitosamente"""
+        cilindraje = self.data_factory.pyint()
+
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa="XXX001", 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje=cilindraje, 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+
+        auto_editado = self.logica.dar_auto(1)
+        self.assertTrue(resultado)
+        self.assertEqual(auto_editado['cilindraje'], cilindraje)
+
+    def test_HU002_caso14_editar_auto_exitosamente_campo_combustible(self):
+        """test que verifica que se edito el auto exitosamente"""
+        combustible = "GASOLINA Premium"
+
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa="XXX001", 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible=combustible, 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+
+        auto_editado = self.logica.dar_auto(1)
+        self.assertTrue(resultado)
+        self.assertEqual(auto_editado['combustible'], combustible)
+
+    def test_HU002_caso15_editar_auto_exitosamente_campo_kilometraje(self):
+        """test que verifica que se edito el auto exitosamente"""
+        kilometraje = self.data_factory.random_int(0, 500000)
+
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa="XXX001", 
+            marca=self.data_factory.marca_auto(), 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=kilometraje
+        )
+
+        auto_editado = self.logica.dar_auto(1)
+        self.assertTrue(resultado)
+        self.assertEqual(auto_editado['kilometraje_compra'], kilometraje)
+
+
+    def test_HU002_caso16_editar_auto_marca_existente(self):
+        """test que verifica que el campo marca no exista en la base de datos"""
+        resultado = self.logica.editar_auto(
+            id=1, 
+            placa="XXX001", 
+            marca="Nissan", 
+            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            color=self.data_factory.color_name(), 
+            cilindraje=self.data_factory.pyint(), 
+            combustible="GASOLINA", 
+            kilometraje=self.data_factory.random_int(0, 500000)
+        )
+        self.assertEqual(resultado, "Error: auto de la Marca Nissan ya esta registrado")
 
 
 class Test_Modelo_Venta(unittest.TestCase):

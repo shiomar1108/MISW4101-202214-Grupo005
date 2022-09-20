@@ -62,6 +62,18 @@ class Logica_real:
     def editar_auto(
         self, id, marca, placa, modelo, kilometraje, color, cilindraje, combustible
     ):
+
+        busqueda_inicial = session.query(Auto).filter(Auto.id == id).first()
+        if busqueda_inicial.placa != placa:
+            busqueda = session.query(Auto).filter(Auto.placa == placa).all()
+            if len(busqueda) != 0:
+                return "Error: auto con Placa " + placa + " ya esta registrado"
+
+        if busqueda_inicial.marca != marca:
+            busqueda = session.query(Auto).filter(Auto.marca == marca).all()
+            if len(busqueda) != 0:
+                return "Error: auto de la Marca " + marca + " ya esta registrado"
+
         response = self.validar_crear_editar_auto(marca=marca, placa=placa, modelo=modelo, kilometraje=kilometraje, color=color, cilindraje=cilindraje, combustible=combustible)
         if not isinstance(response, dict):
             return response
