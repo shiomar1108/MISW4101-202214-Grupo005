@@ -117,6 +117,119 @@ class Logica_mock:
     def crear_auto(
         self, marca, placa, modelo, kilometraje, color, cilindraje, combustible
     ):
+        response = self.validar_crear_editar_auto(marca=marca, placa=placa, modelo=modelo, kilometraje=kilometraje, color=color, cilindraje=cilindraje, combustible=combustible)
+        if not isinstance(response, dict):
+            return response
+
+        busqueda = session.query(Auto).filter(Auto.marca == marca).all()
+        if len(busqueda) != 0:
+            return "Error: auto de la Marca " + marca + " ya esta registrado"
+
+        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
+        if len(busqueda) == 0:
+            auto = Auto(
+                marca=response['marca'],
+                placa=response['placa'],
+                modelo=response['modelo'],
+                kilometraje_compra=response['kilometraje'],
+                color=response['color'],
+                cilindraje=response['cilindraje'],
+                combustible=response['combustible'],
+                precio_venta=0,
+                kilometraje_venta=0,
+                gasto_total=0,
+                gasto_anual=0,
+                gasto_kilometro=0,
+                vendido=False,
+            )
+            session.add(auto)
+            session.commit()
+            return True
+        else:
+            return "Error: auto con Placa " + placa + " ya esta registrado"
+
+    def editar_auto(
+        self, id, marca, placa, modelo, kilometraje, color, cilindraje, combustible
+    ):
+        busqueda_inicial = session.query(Auto).filter(Auto.id == id).first()
+        if busqueda_inicial.placa != placa:
+            busqueda = session.query(Auto).filter(Auto.placa == placa).all()
+            if len(busqueda) != 0:
+                return "Error: auto con Placa " + placa + " ya esta registrado"
+
+        if busqueda_inicial.marca != marca:
+            busqueda = session.query(Auto).filter(Auto.marca == marca).all()
+            if len(busqueda) != 0:
+                return "Error: auto de la Marca " + marca + " ya esta registrado"
+
+        response = self.validar_crear_editar_auto(marca=marca, placa=placa, modelo=modelo, kilometraje=kilometraje, color=color, cilindraje=cilindraje, combustible=combustible)
+        if not isinstance(response, dict):
+            return response
+
+        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
+        if len(busqueda) == 0:
+            return "Error: auto con Placa " + placa + " no existe"
+
+        session.query(Auto).filter(Auto.id == id).update(
+            {
+                'marca':response['marca'],
+                'placa':response['placa'],
+                'modelo':response['modelo'],
+                'modelo':response['modelo'],
+                'kilometraje_compra':response['kilometraje'],
+                'color':response['color'],
+                'cilindraje':response['cilindraje'],
+                'combustible':response['combustible'],
+            })
+        session.commit()
+        return True
+            
+
+    def vender_auto(self, placa, valor, kilometraje):
+        if placa is None or len(placa) == 0:
+            return "Error: placa es requerida"
+
+        try:
+            kilometraje = int(kilometraje)
+        except:
+            return "Error: kilometraje debe ser un número"
+
+        try:
+            valor = float(valor)
+        except:
+            return "Error: valor debe ser un decimal"
+
+        required_numeric_fields = ["valor", "kilometraje"]
+        for field in required_numeric_fields:
+            if field not in locals() or locals()[field] == "":
+                return "Error: {} es requerido".format(field)
+
+            if locals()[field] < 0:
+                return "Error: {} debe ser un numero mayor a 0".format(field)
+
+        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
+        if len(busqueda) == 1:
+            temp = session.query(Auto).filter(Auto.placa == placa).first()
+            if temp.vendido == False:
+                temp.vendido = True
+                temp.precio_venta = valor
+                temp.kilometraje_venta = kilometraje
+                session.commit()
+                return True
+            else:
+                return "Error: auto con placa " + placa + " ya fue vendido"
+        else:
+            return "Error: auto con Placa " + placa + " no existe"
+
+    def eliminar_auto(self, id):
+        # del self.autos[id]
+        auto = session.query(Auto).filter(Auto.id == id).first()
+        session.delete(auto)
+        session.commit()
+
+    def validar_crear_editar_auto(
+        self, marca, placa, modelo, kilometraje, color, cilindraje, combustible
+    ):
         required_fields = [
             "marca",
             "modelo",
@@ -130,7 +243,9 @@ class Logica_mock:
             if field not in locals() or locals()[field] == "":
                 return "Error: {} es requerido".format(field)
 
-        if type(modelo) != int:
+        try:
+            modelo = int(modelo)
+        except:
             return "Error: modelo debe ser un número"
 
         try:
@@ -171,92 +286,21 @@ class Logica_mock:
             if chunks[1].isalpha() or chunks[0].isnumeric():
                 return "Error: placa debe tener 3 letras y 3 numeros (Ej: ABC123)"
 
-        busqueda = session.query(Auto).filter(Auto.marca == marca).all()
-        if len(busqueda) != 0:
-            return "Error: auto de la Marca " + marca + " ya esta registrado"
+        output = {
+            "marca": marca,
+            "modelo": modelo,
+            "placa": placa,
+            "color": color,
+            "cilindraje": cilindraje,
+            "combustible": combustible,
+            "kilometraje": kilometraje,
+        }
 
-        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
-        if len(busqueda) == 0:
-            auto = Auto(
-                marca=marca,
-                modelo=modelo,
-                placa=placa,
-                color=color,
-                cilindraje=cilindraje,
-                combustible=combustible,
-                kilometraje_compra=kilometraje,
-                precio_venta=0,
-                kilometraje_venta=0,
-                gasto_total=0,
-                gasto_anual=0,
-                gasto_kilometro=0,
-                vendido=False,
-            )
-            session.add(auto)
-            session.commit()
-            return True
-        else:
-            return "Error: auto con Placa " + placa + " ya esta registrado"
 
-    def editar_auto(
-        self, id, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible
-    ):
-        self.autos[id]["Marca"] = marca
-        self.autos[id]["Placa"] = placa
-        self.autos[id]["Modelo"] = modelo
-        self.autos[id]["Kilometraje"] = float(kilometraje)
-        self.autos[id]["Color"] = color
-        self.autos[id]["Cilindraje"] = cilindraje
-        self.autos[id]["TipoCombustible"] = tipo_combustible
+        return output
 
-    def vender_auto(self, placa, valor, kilometraje):
-        if placa is None or len(placa) == 0:
-            return "Error: placa es requerida"
 
-        try:
-            kilometraje = int(kilometraje)
-        except:
-            return "Error: kilometraje debe ser un número"
 
-        try:
-            valor = float(valor)
-        except:
-            return "Error: valor debe ser un decimal"
-
-        required_numeric_fields = ["valor", "kilometraje"]
-        for field in required_numeric_fields:
-            if locals()[field] < 0:
-                return "Error: {} debe ser un numero mayor a 0".format(field)
-
-        busqueda = session.query(Auto).filter(Auto.placa == placa).all()
-        if len(busqueda) == 1:
-            temp = session.query(Auto).filter(Auto.placa == placa).first()
-            if temp.vendido == False:
-                temp.vendido = True
-                temp.precio_venta = valor
-                temp.kilometraje_venta = kilometraje
-                session.commit()
-                return True
-            else:
-                return "Error: auto con placa " + placa + " ya fue vendido"
-        else:
-            return "Error: auto con Placa " + placa + " no existe"
-
-    def eliminar_auto(self, id):
-        # del self.autos[id]
-        auto = session.query(Auto).filter(Auto.id == id).first()
-        session.delete(auto)
-        session.commit()
-
-    def validar_crear_editar_auto(
-        self, id, marca, placa, modelo, kilometraje, color, cilindraje, tipo_combustible
-    ):
-        validacion = False
-        try:
-            float(kilometraje)
-            validacion = True
-        except ValueError:
-            return False
 
     def validar_vender_auto(self, id, kilometraje_venta, valor_venta):
         validacion = False

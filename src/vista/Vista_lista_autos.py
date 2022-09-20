@@ -140,7 +140,7 @@ class Vista_lista_autos(QWidget):
                 btn_ver_actividad.setToolTip("Editar automóvil")
                 btn_ver_actividad.setFixedSize(40,40)
                 btn_ver_actividad.setIcon(QIcon("src/recursos/004-edit-button.png"))
-                btn_ver_actividad.clicked.connect(partial(self.mostrar_auto,numero_fila-1) )
+                btn_ver_actividad.clicked.connect(partial(self.mostrar_auto,dic_auto['id']) )
                 self.distribuidor_tabla_autos.addWidget(btn_ver_actividad,numero_fila,1,Qt.AlignCenter)
 
                 btn_editar=QPushButton("",self)
