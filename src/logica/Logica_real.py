@@ -33,8 +33,8 @@ class Logica_real:
             return response
 
         busqueda = session.query(Auto).filter(Auto.marca == marca).all()
-        if len(busqueda) != 0:
-            return "Error: auto de la Marca " + marca + " ya esta registrado"
+        # if len(busqueda) != 0:
+        #     return "Error: auto de la Marca " + marca + " ya esta registrado"
 
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 0:
