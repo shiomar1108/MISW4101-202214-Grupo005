@@ -1838,7 +1838,7 @@ class ModeloTestEmptySetUp(unittest.TestCase):
     def test_HU006_ver_mantenimientos_vacios(self):
         """Test que verifica que dr purda devolver la lista de Mantenimientos vacia"""
         busqueda = self.logica.dar_mantenimientos()
-        if(len(busqueda) == 0):
+        if len(busqueda) == 0:
             resultado = True
         else:
             resultado = False
