@@ -152,7 +152,7 @@ class Vista_lista_acciones(QWidget):
             btn_editar.setIcon(QIcon("src/recursos/004-edit-button.png"))
             btn_editar.setIconSize(QSize(35, 35))
             btn_editar.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-            btn_editar.clicked.connect(partial(self.editar_accion, numero_fila-1))
+            btn_editar.clicked.connect(partial(self.editar_accion, numero_fila))
             self.distribuidor_actividades.addWidget(btn_editar, numero_fila, 4, alignment=Qt.AlignTop)
 
             btn_eliminar = QPushButton("", self)
@@ -162,7 +162,7 @@ class Vista_lista_acciones(QWidget):
             btn_eliminar.setIcon(QIcon("src/recursos/005-delete.png"))
             btn_eliminar.setIconSize(QSize(35, 35))
             btn_eliminar.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-            btn_eliminar.clicked.connect(partial(self.eliminar_accion, numero_fila-1))
+            btn_eliminar.clicked.connect(partial(self.eliminar_accion, numero_fila))
             self.distribuidor_actividades.addWidget(btn_eliminar, numero_fila, 5, alignment=Qt.AlignTop)
 
             numero_fila+=1

@@ -496,48 +496,47 @@ class ModeloTestTDD(unittest.TestCase):
         )
         self.assertTrue(resultado)
 
-
     def test_HU002_caso01_editar_auto_campo_marca_vacio(self):
         """test que verifica que el campo marca del auto no este vacio"""
         resultado = self.logica.editar_auto(
-            id=1, 
+            id=1,
             placa=self.data_factory.bothify(text="???").upper()
-            + str(self.data_factory.random_int(100, 999)), 
-            marca="", 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            + str(self.data_factory.random_int(100, 999)),
+            marca="",
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: marca es requerido")
 
     def test_HU002_caso02_editar_auto_campo_modelo_vacio(self):
         """test que verifica que el campo modelo del auto no este vacio"""
         resultado = self.logica.editar_auto(
-            id=1, 
+            id=1,
             placa=self.data_factory.bothify(text="???").upper()
-            + str(self.data_factory.random_int(100, 999)), 
-            marca="toyota", 
-            modelo="", 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            + str(self.data_factory.random_int(100, 999)),
+            marca="toyota",
+            modelo="",
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: modelo es requerido")
 
     def test_HU002_caso03_editar_auto_campo_placa_vacio(self):
         """test que verifica que el campo placa del auto no este vacio"""
         resultado = self.logica.editar_auto(
-            id=1, 
-            placa="", 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
+            id=1,
+            placa="",
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
             color=self.data_factory.color_name(),
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: placa es requerido")
 
@@ -546,193 +545,193 @@ class ModeloTestTDD(unittest.TestCase):
         resultado = self.logica.editar_auto(
             id=1,
             placa=self.data_factory.bothify(text="???").upper()
-            + str(self.data_factory.random_int(100, 999)), 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color="", 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            + str(self.data_factory.random_int(100, 999)),
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color="",
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: color es requerido")
 
     def test_HU002_caso05_editar_auto_campo_cilindraje_vacio(self):
         """test que verifica que el campo cilindraje del auto no este vacio"""
         resultado = self.logica.editar_auto(
-            id=1, 
+            id=1,
             placa=self.data_factory.bothify(text="???").upper()
-            + str(self.data_factory.random_int(100, 999)), 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje="", 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            + str(self.data_factory.random_int(100, 999)),
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje="",
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: cilindraje es requerido")
 
     def test_HU002_caso06_editar_auto_campo_combustible_vacio(self):
         """test que verifica que el campo combustible del auto no este vacio"""
         resultado = self.logica.editar_auto(
-            id=1, 
+            id=1,
             placa=self.data_factory.bothify(text="???").upper()
-            + str(self.data_factory.random_int(100, 999)), 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            + str(self.data_factory.random_int(100, 999)),
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: combustible es requerido")
-    
+
     def test_HU002_caso07_editar_auto_campo_kilometraje_vacio(self):
         """test que verifica que el campo kilometraje del auto no este vacio"""
         resultado = self.logica.editar_auto(
-            id=1, 
+            id=1,
             placa=self.data_factory.bothify(text="???").upper()
-            + str(self.data_factory.random_int(100, 999)), 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", kilometraje=""
+            + str(self.data_factory.random_int(100, 999)),
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje="",
         )
         self.assertEqual(resultado, "Error: kilometraje es requerido")
 
     def test_HU002_caso09_editar_auto_campo_placa_no_existente(self):
         """test que verifica que el campo placa exista en la base de datos"""
         resultado = self.logica.editar_auto(
-            id=1, 
-            placa="ABC123", 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            id=1,
+            placa="ABC123",
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: auto con Placa ABC123 no existe")
 
     def test_HU002_caso10_editar_auto_campo_placa_existente(self):
         """test que verifica que el campo placa no exista en la base de datos"""
         resultado = self.logica.editar_auto(
-            id=1, 
-            placa="AAA001", 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            id=1,
+            placa="AAA001",
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: auto con Placa AAA001 ya esta registrado")
 
     def test_HU002_caso11_editar_auto_exitosamente_campo_modelo(self):
         """test que verifica que se edito el auto exitosamente"""
         resultado = self.logica.editar_auto(
-            id=1, 
-            placa="XXX001", 
-            marca=self.data_factory.marca_auto(), 
-            modelo=2011, 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            id=1,
+            placa="XXX001",
+            marca=self.data_factory.marca_auto(),
+            modelo=2011,
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
 
         auto_editado = self.logica.dar_auto(1)
         self.assertTrue(resultado)
-        self.assertEqual(auto_editado['modelo'], 2011)
+        self.assertEqual(auto_editado["modelo"], 2011)
 
     def test_HU002_caso12_editar_auto_exitosamente_campo_color(self):
         """test que verifica que se edito el auto exitosamente"""
         color = self.data_factory.color_name()
 
         resultado = self.logica.editar_auto(
-            id=1, 
-            placa="XXX001", 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=color, 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            id=1,
+            placa="XXX001",
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=color,
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
 
         auto_editado = self.logica.dar_auto(1)
         self.assertTrue(resultado)
-        self.assertEqual(auto_editado['color'], color)
+        self.assertEqual(auto_editado["color"], color)
 
     def test_HU002_caso13_editar_auto_exitosamente_campo_cilindraje(self):
         """test que verifica que se edito el auto exitosamente"""
         cilindraje = self.data_factory.pyint()
 
         resultado = self.logica.editar_auto(
-            id=1, 
-            placa="XXX001", 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje=cilindraje, 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            id=1,
+            placa="XXX001",
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje=cilindraje,
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
 
         auto_editado = self.logica.dar_auto(1)
         self.assertTrue(resultado)
-        self.assertEqual(auto_editado['cilindraje'], cilindraje)
+        self.assertEqual(auto_editado["cilindraje"], cilindraje)
 
     def test_HU002_caso14_editar_auto_exitosamente_campo_combustible(self):
         """test que verifica que se edito el auto exitosamente"""
         combustible = "GASOLINA Premium"
 
         resultado = self.logica.editar_auto(
-            id=1, 
-            placa="XXX001", 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible=combustible, 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            id=1,
+            placa="XXX001",
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible=combustible,
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
 
         auto_editado = self.logica.dar_auto(1)
         self.assertTrue(resultado)
-        self.assertEqual(auto_editado['combustible'], combustible)
+        self.assertEqual(auto_editado["combustible"], combustible)
 
     def test_HU002_caso15_editar_auto_exitosamente_campo_kilometraje(self):
         """test que verifica que se edito el auto exitosamente"""
         kilometraje = 14346
 
         resultado = self.logica.editar_auto(
-            id=1, 
-            placa="XXX001", 
-            marca=self.data_factory.marca_auto(), 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=kilometraje
+            id=1,
+            placa="XXX001",
+            marca=self.data_factory.marca_auto(),
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=kilometraje,
         )
 
         auto_editado = self.logica.dar_auto(1)
         self.assertTrue(resultado)
-        self.assertEqual(auto_editado['kilometraje_compra'], kilometraje)
-
+        self.assertEqual(auto_editado["kilometraje_compra"], kilometraje)
 
     def test_HU002_caso16_editar_auto_marca_existente(self):
         """test que verifica que el campo marca no exista en la base de datos"""
         resultado = self.logica.editar_auto(
-            id=1, 
-            placa="XXX001", 
-            marca="Nissan", 
-            modelo=self.data_factory.random_int(min=1900, max=2025), 
-            color=self.data_factory.color_name(), 
-            cilindraje=self.data_factory.pyint(), 
-            combustible="GASOLINA", 
-            kilometraje=self.data_factory.random_int(0, 500000)
+            id=1,
+            placa="XXX001",
+            marca="Nissan",
+            modelo=self.data_factory.random_int(min=1900, max=2025),
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: auto de la Marca Nissan ya esta registrado")
 
@@ -971,7 +970,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             for accion in acciones:
                 if accion.get("valor") == valor and accion.get("fecha") == fecha:
                     resultado = True
-                    continue
+                    break
                 else:
                     resultado = False
         self.assertTrue(resultado)
@@ -1829,9 +1828,452 @@ class ModeloTestEmptySetUp(unittest.TestCase):
         self.assertEqual(resultado, "Error: marca debe tener más de 2 caracteres")
 
     def test_caso_vender_sin_placa(self):
-        """Test que verifica que no se cpueda vender un carro con placa vacia"""
+        """Test que verifica que no se pueda vender un carro con placa vacia"""
         kilometraje = self.data_factory.random_int(0, 500000)
         valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         resultado = self.logica.vender_auto("", valor, kilometraje)
 
         self.assertEqual(resultado, "Error: placa es requerida")
+
+
+class ModeloTestEditarAccion(unittest.TestCase):
+    """Clase que contiene los test de la logica"""
+
+    def setUp(self):
+        self.logica = Logica_real()
+        self.session = Session()
+        self.data_factory = Faker("es_ES")
+
+        self.auto1 = Auto(
+            marca="volkswagen",
+            modelo=2016,
+            placa="XXX001",
+            color="gris",
+            cilindraje=2.5,
+            combustible="GASOLINA",
+            kilometraje_compra=0,
+            precio_venta=0,
+            kilometraje_venta=0,
+            gasto_total=0,
+            gasto_anual=0,
+            gasto_kilometro=0,
+            vendido=False,
+        )
+
+        self.manto1 = Mantenimiento(
+            nombre="Cambio de aceite", descripcion="Cambio de aceite"
+        )
+        self.manto2 = Mantenimiento(
+            nombre="Cambio de Llantas", descripcion="Pago por nuevas llantas"
+        )
+
+        self.session.add(self.auto1)
+        self.session.add(self.manto1)
+        self.session.add(self.manto2)
+        self.session.commit()
+
+    def tearDown(self):
+        self.session = Session()
+
+        """Consulta todos los autos"""
+        busqueda = self.session.query(Auto).all()
+
+        """Borra todos los autos"""
+        for auto in busqueda:
+            self.session.delete(auto)
+
+        """Consulta todos los Mantenimientos"""
+        busqueda = self.session.query(Mantenimiento).all()
+
+        """Borra todos los Mantenimientos"""
+        for manto in busqueda:
+            self.session.delete(manto)
+
+        self.session.commit()
+        self.session.close()
+
+    def test_HU011_01_editar_accion_exitosa(self):
+        """Test que verifica que se pueda editar una accion"""
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=fecha,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        fecha2 = self.data_factory.date(pattern="%Y-%m-%d")
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.editar_accion(
+            id_accion=1,
+            mantenimiento="Cambio de aceite",
+            id_auto=1,
+            valor=valor2,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            fecha=fecha2,
+        )
+        busqueda = self.logica.dar_acciones_auto(id_auto=1)
+        for accion in busqueda:
+            if accion.get("valor") == valor2 and accion.get("fecha") == fecha2:
+                resultado = True
+                break
+            else:
+                resultado = False
+        self.assertTrue(resultado)
+
+    def test_HU011_02_editar_accion_mantenimiento_vacio(self):
+        """Test que verifica que no se pueda editar una accion con mantenimiento vacio"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: mantenimiento es requerido")
+
+    def test_HU011_03_editar_accion_mantenimiento_muy_largo(self):
+        """Test que verifica que no se pueda editar una accion con mantenimiento vacio"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(
+            resultado, "Error: mantenimiento no puede tener mas de 50 caracteres"
+        )
+
+    def test_HU011_04_editar_accion_valor_text(self):
+        """Test que verifica que no se pueda editar una accion con valor como texto"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor="",
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: valor es requerido")
+
+    def test_HU011_05_editar_accion_valor_0(self):
+        """Test que verifica que no se pueda editar una accion con valor de 0"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=0,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(
+            resultado, "Error: valor debe ser un número con decimal mayor a 0"
+        )
+
+    def test_HU011_06_editar_accion_valor_negativo(self):
+        """Test que verifica que no se pueda editar una accion con valor de 0"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=-25000,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(
+            resultado, "Error: valor debe ser un número con decimal mayor a 0"
+        )
+
+    def test_HU011_07_editar_accion_fecha_vacia(self):
+        """Test que verifica que no se pueda editar una accion con fecha de vacia"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha="",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: fecha es requerido")
+
+    def test_HU011_08_editar_accion_fecha_incompleta(self):
+        """Test que verifica que no se pueda editar una accion con fecha incompleta"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha="2020-08",
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: La fecha debe ser en formato AAAA-MM-DD")
+
+    def test_HU011_09_editar_accion_fecha_numerica(self):
+        """Test que verifica que no se pueda editar una accion con fecha numerica"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=123654987,
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: La fecha debe ser un string")
+
+    def test_HU011_10_editar_accion_auto_errado(self):
+        """Test que verifica que no se pueda editar una accion de un auto equivocado"""
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=3,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: El auto debe existir")
+
+    def test_HU011_11_editar_accion_errado(self):
+        """Test que verifica que no se pueda editar una accion equivocada"""
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: La accion debe existir")
+
+    def test_HU011_12_editar_accion_kilometraje_decimal(self):
+        """Test que verifica que no se pueda editar una accion con fecha numerica"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+        )
+        self.assertEqual(resultado, "Error: El kilometraje debe ser entero")
+
+    def test_HU011_13_editar_accion_kilometraje_vacio(self):
+        """Test que verifica que no se pueda editar una accion con fecha numerica"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje="",
+        )
+        self.assertEqual(resultado, "Error: kilometraje es requerido")
+
+    def test_HU011_14_editar_accion_repetida(self):
+        """Test que verifica que al editar una accion no quede repetida"""
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        kilo = self.data_factory.random_int(min=0, max=999999)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=fecha,
+            kilometraje=kilo,
+        )
+        fecha2 = self.data_factory.date(pattern="%Y-%m-%d")
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        kilo2 = self.data_factory.random_int(min=0, max=999999)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de Llantas",
+            valor=valor2,
+            fecha=fecha2,
+            kilometraje=kilo2,
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=2,
+            mantenimiento="Cambio de aceite",
+            id_auto=1,
+            valor=valor,
+            kilometraje=kilo,
+            fecha=fecha,
+        )
+        self.assertEqual(
+            resultado, "Error: La accion modificada no puede estar duplicada"
+        )
+
+    def test_HU011_15_editar_accion_mantenimiento_erroneo(self):
+        """Test que verifica que no se pueda editar una accion con mantenimiento inexistente"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Impuestos",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: El Mantenimiento debe existir")
+
+    def test_HU011_16_editar_accion_exitosa_2(self):
+        """Test que verifica que se pueda editar una accion"""
+        fecha1 = self.data_factory.date(pattern="%Y-%m-%d")
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de Llantas",
+            valor=valor1,
+            fecha=fecha1,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=fecha,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        fecha2 = self.data_factory.date(pattern="%Y-%m-%d")
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.editar_accion(
+            id_accion=2,
+            mantenimiento="Cambio de aceite",
+            id_auto=1,
+            valor=valor2,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            fecha=fecha2,
+        )
+        busqueda = self.logica.dar_acciones_auto(id_auto=1)
+        for accion in busqueda:
+            if accion.get("valor") == valor2 and accion.get("fecha") == fecha2:
+                resultado = True
+                break
+            else:
+                resultado = False
+        self.assertTrue(resultado)
