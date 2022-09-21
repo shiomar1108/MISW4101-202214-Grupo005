@@ -735,6 +735,20 @@ class ModeloTestTDD(unittest.TestCase):
         )
         self.assertEqual(resultado, "Error: auto de la Marca Nissan ya esta registrado")
 
+    def test_HU004_eliminar_auto_no_existente(self):
+        """test que verifica que el auto no exista en la base de datos"""
+        resultado = self.logica.eliminar_auto(100)
+        self.assertEqual(resultado, "Error: El auto debe existir")
+
+    def test_HU004_eliminar_auto_existosamente(self):
+        """test que verifica que el auto se elimina exitosamente"""
+        resultado = self.logica.eliminar_auto(1)
+        self.assertTrue(resultado)
+
+        autos = self.logica.dar_autos()
+        for auto in autos:
+            self.assertNotEqual(auto["id"], 1)
+
 
 class Test_Modelo_Venta(unittest.TestCase):
     """Clase que contiene los test de la logica"""
