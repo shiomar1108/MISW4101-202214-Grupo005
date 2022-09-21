@@ -1835,6 +1835,15 @@ class ModeloTestEmptySetUp(unittest.TestCase):
 
         self.assertEqual(resultado, "Error: placa es requerida")
 
+    def test_HU006_ver_mantenimientos_vacios(self):
+        """Test que verifica que dr purda devolver la lista de Mantenimientos vacia"""
+        busqueda = self.logica.dar_mantenimientos()
+        if(len(busqueda) == 0):
+            resultado = True
+        else:
+            resultado = False
+        self.assertTrue(resultado)
+
 
 class ModeloTestEditarAccion(unittest.TestCase):
     """Clase que contiene los test de la logica"""
