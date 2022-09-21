@@ -2215,3 +2215,65 @@ class ModeloTestEditarAccion(unittest.TestCase):
         self.assertEqual(
             resultado, "Error: La accion modificada no puede estar duplicada"
         )
+
+    def test_HU011_15_editar_accion_mantenimiento_erroneo(self):
+        """Test que verifica que no se pueda editar una accion con mantenimiento inexistente"""
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        resultado = self.logica.editar_accion(
+            id_accion=1,
+            id_auto=1,
+            mantenimiento="Impuestos",
+            fecha=self.data_factory.date(pattern="%Y-%m-%d"),
+            valor=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        self.assertEqual(resultado, "Error: El Mantenimiento debe existir")
+
+    def test_HU011_16_editar_accion_exitosa_2(self):
+        """Test que verifica que se pueda editar una accion"""
+        fecha1 = self.data_factory.date(pattern="%Y-%m-%d")
+        valor1 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de Llantas",
+            valor=valor1,
+            fecha=fecha1,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        fecha = self.data_factory.date(pattern="%Y-%m-%d")
+        valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.crear_accion(
+            id_auto=1,
+            mantenimiento="Cambio de aceite",
+            valor=valor,
+            fecha=fecha,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+        )
+        fecha2 = self.data_factory.date(pattern="%Y-%m-%d")
+        valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
+        self.logica.editar_accion(
+            id_accion=1,
+            mantenimiento="Cambio de aceite",
+            id_auto=1,
+            valor=valor2,
+            kilometraje=self.data_factory.random_int(min=0, max=999999),
+            fecha=fecha2,
+        )
+        busqueda = self.logica.dar_acciones_auto(id_auto=1)
+        for accion in busqueda:
+            if accion.get("valor") == valor2 and accion.get("fecha") == fecha2:
+                resultado = True
+                continue
+            else:
+                resultado = False
+        self.assertTrue(resultado)
