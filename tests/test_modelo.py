@@ -970,7 +970,7 @@ class Test_Modelo_Accion(unittest.TestCase):
             for accion in acciones:
                 if accion.get("valor") == valor and accion.get("fecha") == fecha:
                     resultado = True
-                    continue
+                    break
                 else:
                     resultado = False
         self.assertTrue(resultado)
@@ -1917,7 +1917,7 @@ class ModeloTestEditarAccion(unittest.TestCase):
         for accion in busqueda:
             if accion.get("valor") == valor2 and accion.get("fecha") == fecha2:
                 resultado = True
-                continue
+                break
             else:
                 resultado = False
         self.assertTrue(resultado)
@@ -2262,7 +2262,7 @@ class ModeloTestEditarAccion(unittest.TestCase):
         fecha2 = self.data_factory.date(pattern="%Y-%m-%d")
         valor2 = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
         self.logica.editar_accion(
-            id_accion=1,
+            id_accion=2,
             mantenimiento="Cambio de aceite",
             id_auto=1,
             valor=valor2,
@@ -2273,7 +2273,7 @@ class ModeloTestEditarAccion(unittest.TestCase):
         for accion in busqueda:
             if accion.get("valor") == valor2 and accion.get("fecha") == fecha2:
                 resultado = True
-                continue
+                break
             else:
                 resultado = False
         self.assertTrue(resultado)
