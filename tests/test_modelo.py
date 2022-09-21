@@ -607,7 +607,7 @@ class ModeloTestTDD(unittest.TestCase):
             placa="ABC123",
             marca=self.data_factory.marca_auto(),
             modelo=self.data_factory.random_int(min=1900, max=2025),
-            color=self.data_factory.color_name(),
+            color=self.data_factory.text(10),
             cilindraje=self.data_factory.pyint(),
             combustible="GASOLINA",
             kilometraje=self.data_factory.random_int(0, 500000),
