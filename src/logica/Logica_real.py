@@ -444,3 +444,12 @@ class Logica_real:
         return (
             session.query(Mantenimiento).filter(Mantenimiento.nombre == nombre).first()
         )
+
+    def eliminar_auto(self, id):
+        auto = session.query(Auto).filter(Auto.id == id).first()
+        if auto == None:
+            return "Error: El auto debe existir"
+
+        session.delete(auto)
+        session.commit()
+        return True
