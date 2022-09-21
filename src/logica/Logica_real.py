@@ -328,7 +328,14 @@ class Logica_real:
     def editar_accion(
         self, id_accion, mantenimiento, id_auto, valor, kilometraje, fecha
     ):
-        required_fields = ["id_auto", "mantenimiento", "valor", "fecha", "kilometraje", "id_accion"]
+        required_fields = [
+            "id_auto",
+            "mantenimiento",
+            "valor",
+            "fecha",
+            "kilometraje",
+            "id_accion",
+        ]
         for field in required_fields:
             if field not in locals() or locals()[field] == "":
                 return "Error: {} es requerido".format(field)
@@ -374,13 +381,13 @@ class Logica_real:
                 return "Error: La accion modificada no puede estar duplicada"
 
         for dato in acciones:
-            if ( dato.get("id") == id_accion ):
+            if dato.get("id") == id_accion:
                 session.query(Accion).filter(Accion.id == id_auto).update(
                     {
                         "kilometraje": kilometraje,
                         "valor": valor,
                         "fecha": fecha,
-                        "mantenimiento": mantenimiento,                                             
+                        "mantenimiento": mantenimiento,
                     }
                 )
                 session.commit()

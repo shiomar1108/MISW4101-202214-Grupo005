@@ -1966,7 +1966,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "Error: mantenimiento no puede tener mas de 50 caracteres")
+        self.assertEqual(
+            resultado, "Error: mantenimiento no puede tener mas de 50 caracteres"
+        )
 
     def test_HU011_04_editar_accion_valor_text(self):
         """Test que verifica que no se pueda editar una accion con valor como texto"""
@@ -2008,7 +2010,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             valor=0,
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "Error: valor debe ser un número con decimal mayor a 0")
+        self.assertEqual(
+            resultado, "Error: valor debe ser un número con decimal mayor a 0"
+        )
 
     def test_HU011_06_editar_accion_valor_negativo(self):
         """Test que verifica que no se pueda editar una accion con valor de 0"""
@@ -2029,7 +2033,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             valor=-25000,
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "Error: valor debe ser un número con decimal mayor a 0")
+        self.assertEqual(
+            resultado, "Error: valor debe ser un número con decimal mayor a 0"
+        )
 
     def test_HU011_07_editar_accion_fecha_vacia(self):
         """Test que verifica que no se pueda editar una accion con fecha de vacia"""
@@ -2147,7 +2153,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             valor=self.data_factory.pyfloat(
                 left_digits=5, right_digits=2, positive=True
             ),
-            kilometraje=self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True),
+            kilometraje=self.data_factory.pyfloat(
+                left_digits=5, right_digits=2, positive=True
+            ),
         )
         self.assertEqual(resultado, "Error: El kilometraje debe ser entero")
 
@@ -2204,4 +2212,6 @@ class ModeloTestEditarAccion(unittest.TestCase):
             kilometraje=kilo,
             fecha=fecha,
         )
-        self.assertEqual(resultado, "Error: La accion modificada no puede estar duplicada")
+        self.assertEqual(
+            resultado, "Error: La accion modificada no puede estar duplicada"
+        )

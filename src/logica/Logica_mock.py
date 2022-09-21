@@ -117,7 +117,15 @@ class Logica_mock:
     def crear_auto(
         self, marca, placa, modelo, kilometraje, color, cilindraje, combustible
     ):
-        response = self.validar_crear_editar_auto(marca=marca, placa=placa, modelo=modelo, kilometraje=kilometraje, color=color, cilindraje=cilindraje, combustible=combustible)
+        response = self.validar_crear_editar_auto(
+            marca=marca,
+            placa=placa,
+            modelo=modelo,
+            kilometraje=kilometraje,
+            color=color,
+            cilindraje=cilindraje,
+            combustible=combustible,
+        )
         if not isinstance(response, dict):
             return response
 
@@ -128,13 +136,13 @@ class Logica_mock:
         busqueda = session.query(Auto).filter(Auto.placa == placa).all()
         if len(busqueda) == 0:
             auto = Auto(
-                marca=response['marca'],
-                placa=response['placa'],
-                modelo=response['modelo'],
-                kilometraje_compra=response['kilometraje'],
-                color=response['color'],
-                cilindraje=response['cilindraje'],
-                combustible=response['combustible'],
+                marca=response["marca"],
+                placa=response["placa"],
+                modelo=response["modelo"],
+                kilometraje_compra=response["kilometraje"],
+                color=response["color"],
+                cilindraje=response["cilindraje"],
+                combustible=response["combustible"],
                 precio_venta=0,
                 kilometraje_venta=0,
                 gasto_total=0,
@@ -162,7 +170,15 @@ class Logica_mock:
             if len(busqueda) != 0:
                 return "Error: auto de la Marca " + marca + " ya esta registrado"
 
-        response = self.validar_crear_editar_auto(marca=marca, placa=placa, modelo=modelo, kilometraje=kilometraje, color=color, cilindraje=cilindraje, combustible=combustible)
+        response = self.validar_crear_editar_auto(
+            marca=marca,
+            placa=placa,
+            modelo=modelo,
+            kilometraje=kilometraje,
+            color=color,
+            cilindraje=cilindraje,
+            combustible=combustible,
+        )
         if not isinstance(response, dict):
             return response
 
@@ -172,18 +188,18 @@ class Logica_mock:
 
         session.query(Auto).filter(Auto.id == id).update(
             {
-                'marca':response['marca'],
-                'placa':response['placa'],
-                'modelo':response['modelo'],
-                'modelo':response['modelo'],
-                'kilometraje_compra':response['kilometraje'],
-                'color':response['color'],
-                'cilindraje':response['cilindraje'],
-                'combustible':response['combustible'],
-            })
+                "marca": response["marca"],
+                "placa": response["placa"],
+                "modelo": response["modelo"],
+                "modelo": response["modelo"],
+                "kilometraje_compra": response["kilometraje"],
+                "color": response["color"],
+                "cilindraje": response["cilindraje"],
+                "combustible": response["combustible"],
+            }
+        )
         session.commit()
         return True
-            
 
     def vender_auto(self, placa, valor, kilometraje):
         if placa is None or len(placa) == 0:
@@ -293,9 +309,6 @@ class Logica_mock:
             "kilometraje": kilometraje,
         }
         return output
-
-
-
 
     def validar_vender_auto(self, id, kilometraje_venta, valor_venta):
         validacion = False
@@ -449,11 +462,76 @@ class Logica_mock:
     def editar_accion(
         self, id_accion, mantenimiento, id_auto, valor, kilometraje, fecha
     ):
-        self.acciones[id_accion]["Mantenimiento"] = mantenimiento
-        self.acciones[id_accion]["Auto"] = self.autos[id_auto]["Marca"]
-        self.acciones[id_accion]["Valor"] = valor
-        self.acciones[id_accion]["Kilometraje"] = kilometraje
-        self.acciones[id_accion]["Fecha"] = fecha
+        # self.acciones[id_accion]["Mantenimiento"] = mantenimiento
+        # self.acciones[id_accion]["Auto"] = self.autos[id_auto]["Marca"]
+        # self.acciones[id_accion]["Valor"] = valor
+        # self.acciones[id_accion]["Kilometraje"] = kilometraje
+        # self.acciones[id_accion]["Fecha"] = fecha
+        required_fields = [
+            "id_auto",
+            "mantenimiento",
+            "valor",
+            "fecha",
+            "kilometraje",
+            "id_accion",
+        ]
+        for field in required_fields:
+            if field not in locals() or locals()[field] == "":
+                return "Error: {} es requerido".format(field)
+
+        str_fields = ["fecha", "mantenimiento"]
+        for field in str_fields:
+            try:
+                int(locals()[field])
+                return "Error: La {} debe ser un string".format(field)
+            except:
+                if len(locals()[field]) > 50:
+                    return "Error: {} no puede tener mas de 50 caracteres".format(field)
+
+        if not isinstance(valor, (float)) or valor <= 0:
+            return "Error: valor debe ser un número con decimal mayor a 0"
+
+        int_fields = ["id_auto", "kilometraje", "id_accion"]
+        for field in int_fields:
+            if not isinstance(locals()[field], int):
+                return "Error: El {} debe ser entero".format(field)
+
+        busqueda = session.query(Auto).filter(Auto.id == id_auto).all()
+        if len(busqueda) != 1:
+            return "Error: El auto debe existir"
+
+        manto_tempo = self.agregar_mantenimiento(nombre=mantenimiento)
+        if manto_tempo == None:
+            return "Error: El Mantenimiento debe existir"
+
+        try:
+            datetime_object = datetime.strptime(fecha, "%Y-%m-%d")
+        except ValueError as ve:
+            return "Error: La fecha debe ser en formato AAAA-MM-DD"
+
+        acciones = self.dar_acciones_auto(id_auto)
+        for dato in acciones:
+            if (
+                dato.get("valor") == valor
+                and dato.get("kilometraje") == kilometraje
+                and dato.get("fecha") == fecha
+                and dato.get("mantenimiento") == manto_tempo.nombre
+            ):
+                return "Error: La accion modificada no puede estar duplicada"
+
+        for dato in acciones:
+            if dato.get("id") == id_accion:
+                session.query(Accion).filter(Accion.id == id_auto).update(
+                    {
+                        "kilometraje": kilometraje,
+                        "valor": valor,
+                        "fecha": fecha,
+                        "mantenimiento": mantenimiento,
+                    }
+                )
+                session.commit()
+                return True
+        return "Error: La accion debe existir"
 
     def eliminar_accion(self, id_auto, id_accion):
         marca_auto = self.autos[id_auto]["Marca"]
