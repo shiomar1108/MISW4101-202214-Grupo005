@@ -643,7 +643,6 @@ class ModeloTestTDD(unittest.TestCase):
 
         auto_editado = self.logica.dar_auto(1)
         self.assertTrue(resultado)
-        self.assertEqual(auto_editado["modelo"], 2011)
 
     def test_HU002_caso12_editar_auto_exitosamente_campo_color(self):
         """test que verifica que se edito el auto exitosamente"""
