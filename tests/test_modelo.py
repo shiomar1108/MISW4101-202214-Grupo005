@@ -1892,7 +1892,7 @@ class ModeloTestEditarAccion(unittest.TestCase):
         self.session.commit()
         self.session.close()
 
-    def test_HU011_editar_accion_exitosa(self):
+    def test_HU011_01_editar_accion_exitosa(self):
         """Test que verifica que se pueda editar una accion"""
         fecha = self.data_factory.date(pattern="%Y-%m-%d")
         valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
@@ -1922,7 +1922,7 @@ class ModeloTestEditarAccion(unittest.TestCase):
                 resultado = False
         self.assertTrue(resultado)
 
-    def test_HU011_editar_accion_mantenimiento_vacio(self):
+    def test_HU011_02_editar_accion_mantenimiento_vacio(self):
         """Test que verifica que no se pueda editar una accion con mantenimiento vacio"""
         self.logica.crear_accion(
             id_auto=1,
@@ -1943,9 +1943,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "El mantenimiento no puede estar vacio")
+        self.assertEqual(resultado, "Error: mantenimiento es requerido")
 
-    def test_HU011_editar_accion_mantenimiento_muy_largo(self):
+    def test_HU011_03_editar_accion_mantenimiento_muy_largo(self):
         """Test que verifica que no se pueda editar una accion con mantenimiento vacio"""
         self.logica.crear_accion(
             id_auto=1,
@@ -1966,9 +1966,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "El mantenimiento no puede tener mas de 50 caracteres")
+        self.assertEqual(resultado, "Error: mantenimiento no puede tener mas de 50 caracteres")
 
-    def test_HU011_editar_accion_valor_text(self):
+    def test_HU011_04_editar_accion_valor_text(self):
         """Test que verifica que no se pueda editar una accion con valor como texto"""
         self.logica.crear_accion(
             id_auto=1,
@@ -1987,9 +1987,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             valor="",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "El valor debe ser decimal")
+        self.assertEqual(resultado, "Error: valor es requerido")
 
-    def test_HU011_editar_accion_valor_0(self):
+    def test_HU011_05_editar_accion_valor_0(self):
         """Test que verifica que no se pueda editar una accion con valor de 0"""
         self.logica.crear_accion(
             id_auto=1,
@@ -2008,9 +2008,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             valor=0,
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "El valor debe ser mayor que 0")
+        self.assertEqual(resultado, "Error: valor debe ser un número con decimal mayor a 0")
 
-    def test_HU011_editar_accion_valor_negativo(self):
+    def test_HU011_06_editar_accion_valor_negativo(self):
         """Test que verifica que no se pueda editar una accion con valor de 0"""
         self.logica.crear_accion(
             id_auto=1,
@@ -2029,9 +2029,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             valor=-25000,
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "El valor debe ser mayor que 0")
+        self.assertEqual(resultado, "Error: valor debe ser un número con decimal mayor a 0")
 
-    def test_HU011_editar_accion_fecha_vacia(self):
+    def test_HU011_07_editar_accion_fecha_vacia(self):
         """Test que verifica que no se pueda editar una accion con fecha de vacia"""
         self.logica.crear_accion(
             id_auto=1,
@@ -2052,9 +2052,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "La fecha debe ser en formato AAAA-MM-DD")
+        self.assertEqual(resultado, "Error: fecha es requerido")
 
-    def test_HU011_editar_accion_fecha_incompleta(self):
+    def test_HU011_08_editar_accion_fecha_incompleta(self):
         """Test que verifica que no se pueda editar una accion con fecha incompleta"""
         self.logica.crear_accion(
             id_auto=1,
@@ -2075,9 +2075,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "La fecha debe ser en formato AAAA-MM-DD")
+        self.assertEqual(resultado, "Error: La fecha debe ser en formato AAAA-MM-DD")
 
-    def test_HU011_editar_accion_fecha_numerica(self):
+    def test_HU011_09_editar_accion_fecha_numerica(self):
         """Test que verifica que no se pueda editar una accion con fecha numerica"""
         self.logica.crear_accion(
             id_auto=1,
@@ -2098,9 +2098,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "La fecha debe ser un string")
+        self.assertEqual(resultado, "Error: La fecha debe ser un string")
 
-    def test_HU011_editar_accion_auto_errado(self):
+    def test_HU011_10_editar_accion_auto_errado(self):
         """Test que verifica que no se pueda editar una accion de un auto equivocado"""
         resultado = self.logica.editar_accion(
             id_accion=1,
@@ -2112,9 +2112,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "El auto debe existir")
+        self.assertEqual(resultado, "Error: El auto debe existir")
 
-    def test_HU011_editar_accion_errado(self):
+    def test_HU011_11_editar_accion_errado(self):
         """Test que verifica que no se pueda editar una accion equivocada"""
         resultado = self.logica.editar_accion(
             id_accion=1,
@@ -2126,9 +2126,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje=self.data_factory.random_int(min=0, max=999999),
         )
-        self.assertEqual(resultado, "La accion debe existir")
+        self.assertEqual(resultado, "Error: La accion debe existir")
 
-    def test_HU011_editar_accion_kilometraje_decimal(self):
+    def test_HU011_12_editar_accion_kilometraje_decimal(self):
         """Test que verifica que no se pueda editar una accion con fecha numerica"""
         self.logica.crear_accion(
             id_auto=1,
@@ -2149,9 +2149,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje=self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True),
         )
-        self.assertEqual(resultado, "El kilometraje debe ser entero")
+        self.assertEqual(resultado, "Error: El kilometraje debe ser entero")
 
-    def test_HU011_editar_accion_kilometraje_vacio(self):
+    def test_HU011_13_editar_accion_kilometraje_vacio(self):
         """Test que verifica que no se pueda editar una accion con fecha numerica"""
         self.logica.crear_accion(
             id_auto=1,
@@ -2172,9 +2172,9 @@ class ModeloTestEditarAccion(unittest.TestCase):
             ),
             kilometraje="",
         )
-        self.assertEqual(resultado, "El kilometraje debe ser entero")
+        self.assertEqual(resultado, "Error: kilometraje es requerido")
 
-    def test_HU011_editar_accion_repetida(self):
+    def test_HU011_14_editar_accion_repetida(self):
         """Test que verifica que al editar una accion no quede repetida"""
         fecha = self.data_factory.date(pattern="%Y-%m-%d")
         valor = self.data_factory.pyfloat(left_digits=5, right_digits=2, positive=True)
@@ -2204,4 +2204,4 @@ class ModeloTestEditarAccion(unittest.TestCase):
             kilometraje=kilo,
             fecha=fecha,
         )
-        self.assertEqual(resultado, "La accion modificada no puede estar duplicada")
+        self.assertEqual(resultado, "Error: La accion modificada no puede estar duplicada")
