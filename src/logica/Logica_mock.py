@@ -521,7 +521,7 @@ class Logica_mock:
 
         for dato in acciones:
             if dato.get("id") == id_accion:
-                session.query(Accion).filter(Accion.id == id_auto).update(
+                session.query(Accion).filter(Accion.id == id_accion).update(
                     {
                         "kilometraje": kilometraje,
                         "valor": valor,

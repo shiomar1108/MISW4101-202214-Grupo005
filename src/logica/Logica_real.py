@@ -70,7 +70,6 @@ class Logica_real:
     def editar_auto(
         self, id, marca, placa, modelo, kilometraje, color, cilindraje, combustible
     ):
-
         busqueda_inicial = session.query(Auto).filter(Auto.id == id).first()
         if busqueda_inicial.placa != placa:
             busqueda = session.query(Auto).filter(Auto.placa == placa).all()
@@ -382,7 +381,7 @@ class Logica_real:
 
         for dato in acciones:
             if dato.get("id") == id_accion:
-                session.query(Accion).filter(Accion.id == id_auto).update(
+                session.query(Accion).filter(Accion.id == id_accion).update(
                     {
                         "kilometraje": kilometraje,
                         "valor": valor,
