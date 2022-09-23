@@ -12,5 +12,5 @@ class Accion(Base):
     kilometraje = Column(Integer)
     valor = Column(Float)
     fecha = Column(String)
-    mantenimiento = Column(Integer, ForeignKey("mantenimiento.nombre"))
-    auto = Column(String, ForeignKey("auto.id"))
+    mantenimiento = Column(String, ForeignKey("mantenimiento.nombre"))
+    auto = Column(Integer, ForeignKey("auto.id"))
