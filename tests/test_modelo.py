@@ -413,7 +413,7 @@ class ModeloTestTDD(unittest.TestCase):
             marca="nissan",
             modelo=self.data_factory.random_int(min=1900, max=2025),
             placa="ABC001",
-            color=self.data_factory.text(10),
+            color=self.data_factory.color_name(),
             cilindraje="asd",
             combustible="GASOLINA",
             kilometraje=self.data_factory.random_int(min=0, max=999999),
@@ -734,6 +734,20 @@ class ModeloTestTDD(unittest.TestCase):
             kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: auto de la Marca Nissan ya esta registrado")
+
+    def test_HU002_caso17_editar_auto_modelo_string(self):
+        """test que verifica que el campo marca no exista en la base de datos"""
+        resultado = self.logica.editar_auto(
+            id=1,
+            placa="XXX001",
+            marca=self.data_factory.marca_auto(),
+            modelo='asd',
+            color=self.data_factory.color_name(),
+            cilindraje=self.data_factory.pyint(),
+            combustible="GASOLINA",
+            kilometraje=self.data_factory.random_int(0, 500000),
+        )
+        self.assertEqual(resultado, "Error: modelo debe ser un número")
 
 
 class Test_Modelo_Venta(unittest.TestCase):
