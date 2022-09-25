@@ -86,11 +86,11 @@ class Dialogo_crear_accion(QDialog):
 
         #Si el diálogo se usa para editar, se debe poblar con la información de la acción a editar
         if accion != None:
-            self.texto_valor.setText(str(accion["Valor"]))
-            indice_mantenimiento = self.combobox_mantenimientos.findText(accion["Mantenimiento"])
+            self.texto_valor.setText(str(accion["valor"]))
+            indice_mantenimiento = self.combobox_mantenimientos.findText(accion["mantenimiento"])
             self.combobox_mantenimientos.setCurrentIndex(indice_mantenimiento)
-            self.texto_kilometraje.setText(str(accion["Kilometraje"]))
-            self.fecha.setDate(QtCore.QDate.fromString(str(accion["Fecha"]), "yyyy-MM-dd"))
+            self.texto_kilometraje.setText(str(accion["kilometraje"]))
+            self.fecha.setDate(QtCore.QDate.fromString(str(accion["fecha"]), "yyyy-MM-dd"))
 
     
     def guardar(self):
