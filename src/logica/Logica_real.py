@@ -391,6 +391,7 @@ class Logica_real:
             session.commit()
             return True
         return "Error: La accion debe existir"
+        
 
     def dar_reporte_ganancias(self, id_auto):
         acciones = self.dar_acciones_auto(id_auto)
