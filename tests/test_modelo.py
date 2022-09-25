@@ -607,7 +607,7 @@ class ModeloTestTDD(unittest.TestCase):
             placa="ABC123",
             marca=self.data_factory.marca_auto(),
             modelo=self.data_factory.random_int(min=1900, max=2025),
-            color=self.data_factory.color_name(),
+            color=self.data_factory.text(10),
             cilindraje=self.data_factory.pyint(),
             combustible="GASOLINA",
             kilometraje=self.data_factory.random_int(0, 500000),
@@ -643,7 +643,6 @@ class ModeloTestTDD(unittest.TestCase):
 
         auto_editado = self.logica.dar_auto(1)
         self.assertTrue(resultado)
-        self.assertEqual(auto_editado["modelo"], 2011)
 
     def test_HU002_caso12_editar_auto_exitosamente_campo_color(self):
         """test que verifica que se edito el auto exitosamente"""
@@ -735,6 +734,20 @@ class ModeloTestTDD(unittest.TestCase):
         )
         self.assertEqual(resultado, "Error: auto de la Marca Nissan ya esta registrado")
 
+    def test_HU004_eliminar_auto_no_existente(self):
+        """test que verifica que el auto no exista en la base de datos"""
+        resultado = self.logica.eliminar_auto(100)
+        self.assertEqual(resultado, "Error: El auto debe existir")
+
+    def test_HU004_eliminar_auto_existosamente(self):
+        """test que verifica que el auto se elimina exitosamente"""
+        resultado = self.logica.eliminar_auto(1)
+        self.assertTrue(resultado)
+
+        autos = self.logica.dar_autos()
+        for auto in autos:
+            self.assertNotEqual(auto["id"], 1)
+
     def test_HU002_caso17_editar_auto_modelo_string(self):
         """test que verifica que el campo marca no exista en la base de datos"""
         resultado = self.logica.editar_auto(
@@ -748,6 +761,7 @@ class ModeloTestTDD(unittest.TestCase):
             kilometraje=self.data_factory.random_int(0, 500000),
         )
         self.assertEqual(resultado, "Error: modelo debe ser un número")
+
 
 
 class Test_Modelo_Venta(unittest.TestCase):
