@@ -76,10 +76,10 @@ class Logica_real:
             if len(busqueda) != 0:
                 return "Error: auto con Placa " + placa + " ya esta registrado"
 
-        if busqueda_inicial.marca != marca:
-            busqueda = session.query(Auto).filter(Auto.marca == marca).all()
-            if len(busqueda) != 0:
-                return "Error: auto de la Marca " + marca + " ya esta registrado"
+
+        busqueda = session.query(Auto).filter(Auto.marca == marca).all()
+        if len(busqueda) != 0:
+            return "Error: auto de la Marca " + marca + " ya esta registrado"
 
         response = self.validar_crear_editar_auto(
             marca=marca,
@@ -380,18 +380,18 @@ class Logica_real:
                 return "Error: La accion modificada no puede estar duplicada"
 
         for dato in acciones:
-            if dato.get("id") == id_accion:
-                session.query(Accion).filter(Accion.id == id_accion).update(
-                    {
-                        "kilometraje": kilometraje,
-                        "valor": valor,
-                        "fecha": fecha,
-                        "mantenimiento": mantenimiento,
-                    }
-                )
-                session.commit()
-                return True
+            session.query(Accion).filter(Accion.id == id_accion).update(
+                {
+                    "kilometraje": kilometraje,
+                    "valor": valor,
+                    "fecha": fecha,
+                    "mantenimiento": mantenimiento,
+                }
+            )
+            session.commit()
+            return True
         return "Error: La accion debe existir"
+        
 
     def dar_reporte_ganancias(self, id_auto):
         acciones = self.dar_acciones_auto(id_auto)
