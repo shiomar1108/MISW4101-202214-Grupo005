@@ -131,6 +131,7 @@ class App_AutoPerfecto(QApplication):
         """
         Esta función retorna la información de una acción particular
         """
+        #Pequeño patch para q se use la accion correcta
         new_id=self.logica.dar_acciones_auto(self.auto_actual)[id_accion-1].get('id')
         return self.logica.dar_accion(self.auto_actual, new_id)
 
@@ -149,6 +150,7 @@ class App_AutoPerfecto(QApplication):
         """
         Esta función crea una nueva acción asociada a un auto
         """
+        #Pequeño patch para q se use la accion correcta
         new_id=self.logica.dar_acciones_auto(self.auto_actual)[id-1].get('id')
         if self.logica.validar_crear_editar_accion(new_id, mantenimiento, self.auto_actual, valor, kilometraje, fecha):
             resultado = self.logica.editar_accion(new_id, mantenimiento, self.auto_actual, float(valor), int(kilometraje), fecha)
