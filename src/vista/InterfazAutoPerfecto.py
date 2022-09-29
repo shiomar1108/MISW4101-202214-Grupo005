@@ -131,7 +131,9 @@ class App_AutoPerfecto(QApplication):
         """
         Esta función retorna la información de una acción particular
         """
-        return self.logica.dar_accion(self.auto_actual, id_accion)
+        #Pequeño patch para q se use la accion correcta
+        new_id=self.logica.dar_acciones_auto(self.auto_actual)[id_accion-1].get('id')
+        return self.logica.dar_accion(self.auto_actual, new_id)
 
     def aniadir_accion(self, mantenimiento, valor, kilometraje, fecha):
         """
@@ -148,8 +150,10 @@ class App_AutoPerfecto(QApplication):
         """
         Esta función crea una nueva acción asociada a un auto
         """
-        if self.logica.validar_crear_editar_accion(id, mantenimiento, self.auto_actual, valor, kilometraje, fecha):
-            resultado = self.logica.editar_accion(id, mantenimiento, self.auto_actual, float(valor), int(kilometraje), fecha)
+        #Pequeño patch para q se use la accion correcta
+        new_id=self.logica.dar_acciones_auto(self.auto_actual)[id-1].get('id')
+        if self.logica.validar_crear_editar_accion(new_id, mantenimiento, self.auto_actual, valor, kilometraje, fecha):
+            resultado = self.logica.editar_accion(new_id, mantenimiento, self.auto_actual, float(valor), int(kilometraje), fecha)
             nombre_auto = self.logica.dar_auto(self.auto_actual)['marca']
             self.vista_lista_acciones.mostrar_acciones(nombre_auto, self.logica.dar_acciones_auto(self.auto_actual))
         else:
